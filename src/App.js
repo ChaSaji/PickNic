@@ -1,11 +1,30 @@
-import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import CameraScreen from "./screens/CameraScreen";
+import CookingScreen from "./screens/CookingScreen";
+import BagScreen from "./screens/BagScreen";
+import BadgeScreen from "./screens/BadgeScreen";
+import HomeScreen from "./screens/HomeScreen";
+
+const Tab = createBottomTabNavigator();
+
+function MyTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Camera" component={CameraScreen} />
+      <Tab.Screen name="Cooking" component={CookingScreen} />
+      <Tab.Screen name="Bag" component={BagScreen} />
+      <Tab.Screen name="Badge" component={BadgeScreen} />
+    </Tab.Navigator>
+  );
+}
 
 export default function App() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <MyTabs />
+    </NavigationContainer>
   );
 }
