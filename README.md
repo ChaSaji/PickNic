@@ -1,8 +1,10 @@
 # 環境内容
+
 - node: v20.11.0
 - npm: v10.1.0
 
 # プロジェクトの進め方
+
 ```
 // developブランチに移動
 git checkout develop
