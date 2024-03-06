@@ -2,7 +2,7 @@
 export const Blank = ' ';
 export const InsertQuery = 'INSERT INTO ';
 export const values = ' VALUES ';
-export const DropTableQuery = 'drop table ';
+export const DropTableQuery = 'drop table IF EXISTS ';
 
 class MealementText{
   static id = 'id';

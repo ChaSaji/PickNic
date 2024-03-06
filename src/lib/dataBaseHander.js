@@ -3,36 +3,48 @@ import * as QueryConst from "./databaseQueryText";
 // データベースを作成またはオープン
 const db = SQLite.openDatabase('database.db');
 
-
 export function CreateAllTable(){
-   console.log(QueryConst.createTableBadge);
-   console.log(QueryConst.createTableMaterial);
-   console.log(QueryConst.createTableMaterialPhotoRelation);
-   console.log(QueryConst.createTableMeal);
-   console.log(QueryConst.createTableMeal_Status);
-   console.log(QueryConst.createTablePhoto);
-   console.log(QueryConst.createTableRecipe_Detail);
-    db.transaction(tx => {
-        tx.executeSql(QueryConst.createTableBadge,
-            [],
-            (_, result) => {
-              // クエリが成功した場合の処理
-              console.log('テーブルが作成されました');
-            },
-            (_, error) => {
-              // エラーが発生した場合の処理
-              console.error('テーブルの作成中にエラーが発生しました:', error);
-            }
-        );
-        tx.executeSql(QueryConst.createTableMaterial);
-        tx.executeSql(QueryConst.createTableMaterialPhotoRelation);
-        tx.executeSql(QueryConst.createTableMeal);
-        tx.executeSql(QueryConst.createTableMeal_Status);
-        tx.executeSql(QueryConst.createTablePhoto);
-        tx.executeSql(QueryConst.createTableRecipe_Detail);
-    });
-    return;
+    db.transaction(tx => {tx.executeSql(QueryConst.createTableBadge);    });
+    db.transaction(tx => {tx.executeSql(QueryConst.createTableMaterial);});
+    db.transaction(tx => {tx.executeSql(QueryConst.createTableMaterialPhotoRelation);});
+    db.transaction(tx => {tx.executeSql(QueryConst.createTableMeal);});
+    db.transaction(tx => {tx.executeSql(QueryConst.createTableMeal_Status);});
+    db.transaction(tx => {tx.executeSql(QueryConst.createTablePhoto);});
+    db.transaction(tx => {tx.executeSql(QueryConst.createTableRecipe_Detail,            [],
+      (_, result) => {
+        // クエリが成功した場合の処理
+        console.log('テーブルが作成されました');
+      },
+      (_, error) => {
+        // エラーが発生した場合の処理
+        console.error('テーブルの作成中にエラーが発生しました:', error);
+      }
+  );});
+    console.log(QueryConst.createTableBadge);
+    console.log(QueryConst.createTableMaterial);
+    console.log(QueryConst.createTableMaterialPhotoRelation);
+    console.log(QueryConst.createTableMeal);
+    console.log(QueryConst.createTableMeal_Status);
+    console.log(QueryConst.createTablePhoto);
+    console.log(QueryConst.createTableRecipe_Detail);
 }
+export const getTables = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT name FROM sqlite_master WHERE type="table"',
+        [],
+        (_, { rows }) => {
+          const tables = rows._array.map(row => row.name);
+          resolve(tables);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  });
+};
 
 export function insert_badge(InsertItem){
     let items = ' ('
@@ -200,8 +212,8 @@ export function insert_photo(InsertItem){
 const getRecodeQuery = "SELECT * FROM "
 export function getRecode(){
     let QueryText = getRecodeQuery + QueryConst.Badge.tablename +";";
-    //QueryText = "SELECT * FROM testtable;";
     db.transaction(tx => {
+      
         tx.executeSql(
             QueryText,
             [],
@@ -220,15 +232,15 @@ export function getRecode(){
 }
 
 export function DropAllTable(){
-   console.log(QueryConst.DropTableQuery + QueryConst.Badge.tablename);
-   console.log(QueryConst.DropTableQuery + QueryConst.Meal.tablename);
-   console.log(QueryConst.DropTableQuery + QueryConst.MealStatus.tablename);
-   console.log(QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename);
-   console.log(QueryConst.DropTableQuery + QueryConst.Material.tablename);
-   console.log(QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename);
-   console.log(QueryConst.DropTableQuery + QueryConst.Photo.tablename);
-    db.transaction(tx => {
-        tx.executeSql(QueryConst.DropTableQuery + QueryConst.Badge.tablename,
+   console.log(QueryConst.DropTableQuery + QueryConst.Badge.tablename+';');
+   console.log(QueryConst.DropTableQuery + QueryConst.Meal.tablename+';');
+   console.log(QueryConst.DropTableQuery + QueryConst.MealStatus.tablename+';');
+   console.log(QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename+';');
+   console.log(QueryConst.DropTableQuery + QueryConst.Material.tablename+';');
+   console.log(QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename+';');
+   console.log(QueryConst.DropTableQuery + QueryConst.Photo.tablename+';');
+   db.transaction(tx => {
+    tx.executeSql(QueryConst.DropTableQuery + QueryConst.Badge.tablename+';',
             [],
             (_, result) => {
               // 成功時の処理
@@ -238,13 +250,12 @@ export function DropAllTable(){
               // エラー時の処理
               console.error('テーブルの削除中にエラーが発生しました:', error);
             }
-        );
-        tx.executeSql(QueryConst.DropTableQuery + QueryConst.Meal.tablename);
-        tx.executeSql(QueryConst.DropTableQuery + QueryConst.MealStatus.tablename);
-        tx.executeSql(QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename);
-        tx.executeSql(QueryConst.DropTableQuery + QueryConst.Material.tablename);
-        tx.executeSql(QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename);
-        tx.executeSql(QueryConst.DropTableQuery + QueryConst.Photo.tablename);
-    });
+        );});
+        db.transaction(tx => {tx.executeSql(QueryConst.DropTableQuery + QueryConst.Meal.tablename+';'); });
+        db.transaction(tx => {tx.executeSql(QueryConst.DropTableQuery + QueryConst.MealStatus.tablename+';'); });
+        db.transaction(tx => {tx.executeSql(QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename+';'); });
+        db.transaction(tx => {tx.executeSql(QueryConst.DropTableQuery + QueryConst.Material.tablename+';'); });
+        db.transaction(tx => {tx.executeSql(QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename+';'); });
+        db.transaction(tx => {tx.executeSql(QueryConst.DropTableQuery + QueryConst.Photo.tablename+';'); });
     return;
 }
