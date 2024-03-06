@@ -3,7 +3,7 @@ import { Text, View, Button } from "react-native";
 import {
   CreateAllTable, DropAllTable, getRecode, insert_badge,getTables, insert_item
 } from "../lib/dataBaseHander";
-import { Badge, BadgeElement } from "../lib/databaseQueryText";
+import { Badge, BadgeElement, Material, MaterialElement, MaterialPhotoRelation, MaterialPhotoRelationElemant, Meal,MealElement, MealStatus, MelaStatusElement, Photo, PhotoElement, RecipeDetail, RecipeDetailElement} from "../lib/databaseQueryText";
 
 const HomeScreen = () => {
   // 関数Bを定義
@@ -13,11 +13,33 @@ const HomeScreen = () => {
     CreateAllTable();
   };
   const functionB = () => {
-    console.log("アイテム追加テスト");
+    console.log("アイテム追加テスト1");
     badge = BadgeElement;
-    badge.name = "BadgeName";badge.pass2Photo = "pass2Photoテキスト";badge.isHave = 0; 
+    badge.name = "BadgeName";badge.pass2Photo = "pass2Photo/テキスト/x.png";badge.isHave = 0; 
     insert_item(Badge.tablename,badge);
-    
+    console.log("アイテム追加テスト2");
+    meal = MealElement;    meal.recipeId = 123;meal.badthId=456;    mealStatusId=789;
+    meal.pass2Photo="mealpass2Photo";
+    insert_item(Meal.tablename,meal);
+    console.log("アイテム追加テスト3");
+    mealstatus = MelaStatusElement;
+    mealstatus.locked = 0;mealstatus.cooked = 0;
+    insert_item(MealStatus.tablename,mealstatus);
+    console.log("アイテム追加テスト4");
+    recipe = RecipeDetailElement;
+    recipe.materialId = "321";recipe.needNum = "10";
+    insert_item(RecipeDetail.tablename,recipe);
+    material = MaterialElement
+    material.name = "material name";material.pass2Photo = "pass/To/photo/matarial.jpg";material.stock = "468";
+    insert_item(Material.tablename,material);
+    relation = MaterialPhotoRelationElemant;
+    relation.materialId = "194";relation.PhotoId="514";
+    insert_item(MaterialPhotoRelation.tablename,relation);
+    photo = PhotoElement
+    photo.name = "photoName";photo.ratitude = 135.12345678901234567890;
+    photo.longitude = 35.12345678901234567890;photo.visited = 1;
+    photo.pass2Photo = "photoPass";
+    insert_item(Photo.tablename,photo);
   };
 
   const functionC = () => {

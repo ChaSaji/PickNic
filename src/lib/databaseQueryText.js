@@ -6,12 +6,12 @@ export const DropTableQuery = 'drop table IF EXISTS ';
 
 class MealementText{
   static id = 'id';
-  static recipeId = 'RecipeId';
-  static badthId = 'BadthId';
-  static mealStatusId = 'MealStatusId';
-  static pass2Photo = 'Pass2Photo';
+  static recipeId = 'recipeId';
+  static badthId = 'badthId';
+  static mealStatusId = 'mealStatusId';
+  static pass2Photo = 'pass2Photo';
 };
-export class Mealement{
+export class MealElement{
   id;
   recipeId;
   badthId;
@@ -178,9 +178,10 @@ export const createTableMaterial =
 
 export const createTablePhoto = 
 `CREATE TABLE IF NOT EXISTS `+Photo.tablename+` (`
-  +Photo.elements.id +'INTEGER PRIMARY KEY AUTOINCREMENT,'
-  +Photo.elements.recipeId   + ' INTEGER,'
-  +Photo.elements.badthId    + ' INTEGER,'
-  +Photo.elements.materialId + ' INTEGER,'
-  +Photo.elements.pass2Photo + ' TEXT'
+  +Photo.elements.id +' INTEGER PRIMARY KEY AUTOINCREMENT,'
+  +Photo.elements.name        + ' TEXT,'
+  +Photo.elements.ratitude    + ' INTEGER,'
+  +Photo.elements.longitude   + ' INTEGER,'
+  +Photo.elements.pass2Photo  + ' TEXT,'
+  +Photo.elements.visited     + ' INTEGER'
   +');';
