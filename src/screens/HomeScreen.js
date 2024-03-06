@@ -1,8 +1,9 @@
 import React from "react";
 import { Text, View, Button } from "react-native";
 import {
-  CreateAllTable, DropAllTable
+  CreateAllTable, DropAllTable, getRecode, insert_badge
 } from "../lib/dataBaseHander";
+import { Badge, BadgeElement } from "../lib/databaseQueryText";
 
 const HomeScreen = () => {
   // 関数Bを定義
@@ -13,10 +14,14 @@ const HomeScreen = () => {
   };
   const functionB = () => {
     console.log("アイテム追加テスト");
+    badge = BadgeElement;
+    badge.name = "BadgeName";badge.pass2Photo = "BadgeName";badge.isHave = 0; 
+    insert_badge(badge);
   };
 
   const functionC = () => {
     console.log("アイテム検索テスト");
+    getRecode();
   };
 
   const functionD = () => {

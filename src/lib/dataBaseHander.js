@@ -13,7 +13,17 @@ export function CreateAllTable(){
    console.log(QueryConst.createTablePhoto);
    console.log(QueryConst.createTableRecipe_Detail);
     db.transaction(tx => {
-        tx.executeSql(QueryConst.createTableBadge);
+        tx.executeSql(QueryConst.createTableBadge,
+            [],
+            (_, result) => {
+              // クエリが成功した場合の処理
+              console.log('テーブルが作成されました');
+            },
+            (_, error) => {
+              // エラーが発生した場合の処理
+              console.error('テーブルの作成中にエラーが発生しました:', error);
+            }
+        );
         tx.executeSql(QueryConst.createTableMaterial);
         tx.executeSql(QueryConst.createTableMaterialPhotoRelation);
         tx.executeSql(QueryConst.createTableMeal);
@@ -24,28 +34,176 @@ export function CreateAllTable(){
     return;
 }
 
-const additemQuery = "insert into items (name) values (?);"
-export function AddItem(Item_Name){
-    // ボタンが押されたときに実行される関数
+export function insert_badge(InsertItem){
+    let items = ' ('
+    +QueryConst.Badge.elements.name+','
+    +QueryConst.Badge.elements.isHave+','
+    +QueryConst.Badge.elements.pass2Photo+')';
+    let QueryText = QueryConst.InsertQuery
+    +QueryConst.Badge.tablename
+    +items
+    +QueryConst.values+'(?, ?, ?)';
+    console.log(QueryText);
     db.transaction(tx => {
         tx.executeSql(
-            additemQuery,
-            [Item_Name],
-            () => {},
-            (error) => {
-              console.log(error);
-            }
+          QueryText,
+          [InsertItem.name, InsertItem.isHave, InsertItem.pass2Photo],
+          (_, result) => {
+            // 成功時の処理
+            console.log('データが挿入されました');
+          },
+          (_, error) => {
+            // エラー時の処理
+            console.error('データの挿入中にエラーが発生しました:', error);
+          }
         );
-    });
-    return;
+      }
+    );
 }
 
-const getRecodeQuery = "SELECT * FROM items;"
+export function insert_meal(InsertItem){
+    let items = '('
+        +QueryConst.Meal.elements.recipeId+','
+        +QueryConst.Meal.elements.badthId+','
+        +QueryConst.Meal.elements.mealStatusId+','
+        +QueryConst.Meal.elements.pass2Photo+
+        ')';
+    let QueryText = QueryConst.InsertQuery+QueryConst.Meal.tablename+items+QueryConst.values+'(?,?,?,?)';
+        db.transaction(tx => {
+            tx.executeSql(
+              QueryText,
+              [InsertItem.recipeId,InsertItem.badthId,InsertItem.mealStatusId,InsertItem.pass2Photo],
+              (_, { rowsAffected }) => {
+                if (rowsAffected > 0) {
+                  console.log('Data Inserted Meal');
+                }else{
+                    console.log('erro'+QueryText);
+                }
+              }
+            );
+        }
+    );
+}
 
+export function insert_meal_status(InsertItem){
+    let items = '('
+        +QueryConst.MealStatus.elements.locked+','
+        +QueryConst.MealStatus.elements.cooked+')';
+    let QueryText = QueryConst.InsertQuery+QueryConst.MealStatus.tablename+items+QueryConst.values+'(?,?)';
+        db.transaction(tx => {
+            tx.executeSql(
+              QueryText,
+              [InsertItem.locked,InsertItem.cooked],
+              (_, { rowsAffected }) => {
+                if (rowsAffected > 0) {
+                  console.log('Data Inserted MealStatus');
+                }else{
+                    console.log('erro'+QueryText);
+                }
+              }
+            );
+        }
+    );
+}
+
+export function insert_recipe_detail(InsertItem){
+    let items = '('
+        +QueryConst.RecipeDetail.elements.materialId+','
+        +QueryConst.RecipeDetail.elements.needNum   +')';
+    let QueryText = QueryConst.InsertQuery+QueryConst.RecipeDetail.tablename+items+QueryConst.values+'(?,?)';
+        db.transaction(tx => {
+            tx.executeSql(
+              QueryText,
+              [InsertItem.materialId,InsertItem.needNum],
+              (_, { rowsAffected }) => {
+                if (rowsAffected > 0) {
+                  console.log('Data Inserted RecipeDetail');
+                }else{
+                    console.log('erro'+QueryText);
+                }
+              }
+            );
+        }
+    );
+}
+
+export function insert_material(InsertItem){
+    let items = '('
+        +QueryConst.Material.elements.name+','
+        +QueryConst.Material.elements.pass2Photo+','
+        +QueryConst.Material.elements.stock   +')';
+    let QueryText = QueryConst.InsertQuery
+                +QueryConst.Material.tablename+items+QueryConst.values+'(?,?,?)';
+    db.transaction(tx => {
+            tx.executeSql(
+              QueryText,
+              [InsertItem.name,InsertItem.pass2Photo,InsertItem.stock],
+              (_, { rowsAffected }) => {
+                if (rowsAffected > 0) {
+                  console.log('Data Inserted Material');
+                }else{
+                    console.log('erro'+QueryText);
+                }
+              }
+            );
+    });
+}
+
+export function insert_material_photo_relation(InsertItem){
+    let items = '('
+        +QueryConst.MaterialPhotoRelation.elements.materialId+','
+        +QueryConst.MaterialPhotoRelation.elements.PhotoId+')';
+    let QueryText = QueryConst.InsertQuery
+    +QueryConst.MaterialPhotoRelation.tablename
+    +items+QueryConst.values+'(?,?)';
+        db.transaction(tx => {
+            tx.executeSql(
+              QueryText,
+              [InsertItem.name,InsertItem.pass2Photo,InsertItem.stock],
+              (_, { rowsAffected }) => {
+                if (rowsAffected > 0) {
+                  console.log('Data Inserted Material');
+                }else{
+                    console.log('erro'+QueryText);
+                }
+              }
+            );
+        }
+    );
+}
+export function insert_photo(InsertItem){
+    let items = '('
+        +QueryConst.Photo.elements.name+','
+        +QueryConst.Photo.elements.ratitude+','
+        +QueryConst.Photo.elements.longitude+','
+        +QueryConst.Photo.elements.pass2Photo+','
+        +QueryConst.Photo.elements.visited+')';
+    let QueryText = QueryConst.InsertQuery
+    +QueryConst.Photo.tablename
+    +items+QueryConst.values+'(?,?)';
+        db.transaction(tx => {
+            tx.executeSql(
+              QueryText,
+              [InsertItem.name,InsertItem.pass2Photo,InsertItem.stock],
+              (_, { rowsAffected }) => {
+                if (rowsAffected > 0) {
+                  console.log('Data Inserted Material');
+                }else{
+                    console.log('erro'+QueryText);
+                }
+              }
+            );
+        }
+    );
+}
+
+const getRecodeQuery = "SELECT * FROM "
 export function getRecode(){
+    let QueryText = getRecodeQuery + QueryConst.Badge.tablename +";";
+    //QueryText = "SELECT * FROM testtable;";
     db.transaction(tx => {
         tx.executeSql(
-            getRecodeQuery,
+            QueryText,
             [],
             // 成功時のコールバック
             (_, {rows}) => {
@@ -54,10 +212,9 @@ export function getRecode(){
                 console.log("select result:" + JSON.stringify(rows._array));
 
             },
-            () => {
-                // 失敗時のコールバック
-                console.log("SELECT TABLE Failed.");
-                return false;  // return true でロールバックする
+            (_, error) => {
+                // エラーが発生した場合の処理
+                console.error('エラー:', error);
             });
         });
 }
@@ -71,7 +228,17 @@ export function DropAllTable(){
    console.log(QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename);
    console.log(QueryConst.DropTableQuery + QueryConst.Photo.tablename);
     db.transaction(tx => {
-        tx.executeSql(QueryConst.DropTableQuery + QueryConst.Badge.tablename);
+        tx.executeSql(QueryConst.DropTableQuery + QueryConst.Badge.tablename,
+            [],
+            (_, result) => {
+              // 成功時の処理
+              console.log('テーブルが削除されました');
+            },
+            (_, error) => {
+              // エラー時の処理
+              console.error('テーブルの削除中にエラーが発生しました:', error);
+            }
+        );
         tx.executeSql(QueryConst.DropTableQuery + QueryConst.Meal.tablename);
         tx.executeSql(QueryConst.DropTableQuery + QueryConst.MealStatus.tablename);
         tx.executeSql(QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename);

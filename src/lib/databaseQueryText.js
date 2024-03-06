@@ -1,76 +1,113 @@
 //SQL Funcs
 export const Blank = ' ';
-export const InsertQuery = 'Insert Into ';
-export const values = ' values ';
+export const InsertQuery = 'INSERT INTO ';
+export const values = ' VALUES ';
 export const DropTableQuery = 'drop table ';
 
-class Mealement{
+class MealementText{
   static id = 'id';
   static recipeId = 'RecipeId';
   static badthId = 'BadthId';
   static mealStatusId = 'MealStatusId';
   static pass2Photo = 'Pass2Photo';
 };
+export class Mealement{
+  id;
+  recipeId;
+  badthId;
+  mealStatusId;
+  pass2Photo;
+};
 export class Meal {
   static tablename = 'Meal';
-  static elements = Mealement;
+  static elements = MealementText;
 };
-class BageElement{
+class BadgeElementText{
   static id = 'id';
   static name = 'name';
-  static pass2photo = 'name';
+  static pass2Photo = 'pass2Photo';
   static isHave = 'IsHave';
 };
-export class Badge {
-    static tablename = 'Badge';
-    static elements = BageElement;
+
+export class BadgeElement{
+  id;
+  name;
+  pass2Photo;
+  isHave;
 };
 
-class MelaStatusElement{
+export class Badge {
+    static tablename = 'Badge';
+    static elements = BadgeElementText;
+};
+
+class MelaStatusElementText{
   static id = 'id';
   static locked = 'locked';
   static cooked = 'cooked';
 };
 
+export class MelaStatusElement{
+  id;
+  locked;
+  cooked;
+};
+
 export class MealStatus{
   static tablename = 'MealStatus';
-  static elements = MelaStatusElement;
+  static elements = MelaStatusElementText;
 }
 
-class RecipeDetailElement{
+class RecipeDetailElementText{
   static id = 'id';
   static materialId = 'materialId';
   static needNum = 'needNum';
 }
 
-export class RecipeDetail{
-  static tablename = 'RecipeDatail';
-  static elements = RecipeDetailElement;
+export class RecipeDetailElement{
+  id;
+  materialId;
+  needNum;
 }
 
-class MaterialElement{
+export class RecipeDetail{
+  static tablename = 'RecipeDatail';
+  static elements = RecipeDetailElementText;
+}
+
+class MaterialElementText{
   static id = 'id';
   static name = 'name';
   static pass2Photo = 'pass2photo';
   static stock = 'stock';
 }
 
-export class Material{
-  static tablename = 'Material';
-  static elements = MaterialElement;
+export class MaterialElement{
+  id;
+  name;
+  pass2Photo;
+  stock;
 }
 
-class MaterialPhotoRelationElemant{
+export class Material{
+  static tablename = 'Material';
+  static elements = MaterialElementText;
+}
+
+class MaterialPhotoRelationElemantText{
   static materialId = 'MaterialId';
   static PhotoId = 'PhotoId';
 }
-
+export class MaterialPhotoRelationElemant{
+  materialId;
+  PhotoId;
+}
 export class MaterialPhotoRelation{
   static tablename = 'MaterialPhotoRelation';
-  static elements = MaterialPhotoRelationElemant;
+  static elements = MaterialPhotoRelationElemantText;
 }
 
-class PhotoElement{
+class PhotoElementText{
   static id = 'id';
   static name = 'name';
   static ratitude = 'ratitude';
@@ -78,19 +115,27 @@ class PhotoElement{
   static pass2Photo = 'pass2Photo';
   static visited = 'visited';
 }
+export class PhotoElement{
+  id;
+  name;
+  ratitude;
+  longitude;
+  pass2Photo;
+  visited;
+}
 
 export class Photo{
   static tablename = 'Photo';
-  static elements = PhotoElement;
+  static elements = PhotoElementText;
 }
-
+// IF NOT EXISTS
 // テーブルを作成するクエリ
 export const createTableBadge = 
-'CREATE TABLE IF NOT EXISTS '+Badge.tablename+` (`
+'CREATE TABLE IF NOT EXISTS '+Badge.tablename+' ('
   +Badge.elements.id          +  ' INTEGER PRIMARY KEY AUTOINCREMENT,'
   +Badge.elements.name        +  ' TEXT,'
   +Badge.elements.isHave      +  ' INTEGER,'
-  +Badge.elements.pass2Photo  +  ' TEXT,'
+  +Badge.elements.pass2Photo  +  ' TEXT'
   +');';
 
 export const createTableMeal = 
@@ -102,37 +147,37 @@ export const createTableMeal =
     +Meal.elements.pass2Photo   + ' TEXT'
     +');';
 
-export const createTableMeal_Status = `
-CREATE TABLE IF NOT EXISTS `+MealStatus.tablename+` (`
+export const createTableMeal_Status = 
+`CREATE TABLE IF NOT EXISTS `+MealStatus.tablename+` (`
   +MealStatus.elements.id     + ' INTEGER PRIMARY KEY AUTOINCREMENT,'
   +MealStatus.elements.locked + ' INTEGER,'
-  +MealStatus.elements.cooked + ' INTEGER,'
+  +MealStatus.elements.cooked + ' INTEGER'
   +');';
 
-export const createTableRecipe_Detail = `
-CREATE TABLE IF NOT EXISTS `+RecipeDetail.tablename+` (`
+export const createTableRecipe_Detail = 
+`CREATE TABLE IF NOT EXISTS `+RecipeDetail.tablename+` (`
   +RecipeDetail.elements.id         +' INTEGER PRIMARY KEY AUTOINCREMENT,'
   +RecipeDetail.elements.materialId +' INTEGER,'
-  +RecipeDetail.elements.needNum    +' INTEGER,'
+  +RecipeDetail.elements.needNum    +' INTEGER'
   +`);`;
 
-export const createTableMaterial = `
-CREATE TABLE IF NOT EXISTS `+Material.tablename+` (`
+export const createTableMaterial = 
+'CREATE TABLE IF NOT EXISTS '+Material.tablename+` (`
   +Material.elements.id         + ' INTEGER PRIMARY KEY AUTOINCREMENT,'
   +Material.elements.name       + ' TEXT,'
   +Material.elements.pass2Photo + ' TEXT,'
   +Material.elements.stock      + ' INTEGER'
   +');';
 
-  export const createTableMaterialPhotoRelation = `
-  CREATE TABLE IF NOT EXISTS `+MaterialPhotoRelation.tablename+` (`
+  export const createTableMaterialPhotoRelation = 
+`CREATE TABLE IF NOT EXISTS `+MaterialPhotoRelation.tablename+` (`
   +MaterialPhotoRelation.elements.materialId  + ' INTEGER,'
   +MaterialPhotoRelation.elements.PhotoId     + ' INTEGER'
   +');';
 
 
-export const createTablePhoto = `
-CREATE TABLE IF NOT EXISTS `+Photo.tablename+` (`
+export const createTablePhoto = 
+`CREATE TABLE IF NOT EXISTS `+Photo.tablename+` (`
   +Photo.elements.id +'INTEGER PRIMARY KEY AUTOINCREMENT,'
   +Photo.elements.recipeId   + ' INTEGER,'
   +Photo.elements.badthId    + ' INTEGER,'
