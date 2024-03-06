@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Button } from "react-native";
 import {
-  CreateAllTable, DropAllTable, getRecode, insert_badge,getTables
+  CreateAllTable, DropAllTable, getRecode, insert_badge,getTables, insert_item
 } from "../lib/dataBaseHander";
 import { Badge, BadgeElement } from "../lib/databaseQueryText";
 
@@ -16,7 +16,8 @@ const HomeScreen = () => {
     console.log("アイテム追加テスト");
     badge = BadgeElement;
     badge.name = "BadgeName";badge.pass2Photo = "pass2Photoテキスト";badge.isHave = 0; 
-    insert_badge(badge);
+    insert_item(Badge.tablename,badge);
+    
   };
 
   const functionC = () => {
