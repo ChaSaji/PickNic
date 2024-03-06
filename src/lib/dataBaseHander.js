@@ -9,17 +9,19 @@ export function CreateAllTable(){
     db.transaction(tx => {tx.executeSql(QueryConst.createTableMaterialPhotoRelation);});
     db.transaction(tx => {tx.executeSql(QueryConst.createTableMeal);});
     db.transaction(tx => {tx.executeSql(QueryConst.createTableMeal_Status);});
-    db.transaction(tx => {tx.executeSql(QueryConst.createTablePhoto);});
-    db.transaction(tx => {tx.executeSql(QueryConst.createTableRecipe_Detail,            [],
+    db.transaction(tx => {tx.executeSql(QueryConst.createTablePhoto,            
+      [],
       (_, result) => {
         // クエリが成功した場合の処理
         console.log('テーブルが作成されました');
       },
       (_, error) => {
         // エラーが発生した場合の処理
+        console.error(QueryConst.createTablePhoto);
         console.error('テーブルの作成中にエラーが発生しました:', error);
       }
   );});
+    db.transaction(tx => {tx.executeSql(QueryConst.createTableRecipe_Detail)});
     console.log(QueryConst.createTableBadge);
     console.log(QueryConst.createTableMaterial);
     console.log(QueryConst.createTableMaterialPhotoRelation);
@@ -30,15 +32,30 @@ export function CreateAllTable(){
 }
 
 export function insert_item(Table,InsertItemItem){
+  console.log("insert_item:name:"+Table);
   switch (Table){
-    case QueryConst.Badge.tablename:
-      //console.log(QueryConst.Badge.tablename);
+    case QueryConst.Badge.tablename://1
       insert_badge(InsertItemItem);
       break;
-    case Meal.tablename:
+    case QueryConst.Meal.tablename://2
+      console.log(QueryConst.Meal.tablename);
       insert_meal(InsertItemItem);
       break;
-    
+    case QueryConst.MealStatus.tablename://3
+      insert_meal_status(InsertItemItem);
+      break;
+    case QueryConst.RecipeDetail.tablename://4
+      insert_recipe_detail(InsertItemItem);
+      break;
+    case QueryConst.Material.tablename://5
+      insert_material(InsertItemItem);
+      break;
+    case QueryConst.MaterialPhotoRelation.tablename://6
+      insert_material_photo_relation(InsertItemItem);
+      break;
+    case QueryConst.Photo.tablename://7
+      insert_photo(InsertItemItem);
+      break;
     default:
   }
 }
@@ -78,8 +95,8 @@ export function insert_meal(InsertItem){
         +QueryConst.Meal.elements.pass2Photo+
         ')';
     let QueryText = QueryConst.InsertQuery+QueryConst.Meal.tablename+items+QueryConst.values+'(?,?,?,?)';
-        db.transaction(tx => {
-            tx.executeSql(
+    db.transaction(tx => {
+      tx.executeSql(
               QueryText,
               [InsertItem.recipeId,InsertItem.badthId,InsertItem.mealStatusId,InsertItem.pass2Photo],
               (_, { rowsAffected }) => {
@@ -171,7 +188,7 @@ export function insert_material_photo_relation(InsertItem){
               [InsertItem.name,InsertItem.pass2Photo,InsertItem.stock],
               (_, { rowsAffected }) => {
                 if (rowsAffected > 0) {
-                  console.log('Data Inserted Material');
+                  console.log('Data Inserted MaterialPhotoRelation');
                 }else{
                     console.log('erro'+QueryText);
                 }
@@ -181,6 +198,7 @@ export function insert_material_photo_relation(InsertItem){
     );
 }
 export function insert_photo(InsertItem){
+  console.log("insert_photo");
     let items = '('
         +QueryConst.Photo.elements.name+','
         +QueryConst.Photo.elements.ratitude+','
@@ -189,17 +207,20 @@ export function insert_photo(InsertItem){
         +QueryConst.Photo.elements.visited+')';
     let QueryText = QueryConst.InsertQuery
     +QueryConst.Photo.tablename
-    +items+QueryConst.values+'(?,?)';
+    +items+QueryConst.values+'(?,?,?,?,?)';
         db.transaction(tx => {
             tx.executeSql(
               QueryText,
-              [InsertItem.name,InsertItem.pass2Photo,InsertItem.stock],
+              [InsertItem.name,InsertItem.ratitude,InsertItem.longitude,InsertItem.pass2Photo,InsertItem.visited],
               (_, { rowsAffected }) => {
                 if (rowsAffected > 0) {
-                  console.log('Data Inserted Material');
-                }else{
-                    console.log('erro'+QueryText);
+                  console.log('データが正常に挿入されました');
+                } else {
+                  console.log('データの挿入に失敗しました');
                 }
+              },
+              (_, error) => {
+                console.error('INSERTエラー:', error);
               }
             );
         }
@@ -208,7 +229,7 @@ export function insert_photo(InsertItem){
 
 const getRecodeQuery = "SELECT * FROM "
 export function getRecode(){
-    let QueryText = getRecodeQuery + QueryConst.Badge.tablename +";";
+    let QueryText = getRecodeQuery + QueryConst.Photo.tablename +";";
     db.transaction(tx => {
       
         tx.executeSql(
