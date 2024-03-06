@@ -1,33 +1,27 @@
 import React from "react";
 import { Text, View, Button } from "react-native";
 import {
-  AddItem,
-  DropTable,
-  MakeTableItem,
-  getRecode,
-} from "../DataBaseHander";
+  CreateAllTable, DropAllTable
+} from "../lib/dataBaseHander";
 
 const HomeScreen = () => {
   // 関数Bを定義
   const functionA = () => {
-    console.log("ボタンAが押されました");
+    console.log("テーブルの作成");
     //DataBaseHander.MakeTable();
-    MakeTableItem();
+    CreateAllTable();
   };
   const functionB = () => {
-    console.log("ボタンBが押されました");
-    //DataBaseHander.MakeTable();
-    AddItem("AddItemTester");
-    AddItem("日本語テスト");
+    console.log("アイテム追加テスト");
   };
+
   const functionC = () => {
-    console.log("アイテム一覧を表示します");
-    //getRecode();
-    getRecode();
+    console.log("アイテム検索テスト");
   };
+
   const functionD = () => {
     console.log("テーブルを削除します");
-    DropTable();
+    DropAllTable();
   };
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
