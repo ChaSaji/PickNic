@@ -10,7 +10,8 @@ import {
   SafeAreaView,
 } from "react-native";
 
-const CameraScreen = () => {
+const App_Camera = () => {
+  const [type, setType] = useState(CameraType.back);
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
 
@@ -41,6 +42,7 @@ const CameraScreen = () => {
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
       <Camera
         style={{ flex: 1 }}
+        type={type}
         ref={(ref) => {
           setCamera(ref);
         }}
@@ -66,6 +68,6 @@ const CameraScreen = () => {
       </View>
     </SafeAreaView>
   );
-};
+}
 
-export default CameraScreen;
+export default App_Camera;
