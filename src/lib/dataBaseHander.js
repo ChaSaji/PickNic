@@ -28,23 +28,20 @@ export function CreateAllTable(){
     console.log(QueryConst.createTablePhoto);
     console.log(QueryConst.createTableRecipe_Detail);
 }
-export const getTables = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT name FROM sqlite_master WHERE type="table"',
-        [],
-        (_, { rows }) => {
-          const tables = rows._array.map(row => row.name);
-          resolve(tables);
-        },
-        error => {
-          reject(error);
-        }
-      );
-    });
-  });
-};
+
+export function insert_item(Table,InsertItemItem){
+  switch (Table){
+    case QueryConst.Badge.tablename:
+      //console.log(QueryConst.Badge.tablename);
+      insert_badge(InsertItemItem);
+      break;
+    case Meal.tablename:
+      insert_meal(InsertItemItem);
+      break;
+    
+    default:
+  }
+}
 
 export function insert_badge(InsertItem){
     let items = ' ('
@@ -259,3 +256,21 @@ export function DropAllTable(){
         db.transaction(tx => {tx.executeSql(QueryConst.DropTableQuery + QueryConst.Photo.tablename+';'); });
     return;
 }
+
+export const getTables = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT name FROM sqlite_master WHERE type="table"',
+        [],
+        (_, { rows }) => {
+          const tables = rows._array.map(row => row.name);
+          resolve(tables);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  });
+};
