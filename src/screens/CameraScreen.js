@@ -31,11 +31,7 @@ const CameraScreen = () => {
     return <Text>No access to camera</Text>;
   }
 
-  function toggleCameraType() {
-    setType((current) =>
-      current === CameraType.back ? CameraType.front : CameraType
-    );
-  }
+
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
       <Camera
