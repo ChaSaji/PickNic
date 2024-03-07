@@ -1,49 +1,60 @@
 import * as React from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#FFFFFF",
-      }}
-    >
-      <Text style={styles.title}>Home</Text>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <Text style={styles.title}>Home</Text>
+      </ScrollView>
       <TouchableOpacity
         onPress={() => navigation.navigate("Camera")}
-        style={styles.container}
-      />
+        style={styles.fixedButton}
+      >
+        <Text style={styles.buttonText}>カメラ</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 24,
+    textAlign: "center",
+  },
+
+  fixedButton: {
+    position: "absolute",
     width: 130,
     height: 130,
     borderRadius: 200,
     borderWidth: 10,
     backgroundColor: "green",
     borderColor: "yellow",
-    alignSelf: "flex-end",
-    right: 0,
-    bottom: -250,
+    right: 20,
+    bottom: 20,
   },
-  title: {
-    // paddingVertical: 8,
-    // borderWidth: 4,
-    borderColor: "#20232a",
-    borderRadius: 6,
-    backgroundColor: "#61dafb",
-    color: "#20232a",
+  buttonText: {
+    color: "white",
     textAlign: "center",
-    fontSize: 30,
-    fontWeight: "bold",
-    right: 0,
-    bottom: -350,
+    margin: "auto",
+    fontSize: 16,
   },
 });
 
