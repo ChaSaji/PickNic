@@ -1,14 +1,7 @@
 import React, { useEffect } from "react";
-import { Camera, CameraType } from "expo-camera";
+import { Camera } from "expo-camera";
 import { useState } from "react";
-import {
-  Button,
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
+import { Text, View, TouchableOpacity, SafeAreaView } from "react-native";
 
 const CameraScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
