@@ -5,8 +5,10 @@ export const InsertQuery = 'INSERT INTO ';
 export const UpdateQuery = 'UPDATE '
 export const Set = " Set ";
 export const WhereId = " WHERE id = ?;";
+export const Where = ' WHERE ';
 export const values = ' VALUES ';
 export const getRecodeQuery = "SELECT * FROM ";
+export const DeleteQuery = "DELETE FROM ";
 export const DropTableQuery = 'drop table IF EXISTS ';
 export const Limit = " LIMIT ";
 export const Limit100 = " LIMIT 100 ";
@@ -16,18 +18,22 @@ export const LimitDefault = " 100 ";
 export const OrderByQuery = " order by ";//order by
 export const Descending_order = " DESC";
 export const Ascending_order = " ASC";
-export const par = "%";
-class RO{
-  static Eqqual = "==";
-  static nEqual = "!=";
-  static Biggerthan = ">";
-  static Lessthan = "<";
-  static OrMore = ">=";
-  static OrLess = "<=";
-  static In = "in";
-  static LIKE = "LIKE";
-  static IsNull = "IS NULL";
-  static Bet = "BETWEEN";//上級者向け 
+export const parf= "'%";
+export const parb= "%'";
+
+export class RO{
+  static AND = " AND ";
+  static OR = " OR ";
+  static Eqqual = " == ";
+  static nEqual = " != ";
+  static Biggerthan = " > ";
+  static Lessthan = " < ";
+  static OrMore = " >= ";
+  static OrLess = " <= ";
+  static In = " IN ";
+  static LIKE = " LIKE ";
+  static IsNull = " IS NULL";
+  static Bet = " BETWEEN ";//上級者向け 
 }
 
 class MealementKey{

@@ -1,9 +1,9 @@
 import React from "react";
 import { Text, View, Button } from "react-native";
 import {
-  CreateAllTable, DropAllTable, getRecode,getTables, insert_item,update_item,fetchData, fetchDataAsJson
-} from "../lib/dataBaseHander";
-import { Badge, BadgeElement, Material, MaterialElement, MaterialPhotoRelation, MaterialPhotoRelationElemant, Meal,MealElement, MealStatus, MelaStatusElement, Photo, PhotoElement, RecipeDetail, RecipeDetailElement} from "../lib/databaseQueryText";
+  CreateAllTable, DropAllTable,getTables, insert_item,update_item,fetchData, fetchDataAsJson, selectDataById, selectDataByQueryText, selectData, selectDataAsc, selectDataDesc, deleteDataById, ExecuteQuery, deleteData
+} from "../lib/dataBaseHelper";
+import { RO,Badge, BadgeElement, Material, MaterialElement, MaterialPhotoRelation, MaterialPhotoRelationElemant, Meal,MealElement, MealStatus, MelaStatusElement, Photo, PhotoElement, RecipeDetail, RecipeDetailElement, parf,parb, OrderByQuery, Descending_order} from "../lib/databaseQueryText";
 
 const HomeScreen = () => {
   // 関数Bを定義
@@ -32,6 +32,36 @@ const HomeScreen = () => {
     insert_item(Badge.tablename,badge);
     badge = new BadgeElement;
     badge.name = "5BadgeName";
+    badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";badge.isHave = 1; 
+    insert_item(Badge.tablename,badge);
+    
+    badge = new BadgeElement;
+    badge.name = "山";
+    badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";badge.isHave = 1; 
+    insert_item(Badge.tablename,badge);
+    
+    badge = new BadgeElement;
+    badge.name = "山田";
+    badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";badge.isHave = 1; 
+    insert_item(Badge.tablename,badge);
+    
+    badge = new BadgeElement;
+    badge.name = "野山";
+    badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";badge.isHave = 1; 
+    insert_item(Badge.tablename,badge);
+    
+    badge = new BadgeElement;
+    badge.name = "山山";
+    badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";badge.isHave = 1; 
+    insert_item(Badge.tablename,badge);
+    
+    badge = new BadgeElement;
+    badge.name = "川山海";
+    badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";badge.isHave = 1; 
+    insert_item(Badge.tablename,badge);
+    
+    badge = new BadgeElement;
+    badge.name = "ヤマ梨";
     badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";badge.isHave = 1; 
     insert_item(Badge.tablename,badge);
 
@@ -103,8 +133,8 @@ const HomeScreen = () => {
       console.error('Error occurred:', error); // エラーが発生した場合はエラーメッセージを出力
     });
   }
-  const functionCheckSelect = () => {
-    console.log("アイテム検索テスト");
+  const functionCheckRecode= () => {
+    console.log("取得関数テスト");
     // 使用例
     fetchData(Badge.tablename).then(data => {
       console.log('Received data1:', data); // getData関数の戻り値を受け取り、出力
@@ -207,6 +237,50 @@ const HomeScreen = () => {
     update_item(Photo.tablename,photo);
     
   }
+  const functionCheckSelect = () =>{
+    console.log("検索関数テスト")
+    selectDataById(Badge.tablename,2)
+    .then(data => {
+      console.log('Received by ID:', data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch(error => {
+      console.error('Error occurred:', error); // エラーが発生した場合はエラーメッセージを出力
+    });
+    selectDataByQueryText('select * from Badge where id >= 3;')
+    .then(data => {
+      console.log('Received ByText:', data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch(error => {
+      console.error('Error occurred:', error); // エラーが発生した場合はエラーメッセージを出力
+    });
+    selectData(Badge.tablename,Badge.elementsKey.name, RO.LIKE,parf,"山",parb,RO.AND,Badge.elementsKey.id,RO.Biggerthan,7,OrderByQuery,Badge.elementsKey.name,Descending_order)
+    .then(data => {
+      console.log('Received ByPlane:', data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch(error => {
+      console.error('Error occurred:', error); // エラーが発生した場合はエラーメッセージを出力
+    });
+    selectDataAsc(Badge.tablename,Badge.elementsKey.name, RO.LIKE,parf,"山",parb,RO.AND,Badge.elementsKey.id,RO.Biggerthan,7)
+    .then(data => {
+      console.log('Received ByPlaneAsc:', data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch(error => {
+      console.error('Error occurred:', error); // エラーが発生した場合はエラーメッセージを出力
+    });
+    selectDataDesc(Badge.tablename,Badge.elementsKey.name, RO.LIKE,parf,"山",parb,RO.AND,Badge.elementsKey.id,RO.Biggerthan,7)
+    .then(data => {
+      console.log('Received ByPlaneDesc:', data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch(error => {
+      console.error('Error occurred:', error); // エラーが発生した場合はエラーメッセージを出力
+    });
+  }
+  const functionDelete = () => {
+    console.log("要素削除テスト");
+    deleteDataById(Badge.tablename,2);
+    ExecuteQuery('delete from Badge where id <= 2;');
+    deleteData(Badge.tablename,Badge.elementsKey.name, RO.LIKE,parf,"山",parb,RO.AND,Badge.elementsKey.id,RO.Biggerthan,7);
+  }
   const functionD = () => {
     console.log("テーブルを削除します");
     DropAllTable();
@@ -228,8 +302,10 @@ const HomeScreen = () => {
       <Button title="MakeTableItem" onPress={functionA} />
       <Button title="AddItem" onPress={functionB} />
       <Button title="SeeAllItem" onPress={functionSeeAllItem} />
-      <Button title="CheckSelect" onPress={functionCheckSelect} />
+      <Button title="CheckRecode" onPress={functionCheckRecode} />
+      <Button title="CheckSelectData" onPress={functionCheckSelect} />
       <Button title="UpDateItem" onPress={functionUpdate} />
+      <Button title="DeleteItem" onPress={functionDelete} />
       <Button title="DropTable" onPress={functionD} />
       <Button title="CheckTable" onPress={functionE} />
     </View>

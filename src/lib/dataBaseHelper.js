@@ -9,18 +9,7 @@ export function CreateAllTable(){
     db.transaction(tx => {tx.executeSql(QueryConst.createTableMaterialPhotoRelation);});
     db.transaction(tx => {tx.executeSql(QueryConst.createTableMeal);});
     db.transaction(tx => {tx.executeSql(QueryConst.createTableMeal_Status);});
-    db.transaction(tx => {tx.executeSql(QueryConst.createTablePhoto,            
-      [],
-      (_, result) => {
-        // クエリが成功した場合の処理
-        console.log('テーブルが作成されました');
-      },
-      (_, error) => {
-        // エラーが発生した場合の処理
-        console.error(QueryConst.createTablePhoto);
-        console.error('テーブルの作成中にエラーが発生しました:', error);
-      }
-  );});
+    db.transaction(tx => {tx.executeSql(QueryConst.createTablePhoto);});
     db.transaction(tx => {tx.executeSql(QueryConst.createTableRecipe_Detail)});
     console.log(QueryConst.createTableBadge);
     console.log(QueryConst.createTableMaterial);
@@ -76,11 +65,14 @@ export function insert_badge(InsertItem){
           [InsertItem.name, InsertItem.isHave, InsertItem.pass2Photo],
           (_, result) => {
             // 成功時の処理
-            console.log('データが挿入されました');
+            console.log('Data Inserted badge');
           },
           (_, error) => {
             // エラー時の処理
-            console.error('データの挿入中にエラーが発生しました:', error);
+            console.error('Insert error', error);
+          },
+          (_, error) => {
+            console.error('error', error);
           }
         );
       }
@@ -103,8 +95,11 @@ export function insert_meal(InsertItem){
                 if (rowsAffected > 0) {
                   console.log('Data Inserted Meal');
                 }else{
-                    console.log('erro'+QueryText);
+                    console.log('Insert erro'+QueryText);
                 }
+              },
+              (_, error) => {
+                console.error('error', error);
               }
             );
         }
@@ -124,8 +119,11 @@ export function insert_meal_status(InsertItem){
                 if (rowsAffected > 0) {
                   console.log('Data Inserted MealStatus');
                 }else{
-                    console.log('erro'+QueryText);
+                    console.log('Insert erro'+QueryText);
                 }
+              },
+              (_, error) => {
+                console.error('error', error);
               }
             );
         }
@@ -145,8 +143,11 @@ export function insert_recipe_detail(InsertItem){
                 if (rowsAffected > 0) {
                   console.log('Data Inserted RecipeDetail');
                 }else{
-                    console.log('erro'+QueryText);
+                    console.log('Insert erro'+QueryText);
                 }
+              },
+              (_, error) => {
+                console.error('error', error);
               }
             );
         }
@@ -168,8 +169,11 @@ export function insert_material(InsertItem){
                 if (rowsAffected > 0) {
                   console.log('Data Inserted Material');
                 }else{
-                    console.log('erro'+QueryText);
+                    console.log('Insert erro'+QueryText);
                 }
+              },
+              (_, error) => {
+                console.error('error', error);
               }
             );
     });
@@ -190,8 +194,11 @@ export function insert_material_photo_relation(InsertItem){
                 if (rowsAffected > 0) {
                   console.log('Data Inserted MaterialPhotoRelation');
                 }else{
-                    console.log('erro'+QueryText);
+                    console.log('Insert erro'+QueryText);
                 }
+              },
+              (_, error) => {
+                console.error('error', error);
               }
             );
         }
@@ -214,19 +221,20 @@ export function insert_photo(InsertItem){
               [InsertItem.name,InsertItem.ratitude,InsertItem.longitude,InsertItem.pass2Photo,InsertItem.visited],
               (_, { rowsAffected }) => {
                 if (rowsAffected > 0) {
-                  console.log('データが正常に挿入されました');
-                } else {
-                  console.log('データの挿入に失敗しました');
+                  console.log('Data Inserted photo');
+                } else{
+                  console.log('Insert erro'+QueryText);
                 }
               },
               (_, error) => {
-                console.error('INSERTエラー:', error);
+                console.error('error', error);
               }
             );
         }
     );
 }
 //###end insert
+
 //###start Update
 export function update_item(Table,updateItemItem){
   console.log("update_item:name:"+Table);
@@ -270,13 +278,16 @@ export function update_badge(updateItem){
         tx.executeSql(
           QueryText,
           [updateItem.name, updateItem.isHave, updateItem.pass2Photo,updateItem.id],
-          (_, result) => {
-            // 成功時の処理
-            console.log('データが挿入されました');
+          (_, { rowsAffected }) => {
+            if (rowsAffected > 0) {
+              console.log('Data updated Meal');
+            }else{
+                console.log('erro up meal'+QueryText);
+            }
           },
           (_, error) => {
             // エラー時の処理
-            console.error('データの挿入中にエラーが発生しました:', error);
+            console.error('update erro', error);
           }
         );
       }
@@ -301,14 +312,14 @@ export function update_meal(updateItem){
               [updateItem.recipeId,updateItem.badthId,updateItem.mealStatusId,updateItem.pass2Photo, updateItem.id],
               (_, { rowsAffected }) => {
                 if (rowsAffected > 0) {
-                  console.log('Data updateed Meal');
+                  console.log('Data updated Meal');
                 }else{
                     console.log('erro up meal'+QueryText);
                 }
               },
               (_, error) => {
                 // エラー時の処理
-                console.error('データの挿入中にエラーが発生しました:', error);
+                console.error('update erro', error);
               }
             );
         }
@@ -331,14 +342,14 @@ export function update_meal_status(updateItem){
               [updateItem.locked,updateItem.cooked,updateItem.id],
               (_, { rowsAffected }) => {
                 if (rowsAffected > 0) {
-                  console.log('Data updateed MealStatus');
+                  console.log('Data updated MealStatus');
                 }else{
                     console.log('erro'+QueryText);
                 }
               },
               (_, error) => {
                 // エラー時の処理
-                console.error('データの挿入中にエラーが発生しました:', error);
+                console.error('update erro', error);
               }
             );
         }
@@ -358,13 +369,17 @@ export function update_recipe_detail(updateItem){
         db.transaction(tx => {
             tx.executeSql(
               QueryText,
-              [updateItem.materialId,updateItem.needNum,updateItem.needNum,updateItem.id],
+              [updateItem.materialId,updateItem.needNum,updateItem.id],
               (_, { rowsAffected }) => {
                 if (rowsAffected > 0) {
                   console.log('Data updateed RecipeDetail');
                 }else{
                     console.log('erro'+QueryText);
                 }
+              },
+              (_, error) => {
+                // エラー時の処理
+                console.error('update erro', error);
               }
             );
         }
@@ -377,11 +392,11 @@ export function update_material(updateItem){
         +QueryConst.Material.elementsKey.pass2Photo+' = ?,'
         +QueryConst.Material.elementsKey.stock   +' = ?';
         let QueryText = QueryConst.UpdateQuery
-        + QueryConst.RecipeDetail.tablename
+        + QueryConst.Material.tablename
         + QueryConst.Set
         + items
         + QueryConst.WhereId;
-    console.log(QueryText,updateItem.name,updateItem.pass2Photo,updateItem.stock,updateItem.id);
+        console.log(QueryText,updateItem.name,updateItem.pass2Photo,updateItem.stock,updateItem.id);
         db.transaction(tx => {
             tx.executeSql(
               QueryText,
@@ -392,6 +407,11 @@ export function update_material(updateItem){
                 }else{
                     console.log('erro'+QueryText);
                 }
+              },
+              (_, error) => {
+                // エラー時の処理
+                console.log(QueryText,updateItem.name,updateItem.pass2Photo,updateItem.stock,updateItem.id);
+                console.error('update erro material', error);
               }
             );
     });
@@ -414,6 +434,10 @@ export function update_material_photo_relation(updateItem){
                 }else{
                     console.log('erro'+QueryText);
                 }
+              },
+              (_, error) => {
+                // エラー時の処理
+                console.error('update erro', error);
               }
             );
         }
@@ -440,13 +464,13 @@ export function update_photo(updateItem){
               [updateItem.name,updateItem.ratitude,updateItem.longitude,updateItem.pass2Photo,updateItem.visited,updateItem.id],
               (_, { rowsAffected }) => {
                 if (rowsAffected > 0) {
-                  console.log('データが正常に挿入されました');
+                  console.log('Data Updated Photo');
                 } else {
-                  console.log('データの挿入に失敗しました');
+                  console.log('error' + QueryText);
                 }
               },
               (_, error) => {
-                console.error('updateエラー:', error);
+                console.error('update erro:', error);
               }
             );
         }
@@ -454,6 +478,7 @@ export function update_photo(updateItem){
 }
 //###end Update
 //###start get recode;
+//実際にDBにアクセスする関数
 function fetchDataFromDb(Tablename,offset,limit,DecOrAsc,sortkey){
   let QueryText = QueryConst.getRecodeQuery + Tablename 
   + QueryConst.OrderByQuery+sortkey+DecOrAsc
@@ -477,8 +502,8 @@ function fetchDataFromDb(Tablename,offset,limit,DecOrAsc,sortkey){
 };
 
 // データを取得して戻り値として返す関数
+//Need(Tablename:string),Option(offset:int default 0,limit:int default 100,isDec:boolean default true,sortkey:Decault PrimaryKey(id))
 export async function fetchData(Tablename,...args){
-  // 関数を呼び出してデータを取得し、結果を処理する
   if(args.length>0){offset = args[0];}  else{offset = QueryConst.OffsetDefault;};
   if(args.length>1){limit = args[1];}   else{limit = QueryConst.LimitDefault;};
   if(args.length>2){isdesc = args[2];}  else{isdesc = true;};
@@ -530,9 +555,9 @@ function fetchDataAsJsonFromDb(Tablename,offset,limit,DecOrAsc,sortkey){
     });
   });
 };
+// データを取得して戻り値として返す関数(Json)
 //Need(Tablename:string),Option(offset:int default 0,limit:int default 100,isDec:boolean default true,sortkey:Decault PrimaryKey(id))
 export async function fetchDataAsJson(Tablename,...args){
-  // 関数を呼び出してデータを取得し、結果を処理する
   if(args.length>0){offset = args[0];}else{offset = QueryConst.OffsetDefault;};
   if(args.length>1){limit = args[1];}else{limit = QueryConst.LimitDefault;};
   if(args.length>2){isdesc = args[2];}else{isdesc = true;};
@@ -553,7 +578,9 @@ export async function fetchDataAsJson(Tablename,...args){
 //###end get recode;
 
 //###Start Select
-function SelectDataFromDb(QueryText){
+//select の実行関数
+function selectDataFromDb(QueryText){
+  console.log(QueryText);
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
@@ -579,29 +606,173 @@ function SelectDataFromDb(QueryText){
     });
   });
 };
-//Need(Tablename:string),Option(if aegs.lengsh == 1,use Primary Key,aegs.lengsh > 1,use (key:relational operators:val) logical operators (key:relational operators:val))
-export async function SelectData(Tablename,...args){
+//Idから検索
+export async function selectDataById(Tablename,ID){
   // 関数を呼び出してデータを取得し、結果を処理する
-  
-  let WHERETEXT="";
-  for(i=0;i<args.length;i++){
-    WHERETEXT = args[i];
-  }
-  let QueryText = QueryConst.getRecodeQuery + Tablename 
-  + QueryConst.OrderByQuery+sortkey+DecOrAsc
-  + QueryConst.Limit+limit+QueryConst.Offset+offset
+  Key = Tablename == QueryConst.MaterialPhotoRelation.tablename ? QueryConst.MaterialPhotoRelation.elementsKey.materialId:QueryConst.PrimaryKey;
+  let QueryText = 
+  QueryConst.getRecodeQuery + Tablename 
+  + QueryConst.Where+Key+QueryConst.RO.Eqqual+
+  + ID
   + ";";  
   try {
-    const result = await Selectdata(QueryText); // fetchData関数の実行結果を待ち受ける
+    const result = await selectDataFromDb(QueryText); // fetchData関数の実行結果を待ち受ける
     //console.log('Data:', result); // 取得したデータを出力
     return result; // 非同期処理の結果を戻り値として返す
   } catch (error) {
+    console.error(QueryText);
+    console.error('Error:', error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  } 
+}
+//Textをそのまま使用して検索
+export async function selectDataByQueryText(QueryText){
+  // 関数を呼び出してデータを取得し、結果を処理する
+  try {
+    const result = await selectDataFromDb(QueryText); // fetchData関数の実行結果を待ち受ける
+    //console.log('Data:', result); // 取得したデータを出力
+    return result; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error(QueryText);
+    console.error('Error:', error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  } 
+}
+//自分で条件とKEYを指定しての検索(順序は任意)
+//Need(Tablename:string),Option(use (key:relational operators:val) logical operators (key:relational operators:val))
+export async function selectData(Tablename,...args){
+  // 関数を呼び出してデータを取得し、結果を処理する
+  
+  let CONDITIONTEXT=QueryConst.Where;
+  for(i=0;i<args.length;i++){
+    CONDITIONTEXT = CONDITIONTEXT +  args[i];
+  }
+  let QueryText = QueryConst.getRecodeQuery + Tablename 
+  + CONDITIONTEXT
+  //+ QueryConst.OrderByQuery + QueryConst.PrimaryKey + QueryConst.Descending_order
+  + ";";  
+  try {
+    const result = await selectDataFromDb(QueryText); // fetchData関数の実行結果を待ち受ける
+    //console.log('Data:', result); // 取得したデータを出力
+    return result; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error(QueryText);
+    console.error('Error:', error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  } 
+}
+
+//自分で条件とKEYを指定しての検索：降順
+export async function selectDataDesc(Tablename,...args){
+  // 関数を呼び出してデータを取得し、結果を処理する
+  Key = Tablename == QueryConst.MaterialPhotoRelation.tablename ? QueryConst.MaterialPhotoRelation.elementsKey.materialId:QueryConst.PrimaryKey;
+  let CONDITIONTEXT=QueryConst.Where;
+  for(i=0;i<args.length;i++){
+    CONDITIONTEXT = CONDITIONTEXT +  args[i];
+  }
+  let QueryText = QueryConst.getRecodeQuery + Tablename 
+  + CONDITIONTEXT
+  + QueryConst.OrderByQuery + Key + QueryConst.Descending_order
+  + ";";  
+  try {
+    const result = await selectDataFromDb(QueryText); // fetchData関数の実行結果を待ち受ける
+    //console.log('Data:', result); // 取得したデータを出力
+    return result; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error(QueryText);
+    console.error('Error:', error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  } 
+}
+
+//自分で条件とKEYを指定しての検索：昇順
+export async function selectDataAsc(Tablename,...args){
+  // 関数を呼び出してデータを取得し、結果を処理する
+  Key = Tablename == QueryConst.MaterialPhotoRelation.tablename ? QueryConst.MaterialPhotoRelation.elementsKey.materialId:QueryConst.PrimaryKey;
+  let CONDITIONTEXT=QueryConst.Where;
+  for(i=0;i<args.length;i++){
+    CONDITIONTEXT = CONDITIONTEXT +  args[i];
+  }
+  let QueryText = QueryConst.getRecodeQuery + Tablename 
+  + CONDITIONTEXT
+  + QueryConst.OrderByQuery + Key + QueryConst.Ascending_order
+  + ";";  
+  try {
+    const result = await selectDataFromDb(QueryText); // fetchData関数の実行結果を待ち受ける
+    //console.log('Data:', result); // 取得したデータを出力
+    return result; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error(QueryText);
     console.error('Error:', error); // エラーが発生した場合はエラーメッセージを出力
     throw error; // エラーを再度スローする（上位のコードでキャッチされる）
   } 
 }
 //###end get recode;
 
+//###Start Delete Item
+//削除の実行部分
+function DeleteDataFromDb(QueryText){
+  console.log(QueryText);
+  // SQLクエリを実行してデータベースから要素を削除
+  db.transaction(tx => {
+    tx.executeSql(QueryText,[], (tx, results) => {
+      // 成功した場合の処理
+      console.log('要素が削除されました。');
+    },
+    (tx, error) => {
+      // エラーが発生した場合の処理
+      console.log('削除中にエラーが発生しました:', error);
+    });
+  });
+};
+//Idから削除
+export function deleteDataById(Tablename,ID){
+  // 関数を呼び出してデータを取得し、結果を処理する
+  Key = Tablename == QueryConst.MaterialPhotoRelation.tablename ? QueryConst.MaterialPhotoRelation.elementsKey.materialId:QueryConst.PrimaryKey;
+  let QueryText = 
+  QueryConst.DeleteQuery + Tablename 
+  + QueryConst.Where+Key+QueryConst.RO.Eqqual+
+  + ID
+  + ";";  
+  DeleteDataFromDb(QueryText);
+}
+//ユーザが任意で条件を指定して削除
+//Need(Tablename:string),Option(use (key:relational operators:val) logical operators (key:relational operators:val))
+export function deleteData(Tablename,...args){
+  // 関数を呼び出してデータを取得し、結果を処理する
+  let CONDITIONTEXT=QueryConst.Where;
+  for(i=0;i<args.length;i++){
+    CONDITIONTEXT = CONDITIONTEXT +  args[i];
+  }
+  let QueryText = QueryConst.DeleteQuery + Tablename 
+  + CONDITIONTEXT
+  + ";";  
+  DeleteDataFromDb(QueryText) 
+}
+//###end Delete Item;
+
+//### start exec arbitrary text
+//入力テキストを実行(戻り値無し)
+function ExecQueryText(QueryText){
+  console.log(QueryText);
+  // SQLクエリを実行してデータベースから要素を削除
+  db.transaction(tx => {
+    tx.executeSql(QueryText,[], (tx, results) => {
+      // 成功した場合の処理
+      console.log('success');
+    },
+    (tx, error) => {
+      // エラーが発生した場合の処理
+      console.log('error', error);
+    });
+  });
+};
+//外部とのやり取り用の関数
+export function ExecuteQuery(QueryText){
+  ExecQueryText(QueryText);
+}
+
+//### end exec arbitrary text
 export function DropAllTable(){
    console.log(QueryConst.DropTableQuery + QueryConst.Badge.tablename+';');
    console.log(QueryConst.DropTableQuery + QueryConst.Meal.tablename+';');
