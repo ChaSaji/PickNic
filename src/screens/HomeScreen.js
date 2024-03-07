@@ -41,6 +41,8 @@ const styles = StyleSheet.create({
 
   fixedButton: {
     position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
     width: 130,
     height: 130,
     borderRadius: 200,
@@ -52,8 +54,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    textAlign: "center",
-    margin: "auto",
     fontSize: 16,
   },
 });
