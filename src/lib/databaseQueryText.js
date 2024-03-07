@@ -1,10 +1,36 @@
 //SQL Funcs
+export const PrimaryKey ="id";
 export const Blank = ' ';
 export const InsertQuery = 'INSERT INTO ';
+export const UpdateQuery = 'UPDATE '
+export const Set = " Set ";
+export const WhereId = " WHERE id = ?;";
 export const values = ' VALUES ';
+export const getRecodeQuery = "SELECT * FROM ";
 export const DropTableQuery = 'drop table IF EXISTS ';
+export const Limit = " LIMIT ";
+export const Limit100 = " LIMIT 100 ";
+export const Offset = " OFFSET ";
+export const OffsetDefault = " 0 ";
+export const LimitDefault = " 100 ";
+export const OrderByQuery = " order by ";//order by
+export const Descending_order = " DESC";
+export const Ascending_order = " ASC";
+export const par = "%";
+class RO{
+  static Eqqual = "==";
+  static nEqual = "!=";
+  static Biggerthan = ">";
+  static Lessthan = "<";
+  static OrMore = ">=";
+  static OrLess = "<=";
+  static In = "in";
+  static LIKE = "LIKE";
+  static IsNull = "IS NULL";
+  static Bet = "BETWEEN";//上級者向け 
+}
 
-class MealementText{
+class MealementKey{
   static id = 'id';
   static recipeId = 'recipeId';
   static badthId = 'badthId';
@@ -20,10 +46,10 @@ export class MealElement{
 };
 export class Meal {
   static tablename = 'Meal';
-  static elements = MealementText;
+  static elementsKey = MealementKey;
 };
-class BadgeElementText{
-  static id = 'id';
+class BadgeElementKey{
+  static id = PrimaryKey;
   static name = 'name';
   static pass2Photo = 'pass2Photo';
   static isHave = 'IsHave';
@@ -38,11 +64,11 @@ export class BadgeElement{
 
 export class Badge {
     static tablename = 'Badge';
-    static elements = BadgeElementText;
+    static elementsKey = BadgeElementKey;
 };
 
-class MelaStatusElementText{
-  static id = 'id';
+class MelaStatusElementKey{
+  static id = PrimaryKey;
   static locked = 'locked';
   static cooked = 'cooked';
 };
@@ -55,11 +81,11 @@ export class MelaStatusElement{
 
 export class MealStatus{
   static tablename = 'MealStatus';
-  static elements = MelaStatusElementText;
+  static elementsKey = MelaStatusElementKey;
 }
 
-class RecipeDetailElementText{
-  static id = 'id';
+class RecipeDetailElementKey{
+  static id = PrimaryKey;
   static materialId = 'materialId';
   static needNum = 'needNum';
 }
@@ -72,11 +98,11 @@ export class RecipeDetailElement{
 
 export class RecipeDetail{
   static tablename = 'RecipeDatail';
-  static elements = RecipeDetailElementText;
+  static elementsKey = RecipeDetailElementKey;
 }
 
-class MaterialElementText{
-  static id = 'id';
+class MaterialElementKey{
+  static id = PrimaryKey;
   static name = 'name';
   static pass2Photo = 'pass2photo';
   static stock = 'stock';
@@ -91,7 +117,7 @@ export class MaterialElement{
 
 export class Material{
   static tablename = 'Material';
-  static elements = MaterialElementText;
+  static elementsKey = MaterialElementKey;
 }
 
 class MaterialPhotoRelationElemantText{
@@ -104,11 +130,11 @@ export class MaterialPhotoRelationElemant{
 }
 export class MaterialPhotoRelation{
   static tablename = 'MaterialPhotoRelation';
-  static elements = MaterialPhotoRelationElemantText;
+  static elementsKey = MaterialPhotoRelationElemantText;
 }
 
-class PhotoElementText{
-  static id = 'id';
+class PhotoElementKey{
+  static id = PrimaryKey;
   static name = 'name';
   static ratitude = 'ratitude';
   static longitude = 'longitude';
@@ -126,62 +152,62 @@ export class PhotoElement{
 
 export class Photo{
   static tablename = 'Photo';
-  static elements = PhotoElementText;
+  static elementsKey = PhotoElementKey;
 }
 // IF NOT EXISTS
 // テーブルを作成するクエリ
 export const createTableBadge = 
 'CREATE TABLE IF NOT EXISTS '+Badge.tablename+' ('
-  +Badge.elements.id          +  ' INTEGER PRIMARY KEY AUTOINCREMENT,'
-  +Badge.elements.name        +  ' TEXT,'
-  +Badge.elements.isHave      +  ' INTEGER,'
-  +Badge.elements.pass2Photo  +  ' TEXT'
+  +Badge.elementsKey.id          +  ' INTEGER PRIMARY KEY AUTOINCREMENT,'
+  +Badge.elementsKey.name        +  ' TEXT,'
+  +Badge.elementsKey.isHave      +  ' INTEGER,'
+  +Badge.elementsKey.pass2Photo  +  ' TEXT'
   +');';
 
 export const createTableMeal = 
 `CREATE TABLE IF NOT EXISTS `+Meal.tablename+` (`
-    +Meal.elements.id           + ' INTEGER PRIMARY KEY AUTOINCREMENT,'    
-    +Meal.elements.recipeId     + ' INTEGER,'
-    +Meal.elements.badthId      + ' INTEGER,'
-    +Meal.elements.mealStatusId + ' INTEGER,'
-    +Meal.elements.pass2Photo   + ' TEXT'
+    +Meal.elementsKey.id           + ' INTEGER PRIMARY KEY AUTOINCREMENT,'    
+    +Meal.elementsKey.recipeId     + ' INTEGER,'
+    +Meal.elementsKey.badthId      + ' INTEGER,'
+    +Meal.elementsKey.mealStatusId + ' INTEGER,'
+    +Meal.elementsKey.pass2Photo   + ' TEXT'
     +');';
 
 export const createTableMeal_Status = 
 `CREATE TABLE IF NOT EXISTS `+MealStatus.tablename+` (`
-  +MealStatus.elements.id     + ' INTEGER PRIMARY KEY AUTOINCREMENT,'
-  +MealStatus.elements.locked + ' INTEGER,'
-  +MealStatus.elements.cooked + ' INTEGER'
+  +MealStatus.elementsKey.id     + ' INTEGER PRIMARY KEY AUTOINCREMENT,'
+  +MealStatus.elementsKey.locked + ' INTEGER,'
+  +MealStatus.elementsKey.cooked + ' INTEGER'
   +');';
 
 export const createTableRecipe_Detail = 
 `CREATE TABLE IF NOT EXISTS `+RecipeDetail.tablename+` (`
-  +RecipeDetail.elements.id         +' INTEGER PRIMARY KEY AUTOINCREMENT,'
-  +RecipeDetail.elements.materialId +' INTEGER,'
-  +RecipeDetail.elements.needNum    +' INTEGER'
+  +RecipeDetail.elementsKey.id         +' INTEGER PRIMARY KEY AUTOINCREMENT,'
+  +RecipeDetail.elementsKey.materialId +' INTEGER,'
+  +RecipeDetail.elementsKey.needNum    +' INTEGER'
   +`);`;
 
 export const createTableMaterial = 
 'CREATE TABLE IF NOT EXISTS '+Material.tablename+` (`
-  +Material.elements.id         + ' INTEGER PRIMARY KEY AUTOINCREMENT,'
-  +Material.elements.name       + ' TEXT,'
-  +Material.elements.pass2Photo + ' TEXT,'
-  +Material.elements.stock      + ' INTEGER'
+  +Material.elementsKey.id         + ' INTEGER PRIMARY KEY AUTOINCREMENT,'
+  +Material.elementsKey.name       + ' TEXT,'
+  +Material.elementsKey.pass2Photo + ' TEXT,'
+  +Material.elementsKey.stock      + ' INTEGER'
   +');';
 
   export const createTableMaterialPhotoRelation = 
 `CREATE TABLE IF NOT EXISTS `+MaterialPhotoRelation.tablename+` (`
-  +MaterialPhotoRelation.elements.materialId  + ' INTEGER,'
-  +MaterialPhotoRelation.elements.PhotoId     + ' INTEGER'
+  +MaterialPhotoRelation.elementsKey.materialId  + ' INTEGER,'
+  +MaterialPhotoRelation.elementsKey.PhotoId     + ' INTEGER'
   +');';
 
 
 export const createTablePhoto = 
 `CREATE TABLE IF NOT EXISTS `+Photo.tablename+` (`
-  +Photo.elements.id +' INTEGER PRIMARY KEY AUTOINCREMENT,'
-  +Photo.elements.name        + ' TEXT,'
-  +Photo.elements.ratitude    + ' INTEGER,'
-  +Photo.elements.longitude   + ' INTEGER,'
-  +Photo.elements.pass2Photo  + ' TEXT,'
-  +Photo.elements.visited     + ' INTEGER'
+  +Photo.elementsKey.id +' INTEGER PRIMARY KEY AUTOINCREMENT,'
+  +Photo.elementsKey.name        + ' TEXT,'
+  +Photo.elementsKey.ratitude    + ' INTEGER,'
+  +Photo.elementsKey.longitude   + ' INTEGER,'
+  +Photo.elementsKey.pass2Photo  + ' TEXT,'
+  +Photo.elementsKey.visited     + ' INTEGER'
   +');';
