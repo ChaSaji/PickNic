@@ -9,7 +9,8 @@ import {
 } from "../DataBaseHander";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import { LocationSubscriber } from "expo-location/build/LocationSubscribers";
+// import { LocationSubscription } from "expo-location/build/LocationSubscription";
+import { LocationSubscription } from "expo-location";
 
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
@@ -39,7 +40,7 @@ const HomeScreen = () => {
       (myLocation) => {
         setMyLocation(myLocation)
         setLatitude(myLocation.coords.latitude)
-        setMyLocation(myLocation.coords.longitude)
+        setLongitude(myLocation.coords.longitude)
         console.log("latitude, longitude: " + myLocation.coords.latitude +","+myLocation.coords.longitude)
       })
 
@@ -56,22 +57,24 @@ const HomeScreen = () => {
 
   return (
     <View>
-       <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: latitude,
-          longitude: longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
-      >
-        {/* <Marker>
-          coordinate={{
+      {latitude != null && longitude != null && (
+        <MapView
+          style={styles.map}
+          initialRegion={{
             latitude: latitude,
             longitude: longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
           }}
-        </Marker>  */}
-      </MapView> 
+        >
+          <Marker
+            coordinate={{
+              latitude: latitude,
+              longitude: longitude,
+            }}
+          ></Marker>
+        </MapView>
+      )}
     </View>
   );
 };
