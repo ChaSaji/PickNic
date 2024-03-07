@@ -6,6 +6,7 @@ import CookingScreen from "./screens/CookingScreen";
 import BagScreen from "./screens/BagScreen";
 import BadgeScreen from "./screens/BadgeScreen";
 import HomeScreen from "./screens/HomeScreen";
+import * as Location from 'expo-location';
 
 const Tab = createBottomTabNavigator();
 

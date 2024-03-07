@@ -11,7 +11,7 @@ const CameraScreen = () => {
   const takePicture = async () => {
     if (camera) {
       const image = await camera.takePictureAsync();
-      console.log(image);
+      console.log(image); // imageは "height","uri","width"の3要素からなるjson形式 
     }
   };
 
@@ -40,6 +40,7 @@ const CameraScreen = () => {
         ref={(ref) => {
           setCamera(ref);
         }}
+        autoFocus={Camera.Constants.AutoFocus.on}
       />
       <View
         style={{
