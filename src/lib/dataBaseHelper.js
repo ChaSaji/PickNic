@@ -189,7 +189,7 @@ export function insert_material_photo_relation(InsertItem){
         db.transaction(tx => {
             tx.executeSql(
               QueryText,
-              [InsertItem.name,InsertItem.pass2Photo,InsertItem.stock],
+              [InsertItem.materialId,InsertItem.PhotoId],
               (_, { rowsAffected }) => {
                 if (rowsAffected > 0) {
                   console.log('Data Inserted MaterialPhotoRelation');
