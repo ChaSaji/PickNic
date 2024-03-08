@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Dimensions, Text } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
-const { width, height } = Dimensions.get("window");
-const ASPECT_RATIO = width / height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+const ASPECT_RATIO = windowWidth / windowHeight;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [myLocation, setMyLocation] = useState(null);
   const [granted, setGranted] = useState(false);
 
@@ -42,28 +49,36 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <View>
+    <View style={styles.container}>
       {granted === false ? (
         <Text>Permission to access location was denied</Text>
       ) : myLocation === null ? (
         <Text>Obtaining location information...</Text>
       ) : (
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: myLocation.coords.latitude,
-            longitude: myLocation.coords.longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
-        >
-          <Marker
-            coordinate={{
+        <>
+          <MapView
+            style={styles.map}
+            initialRegion={{
               latitude: myLocation.coords.latitude,
               longitude: myLocation.coords.longitude,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
             }}
-          />
-        </MapView>
+          >
+            <Marker
+              coordinate={{
+                latitude: myLocation.coords.latitude,
+                longitude: myLocation.coords.longitude,
+              }}
+            />
+          </MapView>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Camera")}
+            style={styles.fixedButton}
+          >
+            <Text style={styles.buttonText}>カメラ</Text>
+          </TouchableOpacity>
+        </>
       )}
     </View>
   );
@@ -72,13 +87,29 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  fixedButton: {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 130,
+    height: 130,
+    borderRadius: 200,
+    borderWidth: 10,
+    backgroundColor: "green",
+    borderColor: "yellow",
+    right: 20,
+    bottom: 20,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
   },
   map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: windowWidth,
+    height: windowHeight,
   },
 });
 

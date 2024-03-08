@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
-import { Camera, CameraType } from "expo-camera";
+import { Camera } from "expo-camera";
 import { useState } from "react";
 import { Text, View, TouchableOpacity, SafeAreaView } from "react-native";
 
 const CameraScreen = () => {
-  const [type, setType] = useState(CameraType.back);
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
 
@@ -31,12 +30,10 @@ const CameraScreen = () => {
     return <Text>No access to camera</Text>;
   }
 
-
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
       <Camera
         style={{ flex: 1 }}
-        type={type}
         ref={(ref) => {
           setCamera(ref);
         }}
