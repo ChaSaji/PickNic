@@ -1,24 +1,15 @@
 import * as React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
+import CameraButton from "../components/CameraButton";
 
 const HomeScreen = ({ navigation }) => {
+  const handleNavigateCameraClick = () => navigation.navigate("Camera");
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text style={styles.title}>Home</Text>
       </ScrollView>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Camera")}
-        style={styles.fixedButton}
-      >
-        <Text style={styles.buttonText}>カメラ</Text>
-      </TouchableOpacity>
+      <CameraButton onClick={handleNavigateCameraClick} />
     </View>
   );
 };
@@ -37,24 +28,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     textAlign: "center",
-  },
-
-  fixedButton: {
-    position: "absolute",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 130,
-    height: 130,
-    borderRadius: 200,
-    borderWidth: 10,
-    backgroundColor: "green",
-    borderColor: "yellow",
-    right: 20,
-    bottom: 20,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
   },
 });
 
