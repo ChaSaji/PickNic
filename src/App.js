@@ -7,20 +7,32 @@ import CameraScreen from "./screens/CameraScreen";
 import BagScreen from "./screens/BagScreen";
 import BadgeScreen from "./screens/BadgeScreen";
 import HomeScreen from "./screens/HomeScreen";
+import { createStackNavigator } from "@react-navigation/stack";
+
+const Stack = createStackNavigator(); 
+
+function HomeScreen_nest() {
+  return (
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Camera" component={CameraScreen} />
+    </Stack.Navigator>
+  );
+}
 
 const Tab = createMaterialBottomTabNavigator();
 
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Home_before_nest"
       activeColor="#f0edf6" // タッチした時の文字色
       inactiveColor="#3e2465" //他のタブがタッチされている時の文字色
       barStyle={{ backgroundColor: "#ffd700" }} //タブの背景色
     >
       <Tab.Screen
-        name="Home"
-        component={HomeScreen}
+        name="Home_before_nest"
+        component={HomeScreen_nest}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: () => (
@@ -29,8 +41,6 @@ function MyTabs() {
           ),
         }}
       />
-      {/* カメラスクリーンはタブから移動しなくてもいいと思ったのでどうにか下のバーから消したい */}
-      <Tab.Screen name="Camera" component={CameraScreen} />
       <Tab.Screen
         name="Cooking"
         component={CookingScreen}
