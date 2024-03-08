@@ -2,37 +2,25 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import CookingScreen from "./screens/CookingScreen";
-import CameraScreen from "./screens/CameraScreen";
-import BagScreen from "./screens/BagScreen";
-import BadgeScreen from "./screens/BadgeScreen";
-import HomeScreen from "./screens/HomeScreen";
-import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreenNavigator from "./navigation/stacks/HomeStack";
+import CookingScreenNavigator from "./navigation/stacks/CookingStack";
+import BagScreenNavigator from "./navigation/stacks/BagStack";
+import BadgeScreenNabigator from "./navigation/stacks/BadgeStack";
 
-const Stack = createStackNavigator(); 
-
-function HomeScreen_nest() {
-  return (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Camera" component={CameraScreen} />
-    </Stack.Navigator>
-  );
-}
 
 const Tab = createMaterialBottomTabNavigator();
 
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Home_before_nest"
+      initialRouteName="Home_tab"
       activeColor="#f0edf6" // タッチした時の文字色
       inactiveColor="#3e2465" //他のタブがタッチされている時の文字色
       barStyle={{ backgroundColor: "#ffd700" }} //タブの背景色
     >
       <Tab.Screen
-        name="Home_before_nest"
-        component={HomeScreen_nest}
+        name="Home_tab"
+        component={HomeScreenNavigator}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: () => (
@@ -42,8 +30,8 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="Cooking"
-        component={CookingScreen}
+        name="Cooking_tab"
+        component={CookingScreenNavigator}
         options={{
           tabBarLabel: "Cooking",
           tabBarIcon: () => (
@@ -56,8 +44,8 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="Bag"
-        component={BagScreen}
+        name="Bag_tab"
+        component={BagScreenNavigator}
         options={{
           tabBarLabel: "Bag",
           tabBarIcon: () => (
@@ -70,8 +58,8 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="Badge"
-        component={BadgeScreen}
+        name="Badge_tab"
+        component={BadgeScreenNabigator}
         options={{
           tabBarLabel: "Badge",
           tabBarIcon: () => (
