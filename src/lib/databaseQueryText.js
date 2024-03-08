@@ -1,4 +1,6 @@
 //SQL Funcs
+export const debugDataBaseLevel = 0;//0:No Debug,1:Easy Debug,2:Full Debug; 
+
 export const PrimaryKey ="id";
 export const Blank = ' ';
 export const InsertQuery = 'INSERT INTO ';
@@ -128,11 +130,11 @@ export class Material{
 
 class MaterialPhotoRelationElemantText{
   static materialId = 'MaterialId';
-  static PhotoId = 'PhotoId';
+  static photoId = 'photoId';
 }
 export class MaterialPhotoRelationElemant{
   materialId;
-  PhotoId;
+  photoId;
 }
 export class MaterialPhotoRelation{
   static tablename = 'MaterialPhotoRelation';
@@ -204,7 +206,7 @@ export const createTableMaterial =
   export const createTableMaterialPhotoRelation = 
 `CREATE TABLE IF NOT EXISTS `+MaterialPhotoRelation.tablename+` (`
   +MaterialPhotoRelation.elementsKey.materialId  + ' INTEGER,'
-  +MaterialPhotoRelation.elementsKey.PhotoId     + ' INTEGER'
+  +MaterialPhotoRelation.elementsKey.photoId     + ' INTEGER'
   +');';
 
 

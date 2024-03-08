@@ -17,7 +17,13 @@ const HomeScreen = () => {
     badge = new BadgeElement;
     badge.name = "1BadgeName";
     badge.pass2Photo = "pass2Photo/日本語テキスト1/x.png";badge.isHave = 1; 
-    insert_item(Badge.tablename,badge);
+    insert_item(Badge.tablename,badge)
+    .then(id => {
+      /*ここにIDを用いた処理を記述*/
+      console.log("budge id = "+id);
+    })
+    .catch(error =>{console.error('Error:', error);});
+    /*
     badge = new BadgeElement;
     badge.name = "4BadgeName";
     badge.pass2Photo = "pass2Photo/日本語テキスト2/x.png";badge.isHave = 0; 
@@ -59,35 +65,75 @@ const HomeScreen = () => {
     badge.name = "川山海";
     badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";badge.isHave = 1; 
     insert_item(Badge.tablename,badge);
-    
+    */
     badge = new BadgeElement;
     badge.name = "ヤマ梨";
     badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";badge.isHave = 1; 
-    insert_item(Badge.tablename,badge);
-
+    insert_item(Badge.tablename,badge)
+    .then(id => {
+      /*ここにIDを用いた処理を記述*/
+      console.log("budge id = "+id);
+    })
+    .catch(error =>{console.error('Error:', error);});
+    
+    
     //console.log("アイテム追加テスト2");
     meal = new MealElement;    meal.recipeId = 123;meal.badthId=456;    mealStatusId=789;
     meal.pass2Photo="mealpass2Photo";
-    insert_item(Meal.tablename,meal);
+    insert_item(Meal.tablename,meal)
+    .then(id => {
+      /*ここにIDを用いた処理を記述*/
+      console.log("id = "+id);
+    })
+    .catch(error =>{console.error('Error:', error);});
+
     //console.log("アイテム追加テスト3");
     mealstatus = new MelaStatusElement;
     mealstatus.locked = 0;mealstatus.cooked = 0;
-    insert_item(MealStatus.tablename,mealstatus);
+    insert_item(MealStatus.tablename,mealstatus)
+    .then(id => {
+      /*ここにIDを用いた処理を記述*/
+      console.log("id = "+id);
+    })
+    .catch(error =>{console.error('Error:', error);});
+
     //console.log("アイテム追加テスト4");
     recipe = new RecipeDetailElement;
     recipe.materialId = 321;recipe.needNum = 10;
-    insert_item(RecipeDetail.tablename,recipe);
+    insert_item(RecipeDetail.tablename,recipe).then(id => {
+      /*ここにIDを用いた処理を記述*/
+      console.log("id = "+id);
+    })
+    .catch(error =>{console.error('Error:', error);});
+    
     material = new MaterialElement
     material.name = "material name";material.pass2Photo = "pass/To/photo/matarial.jpg";material.stock = 468;
-    insert_item(Material.tablename,material);
+    insert_item(Material.tablename,material)
+    .then(id => {
+      /*ここにIDを用いた処理を記述*/
+      console.log("id = "+id);
+    })
+    .catch(error =>{console.error('Error:', error);});
+
     relation = new MaterialPhotoRelationElemant;
-    relation.materialId = 194;relation.PhotoId=514;
-    insert_item(MaterialPhotoRelation.tablename,relation);
+    relation.materialId = 194;relation.photoId=514;
+    insert_item(MaterialPhotoRelation.tablename,relation)
+    .then(id => {
+      /*ここにIDを用いた処理を記述*/
+      console.log("id = "+id);
+    })
+    .catch(error =>{console.error('Error:', error);});
     photo = new PhotoElement
     photo.name = "photoName";photo.ratitude = 135.12345678901234567890;
     photo.longitude = 35.12345678901234567890;photo.visited = 1;
     photo.pass2Photo = "photoPass";
-    insert_item(Photo.tablename,photo);
+    insert_item(Photo.tablename,photo)
+    .then(id => {
+      /*ここにIDを用いた処理を記述*/
+      console.log("id = "+id);
+    })
+    .catch(error =>{console.error('Error:', error);});
+    
   };
   const functionSeeAllItem = () =>{
     fetchData(Badge.tablename).then(data => {
@@ -226,7 +272,7 @@ const HomeScreen = () => {
     update_item(Material.tablename,material);
     /*要望があれば、実装しますが、おそらく削除と作成があれば必要十分だと思います
     relation = MaterialPhotoRelationElemant;
-    relation.materialId = "194";relation.PhotoId="514";
+    relation.materialId = "194";relation.photoId="514";
     update_item(MaterialPhotoRelation.tablename,relation);
     */
     photo = new PhotoElement
