@@ -9,5 +9,4 @@ const CookingScreen = () => {
   );
 };
 
-
 export default CookingScreen;
