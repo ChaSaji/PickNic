@@ -15,7 +15,7 @@ const HomeScreen = ({ navigation }) => {
   const [granted, setGranted] = useState(false);
 
   const [key, setKey] = useState(0);
-  const [isCameraEnabled, setIsCameraEnabled] = useState(false);
+  const [isCameraEnabled, setIsCameraEnabled] = useState(true);
 
   const handleNavigateCameraClick = () => {
     console.log("click");

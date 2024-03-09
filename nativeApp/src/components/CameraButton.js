@@ -1,7 +1,7 @@
 import { StyleSheet, TouchableOpacity, Image, View } from "react-native";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
-const TAKE_PICTURE_INTERVAL = 60; // カメラを使用不能にする間隔(秒)
+const TAKE_PICTURE_INTERVAL = 20; // カメラを使用不能にする間隔(秒)
 
 const CameraButton = (props) => {
   console.log("isCameraEnabled = " + props.isCameraEnabled);
