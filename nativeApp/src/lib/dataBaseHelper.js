@@ -1,5 +1,6 @@
 import * as SQLite from "expo-sqlite";
 import * as QueryConst from "./databaseQueryText";
+import * as InitDB from "./dataBaseInit";
 // データベースを作成またはオープン
 const db = SQLite.openDatabase("database.db");
 
@@ -35,7 +36,52 @@ export function CreateAllTable() {
     console.log(QueryConst.createTableRecipe_Detail);
   }
 }
-//###insert
+
+//###start Read Excel data
+export function InitDatabaseTable(){
+  DropAllTable();
+  CreateAllTable();
+  console.log("MPR length"+ InitDB.MaterialPhotoRelation.length);
+  //1Badge
+  for(i=0;i<InitDB.Badge.length;i++){
+    InsertItem = InitDB.Badge[i];
+    insert_item(QueryConst.Badge.tablename,InsertItem);
+  }
+  //2
+  for(i=0;i<InitDB.MealStatus.length;i++){
+    InsertItem = InitDB.MealStatus[i];
+    insert_item(QueryConst.MealStatus.tablename,InsertItem);
+  }
+  //3
+  for(i=0;i<InitDB.Meal.length;i++){
+    InsertItem = InitDB.Meal[i];
+    insert_item(QueryConst.Meal.tablename,InsertItem);
+  }
+  //4
+  for(i=0;i<InitDB.Material.length;i++){
+    InsertItem = InitDB.Material[i];
+    insert_item(QueryConst.Material.tablename,InsertItem);
+  }
+  //5
+  
+  for(i=0;i<InitDB.RecipeDetail.length;i++){
+    InsertItem = InitDB.RecipeDetail[i];
+    insert_item(QueryConst.RecipeDetail.tablename,InsertItem);
+  }
+  //6
+  for(i=0;i<InitDB.MaterialPhotoRelation.length;i++){
+    InsertItem = InitDB.MaterialPhotoRelation[i];
+    insert_item(QueryConst.MaterialPhotoRelation.tablename,InsertItem);
+  }
+  //7
+  for(i=0;i<InitDB.Photo.length;i++){
+    InsertItem = InitDB.Photo[i];
+    insert_item(QueryConst.Photo.tablename,InsertItem);
+  }
+}
+//###end Read Excel data
+
+//###start insert
 export async function insert_item(Table, InsertItemItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log("insert_item:name:" + Table);
@@ -422,7 +468,7 @@ function insert_photo(InsertItem) {
           resolve(lastInsertedId);
           if (QueryConst.debugDataBaseLevel > 0) {
             console.log(
-              "Data Inserted MaterialPhotoRelation id:" + lastInsertedId
+              "Data Inserted Photo id:" + lastInsertedId
             );
           }
         },
@@ -504,10 +550,10 @@ export function update_badge(updateItem) {
       (_, { rowsAffected }) => {
         if (rowsAffected > 0) {
           if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data updated Meal");
+            console.log("Data updated Badge");
           }
         } else {
-          console.log("erro up meal" + QueryText);
+          console.log("erro update Badge" + QueryText);
         }
       },
       (_, error) => {
@@ -596,7 +642,7 @@ export function update_meal_status(updateItem) {
             console.log("Data updated MealStatus");
           }
         } else {
-          console.log("erro" + QueryText);
+          console.log("erro updated MealStatus" + QueryText);
         }
       },
       (_, error) => {
@@ -638,7 +684,7 @@ export function update_recipe_detail(updateItem) {
             console.log("Data updateed RecipeDetail");
           }
         } else {
-          console.log("erro" + QueryText);
+          console.log("erro updateed RecipeDetail" + QueryText);
         }
       },
       (_, error) => {
@@ -682,7 +728,7 @@ export function update_material(updateItem) {
             console.log("Data updateed Material");
           }
         } else {
-          console.log("erro" + QueryText);
+          console.log("erro updateed Material" + QueryText);
         }
       },
       (_, error) => {
@@ -718,7 +764,7 @@ export function update_material_photo_relation(updateItem) {
         if (rowsAffected > 0) {
           console.log("Data updateed MaterialPhotoRelation");
         } else {
-          console.log("erro" + QueryText);
+          console.log("erro updateed MaterialPhotoRelation" + QueryText);
         }
       },
       (_, error) => {
@@ -774,7 +820,7 @@ export function update_photo(updateItem) {
         if (rowsAffected > 0) {
           console.log("Data Updated Photo");
         } else {
-          console.log("error" + QueryText);
+          console.log("error Updated Photo" + QueryText);
         }
       },
       (_, error) => {
@@ -1055,7 +1101,7 @@ export async function selectDataDesc(Tablename, ...args) {
       : QueryConst.PrimaryKey;
 
   let CONDITIONTEXT = "";
-  if(args.length>0){
+  if (args.length > 0) {
     CONDITIONTEXT = CONDITIONTEXT + QueryConst.Where;
   }
   for (i = 0; i < args.length; i++) {
