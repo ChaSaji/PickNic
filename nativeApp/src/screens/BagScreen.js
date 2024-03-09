@@ -16,6 +16,7 @@ import {
   deleteDataById,
   ExecuteQuery,
   deleteData,
+  InitDatabaseTable,
 } from "../lib/dataBaseHelper";
 import {
   RO,
@@ -46,6 +47,9 @@ const BagScreen = () => {
     //DataBaseHander.MakeTable();
     CreateAllTable();
   };
+  const functionInitDataBase = () =>{
+    InitDatabaseTable();
+  }
   const functionB = () => {
     //console.log("アイテム追加テスト1");
     badge = new BadgeElement();
@@ -477,6 +481,7 @@ const BagScreen = () => {
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>バッグ</Text>
       <Button title="MakeTableItem" onPress={functionA} />
+      <Button title="InitDataBase" onPress={functionInitDataBase} />
       <Button title="AddItem" onPress={functionB} />
       <Button title="SeeAllItem" onPress={functionSeeAllItem} />
       <Button title="CheckRecode" onPress={functionCheckRecode} />
