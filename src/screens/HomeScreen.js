@@ -1,24 +1,85 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
+  Dimensions,
 } from "react-native";
+import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+const ASPECT_RATIO = windowWidth / windowHeight;
+const LATITUDE_DELTA = 0.01;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const HomeScreen = ({ navigation }) => {
+  const [myLocation, setMyLocation] = useState(null);
+  const [granted, setGranted] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      let locationSubscription;
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === "granted") {
+        setGranted(true);
+        locationSubscription = await Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.Highest,
+            timeInterval: 1000, //android専用
+            distanceInterval: 1, //
+          },
+          (location) => {
+            setMyLocation(location);
+            console.log(
+              `latitude: ${location.coords.latitude}, longitude: ${location.coords.longitude}`
+            );
+          }
+        );
+        return () => {
+          if (locationSubscription) {
+            locationSubscription.remove();
+          }
+        };
+      }
+    })();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Text style={styles.title}>Home</Text>
-      </ScrollView>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Camera")}
-        style={styles.fixedButton}
-      >
-        <Text style={styles.buttonText}>カメラ</Text>
-      </TouchableOpacity>
+      {granted === false ? (
+        <Text>Permission to access location was denied</Text>
+      ) : myLocation === null ? (
+        <Text>Obtaining location information...</Text>
+      ) : (
+        <>
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: myLocation.coords.latitude,
+              longitude: myLocation.coords.longitude,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            }}
+          >
+            <Marker
+              coordinate={{
+                latitude: myLocation.coords.latitude,
+                longitude: myLocation.coords.longitude,
+              }}
+            />
+          </MapView>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Camera")}
+            style={styles.fixedButton}
+          >
+            <Text style={styles.buttonText}>カメラ</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };
@@ -29,16 +90,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    textAlign: "center",
-  },
-
   fixedButton: {
     position: "absolute",
     justifyContent: "center",
@@ -55,6 +106,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: 16,
+  },
+  map: {
+    width: windowWidth,
+    height: windowHeight,
   },
 });
 

@@ -9,7 +9,7 @@ import BadgeScreen from "./screens/BadgeScreen";
 import HomeScreen from "./screens/HomeScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
-const Stack = createStackNavigator(); 
+const Stack = createStackNavigator();
 
 function HomeScreen_nest() {
   return (
