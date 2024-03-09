@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Dimensions } from "react-native";
 import CameraButton from "../components/CameraButton";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -53,7 +54,7 @@ const HomeScreen = ({ navigation }) => {
         <Text>Obtaining location information...</Text>
       ) : (
         <>
-          <MapView
+          {/* <MapView
             style={styles.map}
             initialRegion={{
               latitude: myLocation.coords.latitude,
@@ -68,14 +69,24 @@ const HomeScreen = ({ navigation }) => {
                 longitude: myLocation.coords.longitude,
               }}
             />
-          </MapView>
+          </MapView> */}
+          <CountdownCircleTimer
+            isPlaying
+            duration={7}
+            colors={"#004777"}
+          >
+            {/* {({ remainingTime}) => <Text>{remainingTime}</Text>} */}
+            {({remainingTime}) => {
+              // <CameraButton onClick={handleNavigateCameraClick} />
+            }}
+          </CountdownCircleTimer>
           {/* <TouchableOpacity
             onPress={() => navigation.navigate("Camera")}
             style={styles.fixedButton}
           >
             <Text style={styles.buttonText}>カメラ</Text>
           </TouchableOpacity> */}
-          <CameraButton onClick={handleNavigateCameraClick} />
+          {/* <CameraButton onClick={handleNavigateCameraClick} /> */}
         </>
       )}
     </View>
