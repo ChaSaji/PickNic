@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, StyleSheet, Image } from "react-native";
 import {
   CreateAllTable,
   DropAllTable,
@@ -478,20 +478,59 @@ const BagScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>バッグ</Text>
-      <Button title="MakeTableItem" onPress={functionA} />
-      <Button title="InitDataBase" onPress={functionInitDataBase} />
-      <Button title="AddItem" onPress={functionB} />
-      <Button title="SeeAllItem" onPress={functionSeeAllItem} />
-      <Button title="CheckRecode" onPress={functionCheckRecode} />
-      <Button title="CheckSelectData" onPress={functionCheckSelect} />
-      <Button title="UpDateItem" onPress={functionUpdate} />
-      <Button title="DeleteItem" onPress={functionDelete} />
-      <Button title="DropTable" onPress={functionD} />
-      <Button title="CheckTable" onPress={functionE} />
+    <View style={styles.container}>
+      <View style={{backgroundColor: 'green', height: 380, width: '100%'}}>
+        <Button title="MakeTableItem" onPress={functionA} />
+        <Button title="InitDataBase" onPress={functionInitDataBase} />
+        <Button title="AddItem" onPress={functionB} />
+        <Button title="SeeAllItem" onPress={functionSeeAllItem} />
+        <Button title="CheckRecode" onPress={functionCheckRecode} />
+        <Button title="CheckSelectData" onPress={functionCheckSelect} />
+        <Button title="UpDateItem" onPress={functionUpdate} />
+        <Button title="DeleteItem" onPress={functionDelete} />
+        <Button title="DropTable" onPress={functionD} />
+        <Button title="CheckTable" onPress={functionE} />
+      </View>
+      {[...Array(3)].map((_, index) => (
+        <View style={styles.itemrow}>
+          {[...Array(3)].map((_, index) => (
+            <View style={styles.item}>
+              <Image
+                  source={require("../../assets/icons8-camera-64.png")}
+                  style={{ width: 75, height: 75 }}
+                />
+                <Text style={{fontSize: 30}}>
+                  ×1
+                </Text>
+            </View>
+          ))}
+        </View>
+      ))}
+
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    flex: 1, 
+    justifyContent: 'flex-start', 
+    alignItems: "center",
+  },
+  itemrow: {
+    flexDirection: 'row',
+    height: 120,
+    width: '100%',
+    margin: 5,
+  },
+  item: {
+    height: 120,
+    width: '31%',
+    backgroundColor:'#FFE8AD',
+    margin: 5,
+    alignItems: 'center',
+  },
+});
 
 export default BagScreen;
