@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import { Text, View, StyleSheet, Dimensions } from "react-native";
+import CameraButton from "../components/CameraButton";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
@@ -18,6 +13,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const HomeScreen = ({ navigation }) => {
   const [myLocation, setMyLocation] = useState(null);
   const [granted, setGranted] = useState(false);
+
+  const handleNavigateCameraClick = () => navigation.navigate("Camera");
 
   useEffect(() => {
     (async () => {
@@ -72,12 +69,13 @@ const HomeScreen = ({ navigation }) => {
               }}
             />
           </MapView>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => navigation.navigate("Camera")}
             style={styles.fixedButton}
           >
             <Text style={styles.buttonText}>カメラ</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <CameraButton onClick={handleNavigateCameraClick} />
         </>
       )}
     </View>
@@ -89,23 +87,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  fixedButton: {
-    position: "absolute",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 130,
-    height: 130,
-    borderRadius: 200,
-    borderWidth: 10,
-    backgroundColor: "green",
-    borderColor: "yellow",
-    right: 20,
-    bottom: 20,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
   },
   map: {
     width: windowWidth,
