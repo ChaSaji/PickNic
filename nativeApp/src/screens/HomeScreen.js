@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Dimensions } from "react-native";
+import { Text, View, StyleSheet, Dimensions, Button } from "react-native";
 import CameraButton from "../components/CameraButton";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import { useCamera } from "../context/CameraContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -14,7 +15,19 @@ const HomeScreen = ({ navigation }) => {
   const [myLocation, setMyLocation] = useState(null);
   const [granted, setGranted] = useState(false);
 
-  const handleNavigateCameraClick = () => navigation.navigate("Camera");
+  const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
+    useCamera();
+
+  const handleNavigateCameraClick = () => {
+    console.log("click");
+    navigation.navigate("Camera");
+  };
+
+  const handleComplete = () => {
+    console.log("set camera enable");
+    setCameraKey((prevKey) => prevKey + 1);
+    setIsCameraEnabled(true);
+  };
 
   useEffect(() => {
     (async () => {
@@ -26,8 +39,8 @@ const HomeScreen = ({ navigation }) => {
         locationSubscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.Highest,
-            timeInterval: 1000, //android専用
-            distanceInterval: 1, //
+            timeInterval: 1000, //android専用らしいけどわからん
+            distanceInterval: 1,
           },
           (location) => {
             setMyLocation(location);
@@ -69,13 +82,26 @@ const HomeScreen = ({ navigation }) => {
               }}
             />
           </MapView>
-          {/* <TouchableOpacity
-            onPress={() => navigation.navigate("Camera")}
-            style={styles.fixedButton}
+          <View
+            style={{
+              position: "absolute",
+              justifyContent: "center",
+              alignItems: "center",
+              width: 130,
+              height: 130,
+              borderRadius: 200,
+              backgroundColor: "#4BBC96",
+              right: 20,
+              bottom: 20,
+            }}
           >
-            <Text style={styles.buttonText}>カメラ</Text>
-          </TouchableOpacity> */}
-          <CameraButton onClick={handleNavigateCameraClick} />
+            <CameraButton
+              cameraKey={cameraKey}
+              isCameraEnabled={isCameraEnabled}
+              onComplete={handleComplete}
+              onClick={handleNavigateCameraClick}
+            />
+          </View>
         </>
       )}
     </View>

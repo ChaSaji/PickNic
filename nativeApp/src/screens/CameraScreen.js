@@ -2,15 +2,19 @@ import React, { useEffect } from "react";
 import { Camera } from "expo-camera";
 import { useState } from "react";
 import { Text, View, TouchableOpacity, SafeAreaView } from "react-native";
+import { useCamera } from "../context/CameraContext";
 
 const CameraScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
 
+  const { setIsCameraEnabled } = useCamera();
+
   const takePicture = async () => {
     if (camera) {
       const image = await camera.takePictureAsync();
-      console.log(image); // imageは "height","uri","width"の3要素からなるjson形式 
+      console.log(image); // imageは "height","uri","width"の3要素からなるjson形式
+      setIsCameraEnabled(false);
     }
   };
 
