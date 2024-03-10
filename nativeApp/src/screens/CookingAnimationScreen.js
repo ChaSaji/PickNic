@@ -1,22 +1,37 @@
-import React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import React, { useRef } from "react";
+import { StyleSheet, View } from "react-native";
+import LottieView from "lottie-react-native";
 
 const CookingAnimationScreen = ({ navigation }) => {
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      paddingHorizontal: 20,
-      backgroundColor: "#F8DAD1",
-    },
-  });
+  const animation = useRef(null);
 
   return (
-    <View style={styles.container}>
-      <Text>CookingAnimation</Text>
+    <View style={styles.animationContainer}>
+      <LottieView
+        autoPlay
+        loop={false}
+        onAnimationFinish={() => navigation.navigate("CookingComplete")}
+        ref={animation}
+        style={{
+          width: 500,
+          height: 500,
+        }}
+        source={require("../../assets/cooking.json")}
+        // 開発用（４倍速）
+        // source={require("../../assets/dev-cooking.json")}
+      />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  animationContainer: {
+    // lottieでカラーセット色々あるから試してみた方がいいかも
+    backgroundColor: "#F8DAD1",
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+});
 
 export default CookingAnimationScreen;

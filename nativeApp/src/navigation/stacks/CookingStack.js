@@ -3,6 +3,7 @@ import CookingScreen from "../../screens/CookingScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import CookingDetailScreen from "../../screens/CookingDetailScreen";
 import CookingAnimationScreen from "../../screens/CookingAnimationScreen";
+import CookingCompleteScreen from "../../screens/CookingCompleteScreen";
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,12 @@ const CookingScreenNavigator = () => {
       <Stack.Screen
         name="CookingAnimation"
         component={CookingAnimationScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CookingComplete"
+        component={CookingCompleteScreen}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
