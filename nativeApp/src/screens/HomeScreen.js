@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, Dimensions } from "react-native";
 import CameraButton from "../components/CameraButton";
 import MapView, { Marker } from "react-native-maps";
 import { useCamera } from "../context/CameraContext";
 import { useLocation } from "../context/LocationContext";
+import { fetchData } from "../lib/dataBaseHelper";
+import { Photo } from "../lib/databaseQueryText";
+import PictureMarker from "../components/PictureMarker";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -15,6 +18,19 @@ const HomeScreen = ({ navigation }) => {
   const { location, granted } = useLocation();
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
     useCamera();
+
+  // photoテーブル全検索
+  // 川口くんのハンドラusage
+  const [pictures, setPictures] = useState([]);
+  useEffect(() => {
+    fetchData(Photo.tablename)
+      .then((data) => {
+        setPictures(data);
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
+  }, [isCameraEnabled]);
 
   const handleNavigateCameraClick = () => {
     console.log("click");
@@ -50,6 +66,21 @@ const HomeScreen = ({ navigation }) => {
                 longitude: location.coords.longitude,
               }}
             />
+            {pictures.map((picture, index) => (
+              <PictureMarker
+                key={index}
+                uri={picture.pass2Photo}
+                // テスト用、少しずらした方が見やすいから
+                latitude={picture.ratitude + 0.001}
+                longitude={picture.longitude + 0.001}
+                onPress={() =>
+                  navigation.navigate("PictureView", {
+                    id: picture.id,
+                    uri: picture.pass2Photo,
+                  })
+                }
+              />
+            ))}
           </MapView>
           <View
             style={{
