@@ -5,24 +5,27 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { CameraProvider } from "../../context/CameraContext";
 import GetMaterialScreen from "../../screens/GetMaterialScreen";
 import { GetMaterialProvider } from "../../context/GetMaterialContext";
+import { LocationProvider } from "../../context/LocationContext";
 
 const Stack = createStackNavigator();
 
 const HomeScreenNavigator = () => {
   return (
     <CameraProvider>
-      <GetMaterialProvider>
-        <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Camera" component={CameraScreen} />
-          <Stack.Screen name="Picture" component={PictureScreen} />
-          <Stack.Screen
-            name="GetMaterial"
-            component={GetMaterialScreen}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </GetMaterialProvider>
+      <LocationProvider>
+        <GetMaterialProvider>
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Camera" component={CameraScreen} />
+            <Stack.Screen name="Picture" component={PictureScreen} />
+            <Stack.Screen
+              name="GetMaterial"
+              component={GetMaterialScreen}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </GetMaterialProvider>
+      </LocationProvider>
     </CameraProvider>
   );
 };

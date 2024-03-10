@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Dimensions, Button } from "react-native";
+import React from "react";
+import { Text, View, StyleSheet, Dimensions } from "react-native";
 import CameraButton from "../components/CameraButton";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
 import { useCamera } from "../context/CameraContext";
+import { useLocation } from "../context/LocationContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -12,9 +12,7 @@ const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const HomeScreen = ({ navigation }) => {
-  const [myLocation, setMyLocation] = useState(null);
-  const [granted, setGranted] = useState(false);
-
+  const { location, granted } = useLocation();
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
     useCamera();
 
@@ -29,56 +27,27 @@ const HomeScreen = ({ navigation }) => {
     setIsCameraEnabled(true);
   };
 
-  useEffect(() => {
-    (async () => {
-      let locationSubscription;
-
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === "granted") {
-        setGranted(true);
-        locationSubscription = await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.Highest,
-            timeInterval: 1000, //android専用らしいけどわからん
-            distanceInterval: 1,
-          },
-          (location) => {
-            setMyLocation(location);
-            console.log(
-              `latitude: ${location.coords.latitude}, longitude: ${location.coords.longitude}`
-            );
-          }
-        );
-        return () => {
-          if (locationSubscription) {
-            locationSubscription.remove();
-          }
-        };
-      }
-    })();
-  }, []);
-
   return (
     <View style={styles.container}>
       {granted === false ? (
         <Text>Permission to access location was denied</Text>
-      ) : myLocation === null ? (
+      ) : location === null ? (
         <Text>Obtaining location information...</Text>
       ) : (
         <>
           <MapView
             style={styles.map}
             initialRegion={{
-              latitude: myLocation.coords.latitude,
-              longitude: myLocation.coords.longitude,
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
           >
             <Marker
               coordinate={{
-                latitude: myLocation.coords.latitude,
-                longitude: myLocation.coords.longitude,
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
               }}
             />
           </MapView>
