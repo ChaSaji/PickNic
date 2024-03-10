@@ -14,7 +14,11 @@ const HomeScreenNavigator = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Camera" component={CameraScreen} />
         <Stack.Screen name="Picture" component={PictureScreen} />
-        <Stack.Screen name="GetMaterial" component={GetMaterialScreen} />
+        <Stack.Screen
+          name="GetMaterial"
+          component={GetMaterialScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </CameraProvider>
   );

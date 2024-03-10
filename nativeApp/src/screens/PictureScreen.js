@@ -8,14 +8,18 @@ const windowHeight = Dimensions.get("window").height;
 
 const PictureScreen = ({ navigation }) => {
   const { picture } = useCamera();
+
+  const handleSubmitToAPI = async () => {
+    // ここでsendImgae()を実行、レスポンスが帰ってきたら"GetMaterial"に遷移
+    // const response = await sendImage({uri: picure.uri});
+    navigation.navigate("GetMaterial");
+  };
   return (
     <View style={styles.container}>
       <Image source={{ uri: picture.uri }} style={styles.image} />
 
       <View style={styles.buttonContainer}>
-        <ChangeMaterialButton
-          onPress={() => navigation.navigate("GetMaterial")}
-        />
+        <ChangeMaterialButton onPress={handleSubmitToAPI} />
       </View>
     </View>
   );

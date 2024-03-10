@@ -1,17 +1,42 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { useCamera } from "../context/CameraContext";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 
 const GetMaterialScreen = ({ navigation }) => {
-  const { picture } = useCamera();
-  return <View style={styles.container}></View>;
+  const materialNum = 3;
+  return (
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigation.navigate("Home")}
+    >
+      <Text style={styles.title}>GET</Text>
+      <Image
+        style={styles.material}
+        source={require("../../assets/icons8-camera-64.png")}
+      />
+      <Text style={styles.materialNumText}>{`× ${materialNum}`}</Text>
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-around",
+    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#FFDC83",
+  },
+  title: {
+    fontSize: 100,
+    fontWeight: "bold",
+    color: "#FF914D",
+  },
+  material: {
+    height: 150,
+    width: 150,
+  },
+  materialNumText: {
+    fontSize: 50,
+    fontWeight: "bold",
   },
 });
 
