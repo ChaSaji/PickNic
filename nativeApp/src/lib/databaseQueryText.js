@@ -42,7 +42,7 @@ export class RO{
 }
 
 class MealementKey{
-  static id = 'id';
+  static id = PrimaryKey;
   static recipeId = 'recipeId';
   static badgeId = 'badgeId';
   static mealStatusId = 'mealStatusId';
