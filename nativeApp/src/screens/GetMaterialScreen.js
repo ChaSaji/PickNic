@@ -1,7 +1,19 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, Image, TouchableOpacity } from "react-native";
+import { useGetMaterial } from "../context/GetMaterialContext";
+// 想定
+// import { Material } from "../lib/databaseQueryText";
 
 const GetMaterialScreen = ({ navigation }) => {
+  const { material } = useGetMaterial();
+
+  // サンプル（想定）
+  // const materialInfo = selectDataById(Badge.tablename, materialId);
+  // const materialName = materialInfo.name;
+  // const materialNum = material.num;
+  // const materialId = mateiral.id;
+  // const materialSource = material.pass2Photo;
+
   const materialNum = 3;
   return (
     <TouchableOpacity
