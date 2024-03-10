@@ -67,8 +67,40 @@ async def upload_files(file):
     h_flat = h.flatten()
     count = np.bincount(h_flat)
     md = np.argmax(count)
-    print('h:',md)
-    return {"return":str(md)}
+
+    if 0 <= md <= 15:
+        #red
+        color = 0
+    elif 15<md<=30:
+        #orange
+        color = 1
+    elif 15<md<=30:
+        #yellow
+        color = 2
+    elif 30<md<=45:
+        #yellowgreen
+        color = 3
+    elif 45<md<=75:
+        #green
+        color = 4
+    elif 75<md<=105:
+        #skyblue
+        color = 5
+    elif 105<md<=135:
+        #blue
+        color = 6
+    elif 135<md<=150:
+        #purple
+        color = 7
+    elif 150<md<=165:
+        #pink
+        color = 8
+    elif 165<md<180:
+        #red
+        color = 9    
+
+
+    return {"return":str(color)}
     # 外接矩形された画像を表示
     #cv2.imshow('output', img)
     #cv2.waitKey(0)
