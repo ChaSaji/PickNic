@@ -36,13 +36,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    resizeMode: "cover",
-    width: windowWidth * 0.6,
-    height: windowHeight * 0.6,
+    resizeMode: "contain",
+    width: windowWidth * 0.7,
+    height: windowHeight * 0.7,
   },
   buttonContainer: {
     width: "100%",
     alignItems: "center",
+    marginBottom: 50,
   },
 });
 
