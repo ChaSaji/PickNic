@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   materialsView: {
+    maxWidth: 330,
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",
@@ -95,6 +96,7 @@ const styles = StyleSheet.create({
       color: "white",
       fontSize: 25,
       fontWeight: "bold",
+      lineHeight: 35,
     },
   },
 });
