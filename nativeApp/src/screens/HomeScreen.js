@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Dimensions, Button } from "react-native";
 import CameraButton from "../components/CameraButton";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import { useCamera } from "../context/CameraContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -14,20 +15,19 @@ const HomeScreen = ({ navigation }) => {
   const [myLocation, setMyLocation] = useState(null);
   const [granted, setGranted] = useState(false);
 
-  const [key, setKey] = useState(0);
-  const [isCameraEnabled, setIsCameraEnabled] = useState(true);
+  const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
+    useCamera();
 
   const handleNavigateCameraClick = () => {
     console.log("click");
-    setIsCameraEnabled(!isCameraEnabled);
     navigation.navigate("Camera");
   };
 
   const handleComplete = () => {
-      console.log("set camera enable");
-      setKey(prevKey => prevKey + 1);
-      setIsCameraEnabled(true);
-  }
+    console.log("set camera enable");
+    setCameraKey((prevKey) => prevKey + 1);
+    setIsCameraEnabled(true);
+  };
 
   useEffect(() => {
     (async () => {
@@ -40,7 +40,7 @@ const HomeScreen = ({ navigation }) => {
           {
             accuracy: Location.Accuracy.Highest,
             timeInterval: 1000, //android専用らしいけどわからん
-            distanceInterval: 1, 
+            distanceInterval: 1,
           },
           (location) => {
             setMyLocation(location);
@@ -57,8 +57,6 @@ const HomeScreen = ({ navigation }) => {
       }
     })();
   }, []);
-
-  
 
   return (
     <View style={styles.container}>
@@ -93,11 +91,16 @@ const HomeScreen = ({ navigation }) => {
               height: 130,
               borderRadius: 200,
               backgroundColor: "#4BBC96",
-              right:20,
-              bottom:20
+              right: 20,
+              bottom: 20,
             }}
           >
-            <CameraButton key={key} isCameraEnabled={isCameraEnabled} onComplete={handleComplete} onClick={handleNavigateCameraClick}/>
+            <CameraButton
+              cameraKey={cameraKey}
+              isCameraEnabled={isCameraEnabled}
+              onComplete={handleComplete}
+              onClick={handleNavigateCameraClick}
+            />
           </View>
         </>
       )}

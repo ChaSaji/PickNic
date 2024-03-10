@@ -12,7 +12,7 @@ const CameraButton = (props) => {
       colors={"#004777"}
       size={130}
       rotation="CounterClockwise"
-      key={props.key}
+      key={props.cameraKey}
       onComplete={() => props.onComplete()}
     >
       {({ renderTime }) =>
