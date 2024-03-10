@@ -4,6 +4,7 @@ import HomeScreenNavigator from "./stacks/HomeStack";
 import CookingScreenNavigator from "./stacks/CookingStack";
 import BagScreenNavigator from "./stacks/BagStack";
 import BadgeScreenNabigator from "./stacks/BadgeStack";
+import DbScreen from "../screens/DbScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -66,6 +67,14 @@ const AppNavigator = () => {
               size={26}
             />
           ),
+        }}
+      />
+      <Tab.Screen
+        name="Db_tab"
+        component={DbScreen}
+        options={{
+          tabBarLabel: "DB",
+          tabBarIcon: () => <></>,
         }}
       />
     </Tab.Navigator>
