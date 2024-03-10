@@ -124,7 +124,7 @@ const BagScreen = () => {
     meal = new MealElement();
     meal.recipeId = 123;
     meal.badgeId = 456;
-    mealStatusId = 789;
+    meal.mealStatusId = 789;
     meal.pass2Photo = "mealpass2Photo";
     insert_item(Meal.tablename, meal)
       .then((id) => {
