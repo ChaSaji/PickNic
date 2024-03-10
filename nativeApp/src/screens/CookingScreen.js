@@ -31,7 +31,7 @@ const CookingScreen = () => {
               style={{ width: "40%", height: "100%", justifyContent: "center" }}
             >
               {[...Array(4)].map((_, index) => (
-                <Text>・じゃがいも</Text>
+                <Text key={index}>・じゃがいも</Text>
               ))}
             </View>
             <View style={{ width: "20%", justifyContent: "center" }}>
