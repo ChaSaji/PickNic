@@ -42,16 +42,16 @@ export class RO{
 }
 
 class MealementKey{
-  static id = 'id';
+  static id = PrimaryKey;
   static recipeId = 'recipeId';
-  static badthId = 'badthId';
+  static badgeId = 'badgeId';
   static mealStatusId = 'mealStatusId';
   static pass2Photo = 'pass2Photo';
 };
 export class MealElement{
   id;
   recipeId;
-  badthId;
+  badgeId;
   mealStatusId;
   pass2Photo;
 };
@@ -179,7 +179,7 @@ export const createTableMeal =
 `CREATE TABLE IF NOT EXISTS `+Meal.tablename+` (`
     +Meal.elementsKey.id           + ' INTEGER PRIMARY KEY AUTOINCREMENT,'    
     +Meal.elementsKey.recipeId     + ' INTEGER,'
-    +Meal.elementsKey.badthId      + ' INTEGER,'
+    +Meal.elementsKey.badgeId      + ' INTEGER,'
     +Meal.elementsKey.mealStatusId + ' INTEGER,'
     +Meal.elementsKey.pass2Photo   + ' TEXT'
     +');';

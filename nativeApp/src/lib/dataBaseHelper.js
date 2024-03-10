@@ -251,7 +251,7 @@ function insert_meal(InsertItem) {
     "(" +
     QueryConst.Meal.elementsKey.recipeId +
     "," +
-    QueryConst.Meal.elementsKey.badthId +
+    QueryConst.Meal.elementsKey.badgeId +
     "," +
     QueryConst.Meal.elementsKey.mealStatusId +
     "," +
@@ -272,7 +272,7 @@ function insert_meal(InsertItem) {
         QueryText,
         [
           InsertItem.recipeId,
-          InsertItem.badthId,
+          InsertItem.badgeId,
           InsertItem.mealStatusId,
           InsertItem.pass2Photo,
         ],
@@ -568,7 +568,7 @@ export function update_meal(updateItem) {
   let items =
     QueryConst.Meal.elementsKey.recipeId +
     " = ?," +
-    QueryConst.Meal.elementsKey.badthId +
+    QueryConst.Meal.elementsKey.badgeId +
     " = ?," +
     QueryConst.Meal.elementsKey.mealStatusId +
     " = ?," +
@@ -584,7 +584,7 @@ export function update_meal(updateItem) {
     console.log(
       QueryText,
       updateItem.recipeId,
-      updateItem.badthId,
+      updateItem.badgeId,
       updateItem.mealStatusId,
       updateItem.pass2Photo,
       updateItem.id
@@ -595,7 +595,7 @@ export function update_meal(updateItem) {
       QueryText,
       [
         updateItem.recipeId,
-        updateItem.badthId,
+        updateItem.badgeId,
         updateItem.mealStatusId,
         updateItem.pass2Photo,
         updateItem.id,
