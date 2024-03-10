@@ -10,7 +10,7 @@ const CameraButton = (props) => {
       isPlaying={!props.isCameraEnabled}
       duration={TAKE_PICTURE_INTERVAL}
       colors={"#004777"}
-      size={150}
+      size={130}
       rotation="CounterClockwise"
       key={props.key}
       onComplete={() => props.onComplete()}
@@ -49,16 +49,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",
-    width: 130,
-    height: 130,
+    width: 115,
+    height: 115,
     borderRadius: 200,
     backgroundColor: "#4BBC96",
   },
   innerRadius: {
     justifyContent: "center",
     alignItems: "center",
-    width: 120,
-    height: 120,
+    width: 105,
+    height: 105,
     borderRadius: 200,
     borderWidth: 5,
     borderColor: "white",
@@ -68,16 +68,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",
-    width: 130,
-    height: 130,
+    width: 115,
+    height: 115,
     borderRadius: 200,
     backgroundColor: "#7D7D7D",
   },
   cameraNoUseInnerRadius: {
     justifyContent: "center",
     alignItems: "center",
-    width: 120,
-    height: 120,
+    width: 105,
+    height: 105,
     borderRadius: 200,
     borderWidth: 5,
     borderColor: "white",
