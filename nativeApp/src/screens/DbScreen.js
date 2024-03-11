@@ -7,16 +7,15 @@ import {
   insert_item,
   update_item,
   fetchData,
-  fetchDataAsJson,
   selectDataById,
   selectDataByQueryText,
   selectData,
   selectDataAsc,
   selectDataDesc,
-  deleteDataById,
   ExecuteQuery,
-  deleteData,
   InitDatabaseTable,
+  delete_item_ById,
+  delete_item,
 } from "../lib/dataBaseHelper";
 import {
   RO,
@@ -122,7 +121,7 @@ const DbScreen = () => {
 
     //console.log("アイテム追加テスト2");
     meal = new MealElement();
-    meal.recipeId = 123;
+    meal.mealId = 123;
     meal.badgeId = 456;
     meal.mealStatusId = 789;
     meal.pass2Photo = "mealpass2Photo";
@@ -150,6 +149,7 @@ const DbScreen = () => {
 
     //console.log("アイテム追加テスト4");
     recipe = new RecipeDetailElement();
+    recipe.mealId = 1;
     recipe.materialId = 321;
     recipe.needNum = 10;
     insert_item(RecipeDetail.tablename, recipe)
@@ -165,6 +165,7 @@ const DbScreen = () => {
     material.name = "material name";
     material.pass2Photo = "pass/To/photo/matarial.jpg";
     material.stock = 468;
+    material.colorId = 2;
     insert_item(Material.tablename, material)
       .then((id) => {
         /*ここにIDを用いた処理を記述*/
@@ -289,42 +290,7 @@ const DbScreen = () => {
       .catch((error) => {
         console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
       });
-    console.log("*************************Json*****************************");
-    fetchDataAsJson(Badge.tablename)
-      .then((data) => {
-        console.log("Received data:", data); // getData関数の戻り値を受け取り、出力
-      })
-      .catch((error) => {
-        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
-      });
-    fetchDataAsJson(Badge.tablename, 2)
-      .then((data) => {
-        console.log("Received data:", data); // getData関数の戻り値を受け取り、出力
-      })
-      .catch((error) => {
-        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
-      });
-    fetchDataAsJson(Badge.tablename, 2, 3)
-      .then((data) => {
-        console.log("Received data:", data); // getData関数の戻り値を受け取り、出力
-      })
-      .catch((error) => {
-        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
-      });
-    fetchDataAsJson(Badge.tablename, 0, 100, false)
-      .then((data) => {
-        console.log("Received data:", data); // getData関数の戻り値を受け取り、出力
-      })
-      .catch((error) => {
-        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
-      });
-    fetchDataAsJson(Badge.tablename, 0, 100, false, Badge.elementsKey.name)
-      .then((data) => {
-        console.log("Received data:", data); // getData関数の戻り値を受け取り、出力
-      })
-      .catch((error) => {
-        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
-      });
+    
   };
   const functionUpdate = () => {
     console.log("アイテム更新テスト");
@@ -336,7 +302,6 @@ const DbScreen = () => {
     update_item(Badge.tablename, badge);
     meal = new MealElement();
     meal.id = 1;
-    meal.recipeId = 111;
     meal.badgeId = 222;
     meal.mealStatusId = 333;
     meal.pass2Photo = "meal/pass2Photo/updated.btm";
@@ -346,16 +311,19 @@ const DbScreen = () => {
     mealstatus.locked = 1;
     mealstatus.cooked = 1;
     update_item(MealStatus.tablename, mealstatus);
+    /*要望があれば、実装しますが、おそらく削除と作成があれば必要十分だと思います
     recipe = new RecipeDetailElement();
     recipe.id = 1;
     recipe.materialId = 444;
     recipe.needNum = 55;
     update_item(RecipeDetail.tablename, recipe);
+    */
     material = new MaterialElement();
-    material.id = 1;
+    material.mealId = 1;
     material.name = "updated material";
     material.pass2Photo = "pass/To/photo/Is/Updated.jpg";
     material.stock = 555;
+    material.colorId = 3;
     update_item(Material.tablename, material);
     /*要望があれば、実装しますが、おそらく削除と作成があれば必要十分だと思います
       relation = MaterialPhotoRelationElemant;
@@ -373,6 +341,13 @@ const DbScreen = () => {
   };
   const functionCheckSelect = () => {
     console.log("検索関数テスト");
+    selectDataById(RecipeDetail.tablename,1).then((data) => {
+      console.log("RecipeDetail Received by ID:", data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch((error) => {
+      console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+    });
+
     selectDataById(Badge.tablename, 2)
       .then((data) => {
         console.log("Received by ID:", data); // getData関数の戻り値を受け取り、出力
@@ -447,9 +422,10 @@ const DbScreen = () => {
   };
   const functionDelete = () => {
     console.log("要素削除テスト");
-    deleteDataById(Badge.tablename, 2);
+    delete_item_ById(RecipeDetail.tablename, 1);
+    delete_item_ById(Badge.tablename, 2);
     ExecuteQuery("delete from Badge where id <= 2;");
-    deleteData(
+    delete_item(
       Badge.tablename,
       Badge.elementsKey.name,
       RO.LIKE,

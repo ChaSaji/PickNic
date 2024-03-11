@@ -43,14 +43,12 @@ export class RO{
 
 class MealementKey{
   static id = PrimaryKey;
-  static recipeId = 'recipeId';
   static badgeId = 'badgeId';
   static mealStatusId = 'mealStatusId';
   static pass2Photo = 'pass2Photo';
 };
 export class MealElement{
   id;
-  recipeId;
   badgeId;
   mealStatusId;
   pass2Photo;
@@ -96,13 +94,13 @@ export class MealStatus{
 }
 
 class RecipeDetailElementKey{
-  static id = PrimaryKey;
+  static  mealId = 'mealId';
   static materialId = 'materialId';
   static needNum = 'needNum';
 }
 
 export class RecipeDetailElement{
-  id;
+  mealId;
   materialId;
   needNum;
 }
@@ -117,6 +115,7 @@ class MaterialElementKey{
   static name = 'name';
   static pass2Photo = 'pass2photo';
   static stock = 'stock';
+  static colorId = `colorId`;
 }
 
 export class MaterialElement{
@@ -124,6 +123,7 @@ export class MaterialElement{
   name;
   pass2Photo;
   stock;
+  colorId;
 }
 
 export class Material{
@@ -178,7 +178,6 @@ export const createTableBadge =
 export const createTableMeal = 
 `CREATE TABLE IF NOT EXISTS `+Meal.tablename+` (`
     +Meal.elementsKey.id           + ' INTEGER PRIMARY KEY AUTOINCREMENT,'    
-    +Meal.elementsKey.recipeId     + ' INTEGER,'
     +Meal.elementsKey.badgeId      + ' INTEGER,'
     +Meal.elementsKey.mealStatusId + ' INTEGER,'
     +Meal.elementsKey.pass2Photo   + ' TEXT'
@@ -193,8 +192,8 @@ export const createTableMeal_Status =
 
 export const createTableRecipe_Detail = 
 `CREATE TABLE IF NOT EXISTS `+RecipeDetail.tablename+` (`
-  +RecipeDetail.elementsKey.id         +' INTEGER PRIMARY KEY AUTOINCREMENT,'
-  +RecipeDetail.elementsKey.materialId +' INTEGER,'
+  +RecipeDetail.elementsKey.mealId   +' INTEGER ,'
+  +RecipeDetail.elementsKey.materialId +' INTEGER ,'
   +RecipeDetail.elementsKey.needNum    +' INTEGER'
   +`);`;
 
@@ -203,7 +202,8 @@ export const createTableMaterial =
   +Material.elementsKey.id         + ' INTEGER PRIMARY KEY AUTOINCREMENT,'
   +Material.elementsKey.name       + ' TEXT,'
   +Material.elementsKey.pass2Photo + ' TEXT,'
-  +Material.elementsKey.stock      + ' INTEGER'
+  +Material.elementsKey.stock      + ' INTEGER,'
+  +Material.elementsKey.colorId    + ' INTEGER'
   +');';
 
   export const createTableMaterialPhotoRelation = 

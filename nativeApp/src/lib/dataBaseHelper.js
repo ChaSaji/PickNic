@@ -277,8 +277,6 @@ function insert_badge(InsertItem) {
 function insert_meal(InsertItem) {
   let items =
     "(" +
-    QueryConst.Meal.elementsKey.recipeId +
-    "," +
     QueryConst.Meal.elementsKey.badgeId +
     "," +
     QueryConst.Meal.elementsKey.mealStatusId +
@@ -290,7 +288,7 @@ function insert_meal(InsertItem) {
     QueryConst.Meal.tablename +
     items +
     QueryConst.values +
-    "(?,?,?,?)";
+    "(?,?,?)";
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
@@ -299,7 +297,6 @@ function insert_meal(InsertItem) {
       tx.executeSql(
         QueryText,
         [
-          InsertItem.recipeId,
           InsertItem.badgeId,
           InsertItem.mealStatusId,
           InsertItem.pass2Photo,
@@ -358,6 +355,8 @@ function insert_meal_status(InsertItem) {
 function insert_recipe_detail(InsertItem) {
   let items =
     "(" +
+    QueryConst.RecipeDetail.elementsKey.mealId +
+    "," +
     QueryConst.RecipeDetail.elementsKey.materialId +
     "," +
     QueryConst.RecipeDetail.elementsKey.needNum +
@@ -367,13 +366,13 @@ function insert_recipe_detail(InsertItem) {
     QueryConst.RecipeDetail.tablename +
     items +
     QueryConst.values +
-    "(?,?)";
+    "(?,?,?)";
     if(QueryConst.debugDataBaseLevel>0){console.log(QueryText);}
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
         QueryText,
-        [InsertItem.materialId, InsertItem.needNum],
+        [InsertItem.mealId,InsertItem.materialId, InsertItem.needNum],
         (_, result) => {
           // 成功時の処理
           const lastInsertedId = result.insertId;
@@ -398,19 +397,21 @@ function insert_material(InsertItem) {
     QueryConst.Material.elementsKey.pass2Photo +
     "," +
     QueryConst.Material.elementsKey.stock +
+    "," +
+    QueryConst.Material.elementsKey.colorId +
     ")";
   let QueryText =
     QueryConst.InsertQuery +
     QueryConst.Material.tablename +
     items +
     QueryConst.values +
-    "(?,?,?)";
+    "(?,?,?,?)";
     if(QueryConst.debugDataBaseLevel>0){console.log(QueryText);}
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
         QueryText,
-        [InsertItem.name, InsertItem.pass2Photo, InsertItem.stock],
+        [InsertItem.name, InsertItem.pass2Photo, InsertItem.stock,InsertItem.colorId],
         (_, result) => {
           // 成功時の処理
           const lastInsertedId = result.insertId;
@@ -597,8 +598,6 @@ export function update_badge(updateItem) {
 
 export function update_meal(updateItem) {
   let items =
-    QueryConst.Meal.elementsKey.recipeId +
-    " = ?," +
     QueryConst.Meal.elementsKey.badgeId +
     " = ?," +
     QueryConst.Meal.elementsKey.mealStatusId +
@@ -614,7 +613,6 @@ export function update_meal(updateItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(
       QueryText,
-      updateItem.recipeId,
       updateItem.badgeId,
       updateItem.mealStatusId,
       updateItem.pass2Photo,
@@ -625,7 +623,6 @@ export function update_meal(updateItem) {
     tx.executeSql(
       QueryText,
       [
-        updateItem.recipeId,
         updateItem.badgeId,
         updateItem.mealStatusId,
         updateItem.pass2Photo,
@@ -686,43 +683,38 @@ export function update_meal_status(updateItem) {
 
 export function update_recipe_detail(updateItem) {
   let items =
+    "(" +
+    QueryConst.RecipeDetail.elementsKey.mealId +
+    "," +
     QueryConst.RecipeDetail.elementsKey.materialId +
-    " = ?," +
+    "," +
     QueryConst.RecipeDetail.elementsKey.needNum +
-    " = ?";
+    ")";
   let QueryText =
-    QueryConst.UpdateQuery +
+    QueryConst.InsertQuery +
     QueryConst.RecipeDetail.tablename +
-    QueryConst.Set +
     items +
-    QueryConst.WhereId;
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(
-      QueryText,
-      updateItem.materialId,
-      updateItem.needNum,
-      updateItem.needNum,
-      updateItem.id
-    );
-  }
-  db.transaction((tx) => {
-    tx.executeSql(
-      QueryText,
-      [updateItem.materialId, updateItem.needNum, updateItem.id],
-      (_, { rowsAffected }) => {
-        if (rowsAffected > 0) {
+    QueryConst.values +
+    "(?,?,?)";
+    if(QueryConst.debugDataBaseLevel>0){console.log(QueryText);}
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        QueryText,
+        [InsertItem.mealId,InsertItem.materialId, InsertItem.needNum],
+        (_, result) => {
+          // 成功時の処理
+          const lastInsertedId = result.insertId;
+          resolve(lastInsertedId);
           if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data updateed RecipeDetail");
+            console.log("Data Inserted RecipeDetail id:" + lastInsertedId);
           }
-        } else {
-          console.log("erro updateed RecipeDetail" + QueryText);
+        },
+        (_, error) => {
+          console.error("error recipe insert", error);
         }
-      },
-      (_, error) => {
-        // エラー時の処理
-        console.error("update erro", error);
-      }
-    );
+      );
+    });
   });
 }
 
@@ -733,6 +725,8 @@ export function update_material(updateItem) {
     QueryConst.Material.elementsKey.pass2Photo +
     " = ?," +
     QueryConst.Material.elementsKey.stock +
+    " = ?," +
+    QueryConst.Material.elementsKey.colorId +
     " = ?";
   let QueryText =
     QueryConst.UpdateQuery +
@@ -746,13 +740,14 @@ export function update_material(updateItem) {
       updateItem.name,
       updateItem.pass2Photo,
       updateItem.stock,
+      updateItem.colorId,
       updateItem.id
     );
   }
   db.transaction((tx) => {
     tx.executeSql(
       QueryText,
-      [updateItem.name, updateItem.pass2Photo, updateItem.stock, updateItem.id],
+      [updateItem.name, updateItem.pass2Photo, updateItem.stock, updateItem.colorId, updateItem.id],
       (_, { rowsAffected }) => {
         if (rowsAffected > 0) {
           if (QueryConst.debugDataBaseLevel > 1) {
@@ -916,6 +911,9 @@ export async function fetchData(Tablename, ...args) {
     sortkey = args[3];
   } else {
     sortkey = QueryConst.PrimaryKey;
+    if (Tablename == QueryConst.RecipeDetail.tablename) {
+      sortkey = QueryConst.RecipeDetail.elementsKey.mealId;
+    }
     if (Tablename == QueryConst.MaterialPhotoRelation.tablename) {
       sortkey = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
     }
@@ -1000,6 +998,9 @@ export async function fetchDataAsJson(Tablename, ...args) {
     sortkey = args[3];
   } else {
     sortkey = QueryConst.PrimaryKey;
+    if (Tablename == QueryConst.RecipeDetail.tablename) {
+      sortkey = QueryConst.RecipeDetail.elementsKey.mealId;
+    }
     if (Tablename == QueryConst.MaterialPhotoRelation.tablename) {
       sortkey = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
     }
@@ -1056,10 +1057,13 @@ function selectDataFromDb(QueryText) {
 //Idから検索
 export async function selectDataById(Tablename, ID) {
   // 関数を呼び出してデータを取得し、結果を処理する
-  Key =
-    Tablename == QueryConst.MaterialPhotoRelation.tablename
-      ? QueryConst.MaterialPhotoRelation.elementsKey.materialId
-      : QueryConst.PrimaryKey;
+  Key = QueryConst.PrimaryKey;
+  if(Tablename == QueryConst.MaterialPhotoRelation.tablename){
+    Key = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
+  }else if(Tablename == QueryConst.RecipeDetail.tablename){
+    Key = QueryConst.RecipeDetail.elementsKey.mealId
+  }
+  
   let QueryText =
     QueryConst.getRecodeQuery +
     Tablename +
@@ -1126,11 +1130,12 @@ export async function selectData(Tablename, ...args) {
 //自分で条件とKEYを指定しての検索：降順
 export async function selectDataDesc(Tablename, ...args) {
   // 関数を呼び出してデータを取得し、結果を処理する
-  Key =
-    Tablename == QueryConst.MaterialPhotoRelation.tablename
-      ? QueryConst.MaterialPhotoRelation.elementsKey.materialId
-      : QueryConst.PrimaryKey;
-
+  Key = QueryConst.PrimaryKey;
+  if(Tablename == QueryConst.MaterialPhotoRelation.tablename){
+    Key = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
+  }else if(Tablename == QueryConst.RecipeDetail.tablename){
+    Key = QueryConst.RecipeDetail.elementsKey.mealId;
+  }
   let CONDITIONTEXT = "";
   if (args.length > 0) {
     CONDITIONTEXT = CONDITIONTEXT + QueryConst.Where;
@@ -1162,10 +1167,12 @@ export async function selectDataDesc(Tablename, ...args) {
 //自分で条件とKEYを指定しての検索：昇順
 export async function selectDataAsc(Tablename, ...args) {
   // 関数を呼び出してデータを取得し、結果を処理する
-  Key =
-    Tablename == QueryConst.MaterialPhotoRelation.tablename
-      ? QueryConst.MaterialPhotoRelation.elementsKey.materialId
-      : QueryConst.PrimaryKey;
+  Key = QueryConst.PrimaryKey;
+  if(Tablename == QueryConst.MaterialPhotoRelation.tablename){
+    Key = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
+  }else if(Tablename == QueryConst.RecipeDetail.tablename){
+    Key = QueryConst.RecipeDetail.elementsKey.mealId;
+  }
   let CONDITIONTEXT = QueryConst.Where;
   for (i = 0; i < args.length; i++) {
     CONDITIONTEXT = CONDITIONTEXT + args[i];
@@ -1217,12 +1224,14 @@ function DeleteDataFromDb(QueryText) {
   });
 }
 //Idから削除
-export function deleteDataById(Tablename, ID) {
+export function delete_item_ById(Tablename, ID) {
   // 関数を呼び出してデータを取得し、結果を処理する
-  Key =
-    Tablename == QueryConst.MaterialPhotoRelation.tablename
-      ? QueryConst.MaterialPhotoRelation.elementsKey.materialId
-      : QueryConst.PrimaryKey;
+  Key = QueryConst.PrimaryKey;
+  if(Tablename == QueryConst.MaterialPhotoRelation.tablename){
+    Key = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
+  }else if(Tablename == QueryConst.RecipeDetail.tablename){
+    Key = QueryConst.RecipeDetail.elementsKey.mealId
+  }
   let QueryText =
     QueryConst.DeleteQuery +
     Tablename +
@@ -1235,7 +1244,7 @@ export function deleteDataById(Tablename, ID) {
 }
 //ユーザが任意で条件を指定して削除
 //Need(Tablename:string),Option(use (key:relational operators:val) logical operators (key:relational operators:val))
-export function deleteData(Tablename, ...args) {
+export function delete_item(Tablename, ...args) {
   // 関数を呼び出してデータを取得し、結果を処理する
   let CONDITIONTEXT = QueryConst.Where;
   for (i = 0; i < args.length; i++) {
