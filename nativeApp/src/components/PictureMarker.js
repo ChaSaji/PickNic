@@ -4,26 +4,25 @@ import { Marker } from "react-native-maps";
 
 const PictureMarker = ({ uri, latitude, longitude, onPress }) => {
   return (
-    <TouchableOpacity onPress={() => onPress()}>
-      <Marker
-        coordinate={{
-          latitude: latitude,
-          longitude: longitude,
+    <Marker
+      coordinate={{
+        latitude: latitude,
+        longitude: longitude,
+      }}
+      onPress={() => onPress()}
+    >
+      <View
+        style={{
+          width: 60,
+          height: 60,
+          backgroundColor: "white",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <View
-          style={{
-            width: 60,
-            height: 60,
-            backgroundColor: "white",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Image source={{ uri: uri }} style={{ width: 50, height: 50 }} />
-        </View>
-      </Marker>
-    </TouchableOpacity>
+        <Image source={{ uri: uri }} style={{ width: 50, height: 50 }} />
+      </View>
+    </Marker>
   );
 };
 
