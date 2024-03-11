@@ -14,7 +14,7 @@ export function CreateAndInitTableIfNotExist() {
       (_, { rows }) => {
         console.log();
         // テーブルが存在しない場合はInitDatabaseTable()を呼び出す
-        if (rows.length === 1) {
+        if (rows.length <= 3) {
           if(QueryConst.debugDataBaseLevel>=2){
             console.log("Exist sqlite_master");  
           }
