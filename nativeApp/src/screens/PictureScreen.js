@@ -3,6 +3,7 @@ import { StyleSheet, View, Image, Dimensions } from "react-native";
 import { useCamera } from "../context/CameraContext";
 import ChangeMaterialButton from "../components/ChangeMaterialButton";
 import { useGetMaterial } from "../context/GetMaterialContext";
+import  sendImage from '../lib/sendPicture';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -13,7 +14,7 @@ const PictureScreen = ({ navigation }) => {
 
   const handleSubmitToAPI = async () => {
     // ここでsendImgae()を実行、レスポンスが帰ってきたら"GetMaterial"に遷移
-    // const response = await sendImage({uri: picure.uri});
+    const response = await sendImage({uri: picture.uri});
     // 以下のようにapiから帰ってきたmaterialをsetする。（適宜変更）
     // setMaterial({id: response.materialId, num: response.num});
     navigation.navigate("GetMaterial");
