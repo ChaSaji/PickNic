@@ -1,6 +1,7 @@
 `dataBaseHelper`の使い方<br>
 # 目次
 -[概要](#about)<br>
+-[Debug](#Debug)<br>
 -[各ファイルについて](#各ファイルについて)<br>
 -[データベースのデータ型について](#データベースのデータ型について)<br>
 -[各関数について](#各関数について)
@@ -11,6 +12,12 @@
 `databaseQueryText.js`は,基本的には変更しない<br>
 `dataBaseInit.js`は`Excel`ファイルを用いた初期化を行う<br>
 詳しい利用法については`dbInittool/Redme.md`を参照のこと
+
+# Debug
+[databaseQueryText.js](#databaseQueryText.js)の`const debugDataBaseLevel`を変更することで、コンソールに表示する情報を指定することが出来る。
+<br>0:エラー、警告のみ
+<br>1:実際に入力されたQueryや選択されているテーブルの情報
+<br>2:関数内で戻り値の情報
 
 # 各ファイルについて<br>
 -[dataBaseHelper.js](#dataBaseHelper.js)<br>
@@ -124,10 +131,17 @@ export class Badge {
 ## 本プロジェクトで用いるテーブルと型
 
 # 各関数について<br>
+-[CreateAndInitTableIfNotExist()](#CreateAndInitTableIfNotExist())<br>
 -[CreateAllTable()](#CreateAllTable())<br>
 -[InitDatabaseTable()](#InitDatabaseTable())<br>
+-[insert_item(Table, InsertItemItem)](#insert_item)<br>
+-[update_item(Table, InsertItemItem)](#update_item)
 -[DropAllTable()](#DropAllTable())<br>
 -[getTables()](#gettables)<br>
+## CreateAndInitTableIfNotExist()
+アプリ起動時に起動を想定している。
+`'SELECT name FROM sqlite_master WHERE type="table";'`コマンドにより現在のテーブル数を取得し、その数が`1`の場合管理料の初期テーブルのみしか存在しないので、[InitDatabaseTable()](#InitDatabaseTable())を起動する.
+現在は`APP.js`の`function App()`内で呼び出されている。
 ## CreateAllTable()
 すべてのテーブルを作成する.<br>
 作成するテーブルの要素の定義は`databaseQueryText.js`で行う.
