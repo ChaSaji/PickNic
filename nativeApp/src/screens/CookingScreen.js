@@ -4,16 +4,24 @@ import {
   View,
   StyleSheet,
   Image,
-  Button,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 
-const CookingScreen = () => {
+const CookingScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView>
         {[...Array(10)].map((_, index) => (
-          <View key={index} style={styles.recipView}>
+          <TouchableOpacity
+            key={index}
+            style={styles.recipView}
+            onPress={() =>
+              navigation.navigate("CookingDetail", {
+                recipeName: "なんか料理名を指定できる。",
+              })
+            }
+          >
             <View
               style={{
                 width: "30%",
@@ -34,13 +42,13 @@ const CookingScreen = () => {
                 <Text key={index}>・じゃがいも</Text>
               ))}
             </View>
-            <View style={{ width: "20%", justifyContent: "center" }}>
+            {/* <View style={{ width: "20%", justifyContent: "center" }}>
               <Button
                 title="Cooking!"
                 onPress={() => alert(`${index}番のボタンが押されました`)}
               />
-            </View>
-          </View>
+            </View> */}
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
