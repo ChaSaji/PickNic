@@ -16,7 +16,7 @@ const BadgeScreen = ({ navigation }) => {
             key={index}
             source={require("../../assets/icons8-camera-64.png")}
             name={String(index)}
-            onPress={handleItemClick}
+            onPress={() => handleItemClick(String(index))}
             backgroundColor="#b8d4f4"
             isTextVisiable={false}
           />

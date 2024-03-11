@@ -12,8 +12,8 @@ const BagScreen = () => {
     });
   }, []);
 
-  const handleItemClick = (name) => {
-    alert(`${name}のボタンが押されました`);
+  const handleItemClick = (material) => {
+    alert(`${material.name}のボタンが押されました`);
   };
 
   return (
@@ -24,7 +24,7 @@ const BagScreen = () => {
             key={index}
             source={material.pass2photo}
             name={material.name}
-            onPress={handleItemClick}
+            onPress={() => handleItemClick(material)}
             backgroundColor="#FFE8AD"
             text={`×${material.stock}`}
           />

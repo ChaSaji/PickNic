@@ -24,7 +24,7 @@ const ItemCard = ({
   });
 
   return (
-    <TouchableOpacity style={styles.item} onPress={() => onPress(name)}>
+    <TouchableOpacity style={styles.item} onPress={onPress}>
       <Image source={images[source]} style={{ width: 75, height: 75 }} />
       {isTextVisiable && <Text style={{ fontSize: 30 }}>{text}</Text>}
     </TouchableOpacity>
