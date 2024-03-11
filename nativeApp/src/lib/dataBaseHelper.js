@@ -16,16 +16,17 @@ export function CreateAndInitTableIfNotExist() {
         // テーブルが存在しない場合はInitDatabaseTable()を呼び出す
         if (rows.length === 1) {
           if(QueryConst.debugDataBaseLevel>=2){
-            InitDatabaseTable();
+            console.log("Exist sqlite_master");  
           }
+          InitDatabaseTable();
         }
       },
       (_, error) => {
-        if(QueryConst.debugDataBaseLevel>=2){
-          InitDatabaseTable();
-        }
         // エラー時の処理
-        console.log("No sqlite_master");
+        if(QueryConst.debugDataBaseLevel>=2){
+          console.log("No sqlite_master");
+        }
+        InitDatabaseTable();
       }
     );
   });
