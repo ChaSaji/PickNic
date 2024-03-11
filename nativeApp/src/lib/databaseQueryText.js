@@ -46,12 +46,14 @@ class MealementKey{
   static badgeId = 'badgeId';
   static mealStatusId = 'mealStatusId';
   static pass2Photo = 'pass2Photo';
+  static name = 'name';
 };
 export class MealElement{
   id;
   badgeId;
   mealStatusId;
   pass2Photo;
+  name;
 };
 export class Meal {
   static tablename = 'Meal';
@@ -180,7 +182,8 @@ export const createTableMeal =
     +Meal.elementsKey.id           + ' INTEGER PRIMARY KEY AUTOINCREMENT,'    
     +Meal.elementsKey.badgeId      + ' INTEGER,'
     +Meal.elementsKey.mealStatusId + ' INTEGER,'
-    +Meal.elementsKey.pass2Photo   + ' TEXT'
+    +Meal.elementsKey.pass2Photo   + ' TEXT,'
+    +Meal.elementsKey.name   + ' TEXT'
     +');';
 
 export const createTableMeal_Status = 

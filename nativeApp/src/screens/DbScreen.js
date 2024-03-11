@@ -125,6 +125,7 @@ const DbScreen = () => {
     meal.badgeId = 456;
     meal.mealStatusId = 789;
     meal.pass2Photo = "mealpass2Photo";
+    meal.name = "meal name";
     insert_item(Meal.tablename, meal)
       .then((id) => {
         /*ここにIDを用いた処理を記述*/
@@ -305,6 +306,7 @@ const DbScreen = () => {
     meal.badgeId = 222;
     meal.mealStatusId = 333;
     meal.pass2Photo = "meal/pass2Photo/updated.btm";
+    meal.name = "meal name updated";
     update_item(Meal.tablename, meal);
     mealstatus = new MelaStatusElement();
     mealstatus.id = 1;

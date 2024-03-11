@@ -1,45 +1,48 @@
 //reset
-export const RecipeDetail =[
+export const MaterialPhotoRelation =[
     {
-        "mealId": 1,
-        "materialId": 2,
-        "needNum": 225
+        "materialId": 123,
+        "photoId": 555
     },
     {
-        "mealId": 1,
-        "materialId": 3,
-        "needNum": 10
-    },
-    {
-        "mealId": 5,
-        "materialId": 1,
-        "needNum": 1
+        "materialId": 456,
+        "photoId": 789
     }
 ];
-export const Material =[
+export const Badge =[
     {
-        "name": "material name",
-        "pass2Photo": "pass/photo",
-        "stock": 5,
-        "colorId": 1
+        "name": "excel",
+        "pass2Photo": "pas1",
+        "isHave": 1
     },
     {
-        "name": "name",
-        "pass2Photo": "pass/photo2",
-        "stock": 10,
-        "colorId": 8
+        "name": "badged",
+        "pass2Photo": "pas2",
+        "isHave": 0
     }
 ];
 export const Meal =[
     {
         "badgeId": 2,
         "mealStatusId": 1,
-        "pass2Photo": "meal/pass/to/excel.png"
+        "pass2Photo": "meal/pass/to/excel.png",
+        "name": "name meal1"
     },
     {
         "badgeId": 3,
         "mealStatusId": 4,
-        "pass2Photo": "pass2"
+        "pass2Photo": "pass2",
+        "name": "name meal2"
+    }
+];
+export const MealStatus =[
+    {
+        "locked": 1,
+        "cooked": 0
+    },
+    {
+        "locked": 1,
+        "cooked": 1
     }
 ];
 export const Photo =[
@@ -58,35 +61,34 @@ export const Photo =[
         "visited": 0
     }
 ];
-export const Badge =[
+export const Material =[
     {
-        "name": "excel",
-        "pass2Photo": "pas1",
-        "isHave": 1
+        "name": "material name",
+        "pass2Photo": "pass/photo",
+        "stock": 5,
+        "colorId": 1
     },
     {
-        "name": "badged",
-        "pass2Photo": "pas2",
-        "isHave": 0
+        "name": "name",
+        "pass2Photo": "pass/photo2",
+        "stock": 10,
+        "colorId": 8
     }
 ];
-export const MealStatus =[
+export const RecipeDetail =[
     {
-        "locked": 1,
-        "cooked": 0
+        "mealId": 1,
+        "materialId": 2,
+        "needNum": 225
     },
     {
-        "locked": 1,
-        "cooked": 1
-    }
-];
-export const MaterialPhotoRelation =[
-    {
-        "materialId": 123,
-        "photoId": 555
+        "mealId": 1,
+        "materialId": 3,
+        "needNum": 10
     },
     {
-        "materialId": 456,
-        "photoId": 789
+        "mealId": 5,
+        "materialId": 1,
+        "needNum": 1
     }
 ];
