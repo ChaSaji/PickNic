@@ -1,24 +1,26 @@
 import React from "react";
-import { StyleSheet, Text, ScrollView, View, Image } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
+import ItemCard from "../components/ItemCard";
 
-const BadgeScreen = () => {
+const BadgeScreen = ({ navigation }) => {
+  const handleItemClick = (name) => {
+    navigation.navigate("BadgeDetail", {
+      recipeName: `${name}番のバッジ`,
+    });
+  };
   return (
     <View style={styles.container}>
-      <View style={styles.titleView}>
-        <Text style={styles.title}>称号</Text>
-      </View>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.badgeView}>
-          {[...Array(100)].map((_, index) => (
-            <Image
-              key={index}
-              source={{
-                uri: "https://reactnative.dev/docs/assets/p_cat1.png",
-              }}
-              style={styles.icon}
-            />
-          ))}
-        </View>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {[...Array(31)].map((_, index) => (
+          <ItemCard
+            key={index}
+            source={require("../../assets/icons8-camera-64.png")}
+            name={String(index)}
+            onPress={handleItemClick}
+            backgroundColor="#b8d4f4"
+            isTextVisiable={false}
+          />
+        ))}
       </ScrollView>
     </View>
   );
@@ -26,34 +28,15 @@ const BadgeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#fff",
     flex: 1,
-    padding: 20,
-  },
-  titleView: {
-    backgroundColor: "pink",
-    justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  scrollView: {
-    flex: 1,
-  },
-  badgeView: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    backgroundColor: "aliceblue",
-    justifyContent: "space-around",
-    marginTop: 8,
     marginHorizontal: 8,
   },
-  icon: {
-    width: 80,
-    height: 80,
+  scrollViewContent: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
 });
 
