@@ -8,7 +8,6 @@ const BadgeScreen = ({ navigation }) => {
   const [badges, setBadges] = useState([]);
   useEffect(() => {
     fetchData(Badge.tablename).then((data) => {
-      console.log(data);
       setBadges(data);
     });
   }, []);
