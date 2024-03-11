@@ -20,9 +20,9 @@ const CookingAnimationScreen = ({ route, navigation }) => {
           width: 500,
           height: 500,
         }}
-        // source={require("../../assets/cooking.json")}
+        source={require("../../assets/cooking.json")}
         // 開発用（４倍速）
-        source={require("../../assets/dev-cooking.json")}
+        // source={require("../../assets/dev-cooking.json")}
       />
     </View>
   );
