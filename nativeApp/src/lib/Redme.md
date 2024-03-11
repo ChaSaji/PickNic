@@ -14,8 +14,8 @@
 詳しい利用法については`dbInittool/Redme.md`を参照のこと
 
 # Debug
-[databaseQueryText.js](#databaseQueryText.js)の`const debugDataBaseLevel`を変更することで、コンソールに表示する情報を指定することが出来る。
-<br>0:エラー、警告のみ
+[databaseQueryText.js](#databaseQueryText.js)の`const debugDataBaseLevel`を変更することで,コンソールに表示する情報を指定することが出来る。
+<br>0:エラー,警告のみ
 <br>1:実際に入力されたQueryや選択されているテーブルの情報
 <br>2:関数内で戻り値の情報
 
@@ -98,7 +98,6 @@ export class Badge {
 |要素名|データ型|説明|
 |:------|:--------------|:--------------|
 |id |INTEGER| PRIMARY KEY AUTOINCREMENT|
-|recipeId     |INTEGER  |対応するRecipeDetailのID|
 |badgeId      |INTEGER  |対応するBadgeのID|
 |mealStatusId |INTEGER  |対応するMealStatusのID|
 |pass2Photo   |TEXT     |画像へのパス(url)も入力可能|
@@ -124,7 +123,7 @@ export class Badge {
 **RecipeDetail**
 |要素名|データ型|説明|
 |:------|:--------------|:--------------|
-|id         |INTEGER |PRIMARY KEY AUTOINCREMENT|
+|mealId     |INTEGER |対応するMealのID|
 |materialId |INTEGER |対応するMaterialのID|
 |needNum    |INTEGER |必要数|
 
@@ -135,12 +134,13 @@ export class Badge {
 -[CreateAllTable()](#CreateAllTable())<br>
 -[InitDatabaseTable()](#InitDatabaseTable())<br>
 -[insert_item(Table, InsertItemItem)](#insert_item)<br>
--[update_item(Table, InsertItemItem)](#update_item)
+-[update_item(Table, InsertItemItem)](#update_item)<br>
+-[delete_item](#deleteData)<br>
 -[DropAllTable()](#DropAllTable())<br>
 -[getTables()](#gettables)<br>
 ## CreateAndInitTableIfNotExist()
 アプリ起動時に起動を想定している。
-`'SELECT name FROM sqlite_master WHERE type="table";'`コマンドにより現在のテーブル数を取得し、その数が`1`の場合管理料の初期テーブルのみしか存在しないので、[InitDatabaseTable()](#InitDatabaseTable())を起動する.
+`'SELECT name FROM sqlite_master WHERE type="table";'`コマンドにより現在のテーブル数を取得し,その数が`1`の場合管理料の初期テーブルのみしか存在しないので,[InitDatabaseTable()](#InitDatabaseTable())を起動する.
 現在は`APP.js`の`function App()`内で呼び出されている。
 ## CreateAllTable()
 すべてのテーブルを作成する.<br>
@@ -180,8 +180,10 @@ excelファイルを変更した場合は,`dbInittool/DbInit.py`を実行して,
 ```
 ## update_item(Table, updateItemItem)
 `Table:string tablaname`で指定されたテーブルに`InsertItemItem`を更新する.
-<br>更新する情報はIDで指定する.`Table`が登録されていない場合`console`に警告を出す.<br>`MaterialPhotoRelation`については,[insert_item](#insert_item)で新規作成すること.
-
+<br>更新する情報はIDで指定する.`Table`が登録されていない場合`console`に警告を出す.
+<br>***`MaterialPhotoRelation`,`Recipe_Retail`については`PrimaryKey`が存在しないので
+[deleteData](#deleteData),で,データを削除した後,[insert_item](#insert_item)で新規作成すること.**
+(実行するとInsertとして動作する.)
 <br>**使用方法**<br>
 `badge`を例に使用方法を説明する.
 以下に使用法を示す.
@@ -224,9 +226,13 @@ update_item(Badge.tablename, badge);
 `selectDataById(Tablename, ID)`,
 `selectDataFromDb(QueryText)`,
 `selectData(Tablename, ...args)`からなる関数群
-<br>`selectDataById(Tablename, ID)`は,`Tablename`で指定したテーブルに対して,idで検索条件を指定.
-(`MaterialPhotoRelation`については`materialId`を使用)
+
+<br>`selectDataById(Tablename, ID)`は,`Tablename`で指定したテーブルに対して,idで検索条件を指定.<br>
+`MaterialPhotoRelation`については`materialId`を使用
+<br>`RecipeDetail`については`mealId`を使用
+
 <br>`selectDataFromDb(QueryText)`は,Queryに用いるコマンドをテキストで直接入力する.レコードを戻り値として取得できる点で[ExecuteQuery](#ExecuteQuery(QueryText))と異なる.
+
 <br>`selectData(Tablename, ...args)`は`Tablename`で指定したテーブルに対して`...args`で指定した条件で検索する.
 <br>下のように指定すると`Badge`に対して,`name`が`山`を含み,`Id`が`7`以上の要素を名前順で降順にソートして取得できる.
 ```c
@@ -280,11 +286,15 @@ selectDataById(Badge.tablename, 2)
 また,昇順降順を指定できる.
 `selectDataAsc(Tablename, ...args)`と`selectDataDesc(Tablename, ...args)`がある.
 
-## deleteData
-deleteDataは`deleteDataById(Tablename, ID)`,`deleteData(Tablename, ...args)`からなる関数群である.<br>
+## delete_item
+deleteDataは`delete_item_ById(Tablename, ID)`,`delete_item(Tablename, ...args)`からなる関数群である.<br>
 `selectDataFromDb(QueryText)`にあたる機能は[ExecuteQuery](#ExecuteQuery)が内包する
-<br>`deleteDataById(Tablename, ID)`は`Tablename`で指定されたテーブルから`ID`で指定されたアイテムを削除する.(`MaterialPhotoRelation`については`materialId`を使用)
-<br> `deleteData(Tablename, ...args)`は`selectData(Tablename, ...args)`と同様の方式で条件を指定してアイテムを削除する.
+
+<br>`delete_item_ById(Tablename, ID)`は`Tablename`で指定されたテーブルから`ID`で指定されたアイテムを削除する.
+<br>`MaterialPhotoRelation`については`materialId`を使用
+<br>`RecipeDetail`については`mealId`を使用
+
+<br> `delete_item(Tablename, ...args)`は`selectData(Tablename, ...args)`と同様の方式で条件を指定してアイテムを削除する.
 <br>**使用例**<br>
 Badgeから`id=2`と`name`に山が含まれる`id>=7`を削除
 ```c
