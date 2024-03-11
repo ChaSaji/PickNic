@@ -16,6 +16,7 @@ const BagScreen = () => {
             name={String(index)}
             onPress={handleItemClick}
             backgroundColor="#FFE8AD"
+            text="×1"
           />
         ))}
       </ScrollView>
