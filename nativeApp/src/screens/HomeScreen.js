@@ -4,6 +4,7 @@ import CameraButton from "../components/CameraButton";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useCamera } from "../context/CameraContext";
+import { CreateAndInitTableIfNotExist, fetchData } from "../lib/dataBaseHelper";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -14,7 +15,18 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const HomeScreen = ({ navigation }) => {
   const [myLocation, setMyLocation] = useState(null);
   const [granted, setGranted] = useState(false);
-
+  CreateAndInitTableIfNotExist().then=()=>{
+    useEffect(() => {
+      fetchData(Photo.tablename)
+        .then((data) => {
+          setPictures(data);
+        })
+        .catch((error) => {
+          console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+        });
+    }, []);
+  }
+  
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
     useCamera();
 

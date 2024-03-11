@@ -131,6 +131,7 @@ export class Badge {
 ## 本プロジェクトで用いるテーブルと型
 
 # 各関数について<br>
+-[関数の呼び出し方式](#関数の呼び出し方式)
 -[CreateAndInitTableIfNotExist()](#CreateAndInitTableIfNotExist())<br>
 -[CreateAllTable()](#CreateAllTable())<br>
 -[InitDatabaseTable()](#InitDatabaseTable())<br>
@@ -138,6 +139,25 @@ export class Badge {
 -[update_item(Table, InsertItemItem)](#update_item)
 -[DropAllTable()](#DropAllTable())<br>
 -[getTables()](#gettables)<br>
+
+## 関数の呼び出し方式
+データベースへのアクセスはすべて非同期で行われる。
+そのため例として`functionDB1()`実行後`functionDB2()`を実行したい場合
+```c
+functionDB1();
+functionDB2();
+```
+と記述すると`functionDB1()`の処理が完了する前に`functionDB2()`の処理を開始する可能性がある。
+<br>そのため以下のように`await`を用いるか`.then=()=>`を用いるかして、順序を明示的に指定する必要がある。
+```c
+await functionDB1();
+await functionDB2();
+```
+```c
+functionDB1().then=()=>{
+  functionDB2();
+}
+```
 ## CreateAndInitTableIfNotExist()
 アプリ起動時に起動を想定している。
 `'SELECT name FROM sqlite_master WHERE type="table";'`コマンドにより現在のテーブル数を取得し、その数が`1`の場合管理料の初期テーブルのみしか存在しないので、[InitDatabaseTable()](#InitDatabaseTable())を起動する.
