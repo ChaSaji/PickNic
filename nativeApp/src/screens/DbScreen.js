@@ -123,8 +123,8 @@ const DbScreen = () => {
     //console.log("アイテム追加テスト2");
     meal = new MealElement();
     meal.recipeId = 123;
-    meal.badthId = 456;
-    mealStatusId = 789;
+    meal.badgeId = 456;
+    meal.mealStatusId = 789;
     meal.pass2Photo = "mealpass2Photo";
     insert_item(Meal.tablename, meal)
       .then((id) => {
@@ -337,7 +337,7 @@ const DbScreen = () => {
     meal = new MealElement();
     meal.id = 1;
     meal.recipeId = 111;
-    meal.badthId = 222;
+    meal.badgeId = 222;
     meal.mealStatusId = 333;
     meal.pass2Photo = "meal/pass2Photo/updated.btm";
     update_item(Meal.tablename, meal);

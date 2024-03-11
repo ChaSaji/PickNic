@@ -3,7 +3,26 @@ import * as QueryConst from "./databaseQueryText";
 import * as InitDB from "./dataBaseInit";
 // データベースを作成またはオープン
 const db = SQLite.openDatabase("database.db");
+//### start First Start Init DB
+export function CreateAndInitTableIfNotExist() {
+  // アプリの起動時にデータベースの存在を確認
+  if(QueryConst.debugDataBaseLevel>=1){console.log("CreateAndInitTableIfNotExist")};
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT name FROM sqlite_master WHERE type="table";',
+      [],
+      (_, { rows }) => {
+        console.log();
+        // テーブルが存在しない場合はInitDatabaseTable()を呼び出す
+        if (rows.length === 1) {
+          InitDatabaseTable();
+        }
+      }
+    );
+  });
+}
 
+//### end First Start Init DB
 export function CreateAllTable() {
   db.transaction((tx) => {
     tx.executeSql(QueryConst.createTableBadge);
@@ -38,45 +57,44 @@ export function CreateAllTable() {
 }
 
 //###start Read Excel data
-export function InitDatabaseTable(){
+export function InitDatabaseTable() {
   DropAllTable();
   CreateAllTable();
-  console.log("MPR length"+ InitDB.MaterialPhotoRelation.length);
   //1Badge
-  for(i=0;i<InitDB.Badge.length;i++){
+  for (i = 0; i < InitDB.Badge.length; i++) {
     InsertItem = InitDB.Badge[i];
-    insert_item(QueryConst.Badge.tablename,InsertItem);
+    insert_item(QueryConst.Badge.tablename, InsertItem);
   }
   //2
-  for(i=0;i<InitDB.MealStatus.length;i++){
+  for (i = 0; i < InitDB.MealStatus.length; i++) {
     InsertItem = InitDB.MealStatus[i];
-    insert_item(QueryConst.MealStatus.tablename,InsertItem);
+    insert_item(QueryConst.MealStatus.tablename, InsertItem);
   }
   //3
-  for(i=0;i<InitDB.Meal.length;i++){
+  for (i = 0; i < InitDB.Meal.length; i++) {
     InsertItem = InitDB.Meal[i];
-    insert_item(QueryConst.Meal.tablename,InsertItem);
+    insert_item(QueryConst.Meal.tablename, InsertItem);
   }
   //4
-  for(i=0;i<InitDB.Material.length;i++){
+  for (i = 0; i < InitDB.Material.length; i++) {
     InsertItem = InitDB.Material[i];
-    insert_item(QueryConst.Material.tablename,InsertItem);
+    insert_item(QueryConst.Material.tablename, InsertItem);
   }
   //5
-  
-  for(i=0;i<InitDB.RecipeDetail.length;i++){
+
+  for (i = 0; i < InitDB.RecipeDetail.length; i++) {
     InsertItem = InitDB.RecipeDetail[i];
-    insert_item(QueryConst.RecipeDetail.tablename,InsertItem);
+    insert_item(QueryConst.RecipeDetail.tablename, InsertItem);
   }
   //6
-  for(i=0;i<InitDB.MaterialPhotoRelation.length;i++){
+  for (i = 0; i < InitDB.MaterialPhotoRelation.length; i++) {
     InsertItem = InitDB.MaterialPhotoRelation[i];
-    insert_item(QueryConst.MaterialPhotoRelation.tablename,InsertItem);
+    insert_item(QueryConst.MaterialPhotoRelation.tablename, InsertItem);
   }
   //7
-  for(i=0;i<InitDB.Photo.length;i++){
+  for (i = 0; i < InitDB.Photo.length; i++) {
     InsertItem = InitDB.Photo[i];
-    insert_item(QueryConst.Photo.tablename,InsertItem);
+    insert_item(QueryConst.Photo.tablename, InsertItem);
   }
 }
 //###end Read Excel data
@@ -219,7 +237,7 @@ function insert_badge(InsertItem) {
     QueryConst.values +
     "(?, ?, ?)";
 
-  if (QueryText.debugDataBaseLevel > -1) {
+  if (QueryText.debugDataBaseLevel > 0) {
     console.log(
       QueryText + InsertItem.name + InsertItem.isHave + InsertItem.pass2Photo
     );
@@ -305,6 +323,7 @@ function insert_meal_status(InsertItem) {
     items +
     QueryConst.values +
     "(?,?)";
+    if(QueryConst.debugDataBaseLevel>0){console.log(QueryText);}
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -339,6 +358,7 @@ function insert_recipe_detail(InsertItem) {
     items +
     QueryConst.values +
     "(?,?)";
+    if(QueryConst.debugDataBaseLevel>0){console.log(QueryText);}
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -348,7 +368,7 @@ function insert_recipe_detail(InsertItem) {
           // 成功時の処理
           const lastInsertedId = result.insertId;
           resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 0) {
+          if (QueryConst.debugDataBaseLevel > 1) {
             console.log("Data Inserted RecipeDetail id:" + lastInsertedId);
           }
         },
@@ -375,6 +395,7 @@ function insert_material(InsertItem) {
     items +
     QueryConst.values +
     "(?,?,?)";
+    if(QueryConst.debugDataBaseLevel>0){console.log(QueryText);}
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -384,7 +405,7 @@ function insert_material(InsertItem) {
           // 成功時の処理
           const lastInsertedId = result.insertId;
           resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 0) {
+          if (QueryConst.debugDataBaseLevel > 1) {
             console.log("Data Inserted Material id:" + lastInsertedId);
           }
         },
@@ -409,6 +430,7 @@ function insert_material_photo_relation(InsertItem) {
     items +
     QueryConst.values +
     "(?,?)";
+    if(QueryConst.debugDataBaseLevel>0){console.log(QueryText);}
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -418,7 +440,7 @@ function insert_material_photo_relation(InsertItem) {
           // 成功時の処理
           const lastInsertedId = result.insertId;
           resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 0) {
+          if (QueryConst.debugDataBaseLevel > 1) {
             console.log(
               "Data Inserted MaterialPhotoRelation id:" + lastInsertedId
             );
@@ -451,6 +473,7 @@ function insert_photo(InsertItem) {
     items +
     QueryConst.values +
     "(?,?,?,?,?)";
+    if(QueryConst.debugDataBaseLevel>0){console.log(QueryText);}
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -466,10 +489,8 @@ function insert_photo(InsertItem) {
           // 成功時の処理
           const lastInsertedId = result.insertId;
           resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 0) {
-            console.log(
-              "Data Inserted Photo id:" + lastInsertedId
-            );
+          if (QueryConst.debugDataBaseLevel > 1) {
+            console.log("Data Inserted Photo id:" + lastInsertedId);
           }
         },
         (_, error) => {
@@ -529,7 +550,7 @@ export function update_badge(updateItem) {
     QueryConst.Set +
     items +
     QueryConst.WhereId;
-  if (QueryConst.debugDataBaseLevel > 1) {
+  if (QueryConst.debugDataBaseLevel > 0) {
     console.log(
       QueryText,
       updateItem.name,
@@ -580,7 +601,7 @@ export function update_meal(updateItem) {
     QueryConst.Set +
     items +
     QueryConst.WhereId;
-  if (QueryConst.debugDataBaseLevel > 1) {
+  if (QueryConst.debugDataBaseLevel > 0) {
     console.log(
       QueryText,
       updateItem.recipeId,
@@ -629,7 +650,7 @@ export function update_meal_status(updateItem) {
     QueryConst.Set +
     items +
     QueryConst.WhereId;
-  if (QueryConst.debugDataBaseLevel > 1) {
+  if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText, updateItem.locked, updateItem.cooked, updateItem.id);
   }
   db.transaction((tx) => {
@@ -665,7 +686,7 @@ export function update_recipe_detail(updateItem) {
     QueryConst.Set +
     items +
     QueryConst.WhereId;
-  if (QueryConst.debugDataBaseLevel > 1) {
+  if (QueryConst.debugDataBaseLevel > 0) {
     console.log(
       QueryText,
       updateItem.materialId,
@@ -709,7 +730,7 @@ export function update_material(updateItem) {
     QueryConst.Set +
     items +
     QueryConst.WhereId;
-  if (QueryConst.debugDataBaseLevel > 1) {
+  if (QueryConst.debugDataBaseLevel > 0) {
     console.log(
       QueryText,
       updateItem.name,
@@ -753,7 +774,7 @@ export function update_material_photo_relation(updateItem) {
     items +
     QueryConst.values +
     "(?,?)";
-  if (QueryConst.debugDataBaseLevel > 1) {
+  if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText, updateItem.materialId, updateItem.photoId);
   }
   db.transaction((tx) => {
@@ -794,7 +815,7 @@ export function update_photo(updateItem) {
     QueryConst.Set +
     items +
     QueryConst.WhereId;
-  if (QueryConst.debugDataBaseLevel > 1) {
+  if (QueryConst.debugDataBaseLevel > 0) {
     console.log(
       QueryText,
       updateItem.name,
@@ -996,7 +1017,7 @@ export async function fetchDataAsJson(Tablename, ...args) {
 //###Start Select
 //select の実行関数
 function selectDataFromDb(QueryText) {
-  console.log(QueryText);
+  if(QueryConst.debugDataBaseLevel>0){console.log(QueryText);}
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -1218,7 +1239,7 @@ export function deleteData(Tablename, ...args) {
 //### start exec arbitrary text
 //入力テキストを実行(戻り値無し)
 function ExecQueryText(QueryText) {
-  if (QueryConst.debugDataBaseLevel > 1) {
+  if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
   // SQLクエリを実行してデータベースから要素を削除
