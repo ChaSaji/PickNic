@@ -20,28 +20,25 @@ async function SetAppAndHomeScreen() {
     // 両処理が完了した後の処理を行う
     return resultB;
   } catch (error) {
-    console.error('エラー:', error);
+    console.error("エラー:", error);
   }
 }
 
 const HomeScreen = ({ navigation }) => {
   const [myLocation, setMyLocation] = useState(null);
   const [granted, setGranted] = useState(false);
-  
 
   useEffect(() => {
     SetAppAndHomeScreen()
-    .then((data) => {
-          console.log("return data SetAppAndHomeScreen =");
-          console.log(data);
-          setPictures(data);
-        })
-        .catch((error) => {
-          console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
-        });
+      .then((data) => {
+        console.log("return data SetAppAndHomeScreen =");
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
   }, []);
-  
-  
+
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
     useCamera();
 
