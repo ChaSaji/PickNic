@@ -1,36 +1,44 @@
 import React, { useLayoutEffect } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import images from "../lib/images";
 
 const CookingDetailScreen = ({ route, navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: route.params.recipeName,
+      title: route.params.meal.name,
     });
   }, []);
+
+  const meal = route.params.meal;
+  const materials = route.params.materials;
 
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Image
-          style={styles.meal}
-          source={require("../../assets/icons8-camera-64.png")}
-        />
+        <Image style={styles.meal} source={images[meal.pass2Photo]} />
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>必要な食材</Text>
         <View style={styles.materialsView}>
-          {[...Array(9)].map((_, index) => (
+          {materials.map((material, index) => (
             // 10個くらい限度にしよう
-            <Image
-              key={index}
-              style={styles.material}
-              source={require("../../assets/icons8-camera-64.png")}
-            />
+            <View key={index} style={styles.materialView}>
+              <Image
+                key={index}
+                style={styles.material}
+                source={images[material.pass2photo]}
+              />
+              <Text>{`×${material.needNum}`}</Text>
+            </View>
           ))}
         </View>
       </View>
       <TouchableOpacity
-        onPress={() => navigation.navigate("CookingAnimation")}
+        onPress={() =>
+          navigation.navigate("CookingAnimation", {
+            meal: meal,
+          })
+        }
         style={[styles.button.outerRadius]}
       >
         <View style={[styles.button.innerRadius]}>
@@ -67,6 +75,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",
+  },
+  materialView: {
+    alignItems: "center",
   },
   material: {
     width: 50,

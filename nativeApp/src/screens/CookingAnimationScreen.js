@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import LottieView from "lottie-react-native";
 
-const CookingAnimationScreen = ({ navigation }) => {
+const CookingAnimationScreen = ({ route, navigation }) => {
   const animation = useRef(null);
 
   return (
@@ -10,7 +10,11 @@ const CookingAnimationScreen = ({ navigation }) => {
       <LottieView
         autoPlay
         loop={false}
-        onAnimationFinish={() => navigation.navigate("CookingComplete")}
+        onAnimationFinish={() =>
+          navigation.navigate("CookingComplete", {
+            meal: route.params.meal,
+          })
+        }
         ref={animation}
         style={{
           width: 500,
