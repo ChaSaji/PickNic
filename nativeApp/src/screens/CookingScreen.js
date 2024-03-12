@@ -2,13 +2,39 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import ItemCard from "../components/ItemCard";
 import { fetchData, selectData } from "../lib/dataBaseHelper";
-import { RO, Material, Meal, RecipeDetail } from "../lib/databaseQueryText";
+import {
+  RO,
+  Material,
+  Meal,
+  RecipeDetail,
+  MealStatus,
+} from "../lib/databaseQueryText";
+import getImageSource from "../lib/images";
 
 const CookingScreen = ({ navigation }) => {
   const [meals, setMeals] = useState([]);
   useEffect(() => {
-    fetchData(Meal.tablename).then((data) => {
-      setMeals(data);
+    fetchData(Meal.tablename).then((meals) => {
+      Promise.all(
+        meals.map((meal) =>
+          selectData(
+            MealStatus.tablename,
+            MealStatus.elementsKey.id,
+            RO.Eqqual,
+            meal.mealStatusId
+          ).then((mealStatus) => {
+            const status =
+              mealStatus.length > 0 ? mealStatus[0] : { cooked: 0, locked: 1 };
+            return {
+              ...meal,
+              cooked: status.cooked,
+              locked: status.locked,
+            };
+          })
+        )
+      ).then((meals) => {
+        setMeals(meals);
+      });
     });
   }, []);
 
@@ -45,7 +71,14 @@ const CookingScreen = ({ navigation }) => {
         {meals.map((meal, index) => (
           <ItemCard
             key={index}
-            source={meal.pass2Photo}
+            source={getImageSource({
+              pass2Photo: meal.pass2Photo,
+              locked: meal.locked,
+              cooked: meal.cooked,
+              // （テスト用）上をコメントアウトしてここをいじって変化を見てください
+              // locked: 0,
+              // cooked: 0,
+            })}
             name={meal.name}
             onPress={() => handleItemClick(meal)}
             backgroundColor="#F8DAD1"
