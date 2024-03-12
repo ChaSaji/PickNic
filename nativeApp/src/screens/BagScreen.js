@@ -1,29 +1,23 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
+import ItemCard from "../components/ItemCard";
 
 const BagScreen = () => {
+  const handleItemClick = (name) => {
+    alert(`${name}番のボタンが押されました`);
+  };
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {[...Array(31)].map((_, index) => (
-          <TouchableOpacity
+          <ItemCard
             key={index}
-            style={styles.item}
-            onPress={() => alert(`${index}番のボタンが押されました`)}
-          >
-            <Image
-              source={require("../../assets/icons8-camera-64.png")}
-              style={{ width: 75, height: 75 }}
-            />
-            <Text style={{ fontSize: 30 }}>×1</Text>
-          </TouchableOpacity>
+            source={require("../../assets/icons8-camera-64.png")}
+            name={String(index)}
+            onPress={handleItemClick}
+            backgroundColor="#FFE8AD"
+            text="×1"
+          />
         ))}
       </ScrollView>
     </View>
@@ -41,14 +35,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-  },
-  item: {
-    height: 120,
-    width: "30%",
-    backgroundColor: "#FFE8AD",
-    margin: 5,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
 

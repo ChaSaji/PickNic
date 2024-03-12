@@ -4,17 +4,18 @@ import { useState } from "react";
 import { Text, View, TouchableOpacity, SafeAreaView } from "react-native";
 import { useCamera } from "../context/CameraContext";
 
-const CameraScreen = () => {
+const CameraScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
 
-  const { setIsCameraEnabled } = useCamera();
+  const { setIsCameraEnabled, setPicture } = useCamera();
 
   const takePicture = async () => {
     if (camera) {
       const image = await camera.takePictureAsync();
-      console.log(image); // imageは "height","uri","width"の3要素からなるjson形式
+      setPicture(image);
       setIsCameraEnabled(false);
+      navigation.navigate("Picture");
     }
   };
 

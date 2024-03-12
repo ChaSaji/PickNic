@@ -1,46 +1,25 @@
 import React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Button,
-  ScrollView,
-} from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
+import ItemCard from "../components/ItemCard";
 
-const CookingScreen = () => {
+const CookingScreen = ({ navigation }) => {
+  const handleItemClick = (name) => {
+    navigation.navigate("CookingDetail", {
+      recipeName: `${name}番の料理`,
+    });
+  };
   return (
     <View style={styles.container}>
-      <ScrollView>
-        {[...Array(10)].map((_, index) => (
-          <View key={index} style={styles.recipView}>
-            <View
-              style={{
-                width: "30%",
-                height: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Image
-                source={require("../../assets/icons8-camera-64.png")}
-                style={{ width: 75, height: 75 }}
-              />
-            </View>
-            <View
-              style={{ width: "40%", height: "100%", justifyContent: "center" }}
-            >
-              {[...Array(4)].map((_, index) => (
-                <Text key={index}>・じゃがいも</Text>
-              ))}
-            </View>
-            <View style={{ width: "20%", justifyContent: "center" }}>
-              <Button
-                title="Cooking!"
-                onPress={() => alert(`${index}番のボタンが押されました`)}
-              />
-            </View>
-          </View>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {[...Array(31)].map((_, index) => (
+          <ItemCard
+            key={index}
+            source={require("../../assets/icons8-camera-64.png")}
+            name={String(index)}
+            onPress={handleItemClick}
+            backgroundColor="#F8DAD1"
+            isTextVisiable={false}
+          />
         ))}
       </ScrollView>
     </View>
@@ -49,17 +28,15 @@ const CookingScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#fff",
     flex: 1,
-    backgroundColor: "#FFF",
-    justifyContent: "flex-start",
-  },
-  recipView: {
-    height: 100,
-    flexDirection: "row",
     alignItems: "center",
-    width: "100%",
-    backgroundColor: "#F8DAD1",
-    marginVertical: 5,
+    marginHorizontal: 8,
+  },
+  scrollViewContent: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
 });
 
