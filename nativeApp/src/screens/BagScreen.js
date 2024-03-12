@@ -3,14 +3,18 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import ItemCard from "../components/ItemCard";
 import { fetchData } from "../lib/dataBaseHelper";
 import { Material } from "../lib/databaseQueryText";
+import { useDbUpdate } from "../context/DbUpdateContext";
 
 const BagScreen = () => {
   const [materials, setMaterials] = useState([]);
+
+  const { materialUpdate } = useDbUpdate();
+
   useEffect(() => {
     fetchData(Material.tablename).then((data) => {
       setMaterials(data);
     });
-  }, []);
+  }, [materialUpdate]);
 
   const handleItemClick = (material) => {
     alert(`${material.name}のボタンが押されました`);
@@ -22,7 +26,7 @@ const BagScreen = () => {
         {materials.map((material, index) => (
           <ItemCard
             key={index}
-            source={material.pass2photo}
+            source={material.pass2Photo}
             name={material.name}
             onPress={() => handleItemClick(material)}
             backgroundColor="#FFE8AD"

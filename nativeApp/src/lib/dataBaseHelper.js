@@ -5,25 +5,31 @@ import * as InitDB from "./dataBaseInit";
 const db = SQLite.openDatabase("database.db");
 //### start First Start Init DB
 
-export async function CreateAndInitTableIfNotExist(){
+export async function CreateAndInitTableIfNotExist() {
   try {
-  const tablenum = await GetTableNum();
-  if (QueryConst.debugDataBaseLevel >= 1) {
-    console.log("CreateAndInitTableIfNotExist");
-    console.log(tablenum);
-  }
-  let init = 0;
-  if (QueryConst.debugDataBaseLevel >= 1) {console.log("Chatch table num = "+tablenum)}
-  if(tablenum<=3){
-    init = await InitDatabaseTable();
-    if (QueryConst.debugDataBaseLevel >= 1) {console.log("Tables Not Exist");}
-  }else{
-    if (QueryConst.debugDataBaseLevel >= 1) {console.log("Tables Exist");}
-  }
-  return tablenum;
-  }catch (error) {
+    const tablenum = await GetTableNum();
+    if (QueryConst.debugDataBaseLevel >= 1) {
+      console.log("CreateAndInitTableIfNotExist");
+      console.log(tablenum);
+    }
+    let init = 0;
+    if (QueryConst.debugDataBaseLevel >= 1) {
+      console.log("Chatch table num = " + tablenum);
+    }
+    if (tablenum <= 3) {
+      init = await InitDatabaseTable();
+      if (QueryConst.debugDataBaseLevel >= 1) {
+        console.log("Tables Not Exist");
+      }
+    } else {
+      if (QueryConst.debugDataBaseLevel >= 1) {
+        console.log("Tables Exist");
+      }
+    }
+    return tablenum;
+  } catch (error) {
     // エラーハンドリング
-    throw new Error('CreateAndInitTableIfNotExistでエラーが発生しました');
+    throw new Error("CreateAndInitTableIfNotExistでエラーが発生しました");
   }
 }
 function GetTableNum() {
@@ -32,27 +38,29 @@ function GetTableNum() {
     console.log("CreateAndInitTableIfNotExist");
   }
   return new Promise((resolve, reject) => {
-  db.transaction((tx) => {
-    tx.executeSql(
-      'SELECT name FROM sqlite_master WHERE type="table";',
-      [],
-      (_, { rows }) => {
-        const tablenum = rows.length
-        if (QueryConst.debugDataBaseLevel >= 1) {console.log("table Length = "+tablenum);}
-        // テーブルが存在しない場合はInitDatabaseTable()を呼び出す
-        resolve(tablenum);
-      },
-      (_, error) => {
-        // エラー時の処理
-        if (QueryConst.debugDataBaseLevel >= 2) {
-          console.log("No sqlite_master");
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT name FROM sqlite_master WHERE type="table";',
+        [],
+        (_, { rows }) => {
+          const tablenum = rows.length;
+          if (QueryConst.debugDataBaseLevel >= 1) {
+            console.log("table Length = " + tablenum);
+          }
+          // テーブルが存在しない場合はInitDatabaseTable()を呼び出す
+          resolve(tablenum);
+        },
+        (_, error) => {
+          // エラー時の処理
+          if (QueryConst.debugDataBaseLevel >= 2) {
+            console.log("No sqlite_master");
+          }
+          const tablenum = -1;
+          reject(tablenum);
         }
-        const tablenum = -1;
-        reject(tablenum);
-      }
-    );
+      );
+    });
   });
-});
 }
 
 //### end First Start Init DB
@@ -417,7 +425,7 @@ function insert_recipe_detail(InsertItem) {
     db.transaction((tx) => {
       tx.executeSql(
         QueryText,
-        [InsertItem.mealId,InsertItem.materialId, InsertItem.needNum],
+        [InsertItem.mealId, InsertItem.materialId, InsertItem.needNum],
         (_, result) => {
           // 成功時の処理
           const lastInsertedId = result.insertId;
@@ -458,7 +466,12 @@ function insert_material(InsertItem) {
     db.transaction((tx) => {
       tx.executeSql(
         QueryText,
-        [InsertItem.name, InsertItem.pass2Photo, InsertItem.stock,InsertItem.colorId],
+        [
+          InsertItem.name,
+          InsertItem.pass2Photo,
+          InsertItem.stock,
+          InsertItem.colorId,
+        ],
         (_, result) => {
           // 成功時の処理
           const lastInsertedId = result.insertId;
@@ -822,6 +835,7 @@ export function update_material(updateItem) {
           updateItem.name,
           updateItem.pass2Photo,
           updateItem.stock,
+          updateItem.colorId,
           updateItem.id,
         ],
         (_, { rowsAffected }) => {
@@ -1142,12 +1156,12 @@ function selectDataFromDb(QueryText) {
 export async function selectDataById(Tablename, ID) {
   // 関数を呼び出してデータを取得し、結果を処理する
   Key = QueryConst.PrimaryKey;
-  if(Tablename == QueryConst.MaterialPhotoRelation.tablename){
+  if (Tablename == QueryConst.MaterialPhotoRelation.tablename) {
     Key = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
-  }else if(Tablename == QueryConst.RecipeDetail.tablename){
-    Key = QueryConst.RecipeDetail.elementsKey.mealId
+  } else if (Tablename == QueryConst.RecipeDetail.tablename) {
+    Key = QueryConst.RecipeDetail.elementsKey.mealId;
   }
-  
+
   let QueryText =
     QueryConst.getRecodeQuery +
     Tablename +
@@ -1215,9 +1229,9 @@ export async function selectData(Tablename, ...args) {
 export async function selectDataDesc(Tablename, ...args) {
   // 関数を呼び出してデータを取得し、結果を処理する
   Key = QueryConst.PrimaryKey;
-  if(Tablename == QueryConst.MaterialPhotoRelation.tablename){
+  if (Tablename == QueryConst.MaterialPhotoRelation.tablename) {
     Key = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
-  }else if(Tablename == QueryConst.RecipeDetail.tablename){
+  } else if (Tablename == QueryConst.RecipeDetail.tablename) {
     Key = QueryConst.RecipeDetail.elementsKey.mealId;
   }
   let CONDITIONTEXT = "";
@@ -1252,9 +1266,9 @@ export async function selectDataDesc(Tablename, ...args) {
 export async function selectDataAsc(Tablename, ...args) {
   // 関数を呼び出してデータを取得し、結果を処理する
   Key = QueryConst.PrimaryKey;
-  if(Tablename == QueryConst.MaterialPhotoRelation.tablename){
+  if (Tablename == QueryConst.MaterialPhotoRelation.tablename) {
     Key = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
-  }else if(Tablename == QueryConst.RecipeDetail.tablename){
+  } else if (Tablename == QueryConst.RecipeDetail.tablename) {
     Key = QueryConst.RecipeDetail.elementsKey.mealId;
   }
   let CONDITIONTEXT = QueryConst.Where;
@@ -1313,10 +1327,10 @@ function deleteDataFromDb(QueryText) {
 export async function deleteDataById(Tablename, ID) {
   // 関数を呼び出してデータを取得し、結果を処理する
   Key = QueryConst.PrimaryKey;
-  if(Tablename == QueryConst.MaterialPhotoRelation.tablename){
+  if (Tablename == QueryConst.MaterialPhotoRelation.tablename) {
     Key = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
-  }else if(Tablename == QueryConst.RecipeDetail.tablename){
-    Key = QueryConst.RecipeDetail.elementsKey.mealId
+  } else if (Tablename == QueryConst.RecipeDetail.tablename) {
+    Key = QueryConst.RecipeDetail.elementsKey.mealId;
   }
   let QueryText =
     QueryConst.DeleteQuery +
