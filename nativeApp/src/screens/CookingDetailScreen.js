@@ -1,6 +1,16 @@
 import React, { useLayoutEffect } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import images from "../lib/images";
+import {
+  selectDataById,
+  update_item,
+} from "../lib/dataBaseHelper";
+import {
+  MealStatus,
+  MelaStatusElement,
+  Material,
+  MaterialElement,
+} from "../lib/databaseQueryText";
 
 const CookingDetailScreen = ({ route, navigation }) => {
   useLayoutEffect(() => {
@@ -11,6 +21,51 @@ const CookingDetailScreen = ({ route, navigation }) => {
 
   const meal = route.params.meal;
   const materials = route.params.materials;
+
+  const isCookable = () => {
+    for (let i=0; i < materials.length; i++){
+      if (materials[i].stock < materials[i].needNum){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  const updateMealStatusCooked = () => {
+    selectDataById(MealStatus.tablename, meal.mealStatusId).then((data) => {
+      mealStatus = new MelaStatusElement();
+      mealStatus.id = data[0].id;
+      mealStatus.cooked = 1;
+      mealStatus.locked = data[0].locked;
+      update_item(MealStatus.tablename, mealStatus);
+    })
+  }
+
+  const updateMaterialStock = () => {
+    for (let i=0; i < materials.length; i++){
+      selectDataById(Material.tablename, materials[i].id).then((data) => {
+        material = new MaterialElement();
+        material.id = data[0].id;
+        material.name = data[0].name;
+        material.pass2Photo = data[0].pass2Photo;
+        material.colorId = data[0].colorId;
+        material.stock = materials[i].stock - materials[i].needNum;
+        update_item(Material.tablename, material);
+      })
+    }
+  }
+
+  const cookCheck = () => {
+    if (isCookable()) {
+      updateMealStatusCooked();
+      updateMaterialStock();
+      navigation.navigate("CookingAnimation", {
+        meal: meal,
+      })
+    } else {
+      return alert("素材が足りません")
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -35,9 +90,7 @@ const CookingDetailScreen = ({ route, navigation }) => {
       </View>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("CookingAnimation", {
-            meal: meal,
-          })
+         cookCheck()
         }
         style={[styles.button.outerRadius]}
       >
