@@ -4,7 +4,29 @@ import * as InitDB from "./dataBaseInit";
 // データベースを作成またはオープン
 const db = SQLite.openDatabase("database.db");
 //### start First Start Init DB
-export function CreateAndInitTableIfNotExist() {
+
+export async function CreateAndInitTableIfNotExist(){
+  try {
+  const tablenum = await GetTableNum();
+  if (QueryConst.debugDataBaseLevel >= 1) {
+    console.log("CreateAndInitTableIfNotExist");
+    console.log(tablenum);
+  }
+  let init = 0;
+  if (QueryConst.debugDataBaseLevel >= 1) {console.log("Chatch table num = "+tablenum)}
+  if(tablenum<=3){
+    init = await InitDatabaseTable();
+    if (QueryConst.debugDataBaseLevel >= 1) {console.log("Tables Not Exist");}
+  }else{
+    if (QueryConst.debugDataBaseLevel >= 1) {console.log("Tables Exist");}
+  }
+  return tablenum;
+  }catch (error) {
+    // エラーハンドリング
+    throw new Error('CreateAndInitTableIfNotExistでエラーが発生しました');
+  }
+}
+function GetTableNum() {
   // アプリの起動時にデータベースの存在を確認
   if (QueryConst.debugDataBaseLevel >= 1) {
     console.log("CreateAndInitTableIfNotExist");
@@ -15,21 +37,18 @@ export function CreateAndInitTableIfNotExist() {
       'SELECT name FROM sqlite_master WHERE type="table";',
       [],
       (_, { rows }) => {
-        console.log();
+        const tablenum = rows.length
+        if (QueryConst.debugDataBaseLevel >= 1) {console.log("table Length = "+tablenum);}
         // テーブルが存在しない場合はInitDatabaseTable()を呼び出す
-        if (rows.length <= 3) {
-          if (QueryConst.debugDataBaseLevel >= 2) {
-            console.log("Exist sqlite_master");
-          }
-          InitDatabaseTable();
-        }
+        resolve(tablenum);
       },
       (_, error) => {
         // エラー時の処理
         if (QueryConst.debugDataBaseLevel >= 2) {
           console.log("No sqlite_master");
         }
-        InitDatabaseTable();
+        const tablenum = -1;
+        reject(tablenum);
       }
     );
   });
@@ -124,6 +143,7 @@ export async function InitDatabaseTable() {
     InsertItem = InitDB.Photo[i];
     await insert_item(QueryConst.Photo.tablename, InsertItem);
   }
+  return 1;
 }
 //###end Read Excel data
 

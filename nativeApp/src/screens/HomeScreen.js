@@ -5,6 +5,7 @@ import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useCamera } from "../context/CameraContext";
 import { CreateAndInitTableIfNotExist, fetchData } from "../lib/dataBaseHelper";
+import { Photo } from "../lib/databaseQueryText";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -12,20 +13,34 @@ const ASPECT_RATIO = windowWidth / windowHeight;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+async function SetAppAndHomeScreen() {
+  try {
+    const resultA = await CreateAndInitTableIfNotExist(); // 非同期処理CreateAndInitTableIfNotExistの完了を待つ
+    const resultB = await fetchData(Photo.tablename); // 非同期処理Bの完了を待つ
+    // 両処理が完了した後の処理を行う
+    return resultB;
+  } catch (error) {
+    console.error('エラー:', error);
+  }
+}
+
 const HomeScreen = ({ navigation }) => {
   const [myLocation, setMyLocation] = useState(null);
   const [granted, setGranted] = useState(false);
-  CreateAndInitTableIfNotExist().then=()=>{
-    useEffect(() => {
-      fetchData(Photo.tablename)
-        .then((data) => {
+  
+
+  useEffect(() => {
+    SetAppAndHomeScreen()
+    .then((data) => {
+          console.log("return data SetAppAndHomeScreen =");
+          console.log(data);
           setPictures(data);
         })
         .catch((error) => {
           console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
         });
-    }, []);
-  }
+  }, []);
+  
   
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
     useCamera();
