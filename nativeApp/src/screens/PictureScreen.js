@@ -2,22 +2,36 @@ import React from "react";
 import { StyleSheet, View, Image, Dimensions } from "react-native";
 import { useCamera } from "../context/CameraContext";
 import ChangeMaterialButton from "../components/ChangeMaterialButton";
-import { useGetMaterial } from "../context/GetMaterialContext";
-import  sendImage from '../lib/sendPicture';
+import sendImage from "../lib/sendPicture";
+import { selectData } from "../lib/dataBaseHelper";
+import { RO, Material } from "../lib/databaseQueryText";
+import getRandomNum from "../lib/getRandomNum";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const PictureScreen = ({ navigation }) => {
   const { picture } = useCamera();
-  const { setMaterial } = useGetMaterial();
 
   const handleSubmitToAPI = async () => {
-    // ここでsendImgae()を実行、レスポンスが帰ってきたら"GetMaterial"に遷移
-    const response = await sendImage({uri: picture.uri});
-    // 以下のようにapiから帰ってきたmaterialをsetする。（適宜変更）
-    // setMaterial({id: response.materialId, num: response.num});
-    navigation.navigate("GetMaterial");
+    const response = await sendImage({ uri: picture.uri });
+    selectData(
+      Material.tablename,
+      Material.elementsKey.colorId,
+      RO.Eqqual,
+      response.return
+    ).then((materials) => {
+      if (materials.length > 0) {
+        const randomIndx = getRandomNum(materials.length);
+        navigation.navigate("GetMaterial", {
+          getMaterial: materials[randomIndx],
+        });
+      } else {
+        console.log(
+          `colorId == ${response.return}のマテリアルが登録されていません`
+        );
+      }
+    });
   };
   return (
     <View style={styles.container}>

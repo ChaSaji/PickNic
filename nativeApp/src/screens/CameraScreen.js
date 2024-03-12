@@ -8,13 +8,12 @@ const CameraScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
 
-  const { setIsCameraEnabled, setPicture } = useCamera();
+  const { setPicture } = useCamera();
 
   const takePicture = async () => {
     if (camera) {
       const image = await camera.takePictureAsync();
       setPicture(image);
-      setIsCameraEnabled(false);
       navigation.navigate("Picture");
     }
   };
