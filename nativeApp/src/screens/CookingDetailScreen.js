@@ -26,7 +26,7 @@ const CookingDetailScreen = ({ route, navigation }) => {
               <Image
                 key={index}
                 style={styles.material}
-                source={images[material.pass2photo]}
+                source={images[material.pass2Photo]}
               />
               <Text>{`×${material.needNum}`}</Text>
             </View>

@@ -22,7 +22,7 @@ const BagScreen = () => {
         {materials.map((material, index) => (
           <ItemCard
             key={index}
-            source={material.pass2photo}
+            source={material.pass2Photo}
             name={material.name}
             onPress={() => handleItemClick(material)}
             backgroundColor="#FFE8AD"
