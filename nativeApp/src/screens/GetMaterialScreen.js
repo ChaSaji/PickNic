@@ -5,11 +5,13 @@ import getRandomNum from "../lib/getRandomNum";
 import { update_item } from "../lib/dataBaseHelper";
 import { Material, MaterialElement } from "../lib/databaseQueryText";
 import { useDbUpdate } from "../context/DbUpdateContext";
+import { useCamera } from "../context/CameraContext";
 
 const GetMaterialScreen = ({ route, navigation }) => {
   const getMaterial = route.params.getMaterial;
   const getMaterialNum = getRandomNum(4) + 1;
 
+  const { setIsCameraEnabled } = useCamera();
   const { setMaterialUpdate } = useDbUpdate();
 
   useEffect(() => {
@@ -20,6 +22,7 @@ const GetMaterialScreen = ({ route, navigation }) => {
     material.pass2Photo = getMaterial.pass2Photo;
     material.stock = getMaterial.stock + getMaterialNum;
     update_item(Material.tablename, material);
+    setIsCameraEnabled(false);
     setMaterialUpdate(Date.now);
   }, []);
 
