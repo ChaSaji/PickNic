@@ -28,7 +28,7 @@ const BagScreen = () => {
           <ItemCard
             key={index}
             source={getImageSource({
-              pass2Photo: material.pass2photo,
+              pass2Photo: material.pass2Photo,
             })}
             name={material.name}
             onPress={() => handleItemClick(material)}
