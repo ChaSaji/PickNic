@@ -19,13 +19,15 @@ const CookingDetailScreen = ({ route, navigation }) => {
   const meal = route.params.meal;
   const materials = route.params.materials;
 
-  const isCookable = () => {
+  const isCookableCheck = () => {
+    if (meal.locked)
+      return { isCookable: false, msg: "このレシピはロックがかかっています。" };
     for (let i = 0; i < materials.length; i++) {
       if (materials[i].stock < materials[i].needNum) {
-        return false;
+        return { isCookable: false, msg: "食材が足りません。" };
       }
     }
-    return true;
+    return { isCookable: true, msg: "" };
   };
 
   const updateMealStatusCooked = () => {
@@ -53,14 +55,15 @@ const CookingDetailScreen = ({ route, navigation }) => {
   };
 
   const cookCheck = () => {
-    if (isCookable()) {
+    const isCookableResult = isCookableCheck();
+    if (isCookableResult.isCookable) {
       updateMealStatusCooked();
       updateMaterialStock();
       navigation.navigate("CookingAnimation", {
         meal: meal,
       });
     } else {
-      return alert("素材が足りません");
+      return alert(isCookableResult.msg);
     }
   };
 
