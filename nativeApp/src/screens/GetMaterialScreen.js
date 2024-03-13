@@ -6,10 +6,12 @@ import { update_item } from "../lib/dataBaseHelper";
 import { Material, MaterialElement } from "../lib/databaseQueryText";
 import { useDbUpdate } from "../context/DbUpdateContext";
 import { useCamera } from "../context/CameraContext";
+import getImageSource from "../lib/images";
 
 const GetMaterialScreen = ({ route, navigation }) => {
   const getMaterial = route.params.getMaterial;
   const getMaterialNum = getRandomNum(4) + 1;
+  console.log(getMaterialNum);
 
   const { setIsCameraEnabled } = useCamera();
   const { setMaterialUpdate } = useDbUpdate();
@@ -32,7 +34,10 @@ const GetMaterialScreen = ({ route, navigation }) => {
       onPress={() => navigation.navigate("Home")}
     >
       <Text style={styles.title}>GET</Text>
-      <Image style={styles.material} source={images[getMaterial.pass2Photo]} />
+      <Image
+        style={styles.material}
+        source={getImageSource({ pass2Photo: getMaterial.pass2Photo })}
+      />
       <Text style={styles.materialNumText}>{`× ${getMaterialNum}`}</Text>
     </TouchableOpacity>
   );

@@ -1,10 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import images from "../lib/images";
-import {
-  selectDataById,
-  update_item,
-} from "../lib/dataBaseHelper";
+import getImageSource from "../lib/images";
+import { selectDataById, update_item } from "../lib/dataBaseHelper";
 import {
   MealStatus,
   MelaStatusElement,
@@ -23,13 +20,13 @@ const CookingDetailScreen = ({ route, navigation }) => {
   const materials = route.params.materials;
 
   const isCookable = () => {
-    for (let i=0; i < materials.length; i++){
-      if (materials[i].stock < materials[i].needNum){
+    for (let i = 0; i < materials.length; i++) {
+      if (materials[i].stock < materials[i].needNum) {
         return false;
       }
     }
     return true;
-  }
+  };
 
   const updateMealStatusCooked = () => {
     selectDataById(MealStatus.tablename, meal.mealStatusId).then((data) => {
@@ -38,11 +35,11 @@ const CookingDetailScreen = ({ route, navigation }) => {
       mealStatus.cooked = 1;
       mealStatus.locked = data[0].locked;
       update_item(MealStatus.tablename, mealStatus);
-    })
-  }
+    });
+  };
 
   const updateMaterialStock = () => {
-    for (let i=0; i < materials.length; i++){
+    for (let i = 0; i < materials.length; i++) {
       selectDataById(Material.tablename, materials[i].id).then((data) => {
         material = new MaterialElement();
         material.id = data[0].id;
@@ -51,9 +48,9 @@ const CookingDetailScreen = ({ route, navigation }) => {
         material.colorId = data[0].colorId;
         material.stock = materials[i].stock - materials[i].needNum;
         update_item(Material.tablename, material);
-      })
+      });
     }
-  }
+  };
 
   const cookCheck = () => {
     if (isCookable()) {
@@ -61,16 +58,23 @@ const CookingDetailScreen = ({ route, navigation }) => {
       updateMaterialStock();
       navigation.navigate("CookingAnimation", {
         meal: meal,
-      })
+      });
     } else {
-      return alert("素材が足りません")
+      return alert("素材が足りません");
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Image style={styles.meal} source={images[meal.pass2Photo]} />
+        <Image
+          style={styles.meal}
+          source={getImageSource({
+            pass2Photo: meal.pass2Photo,
+            locked: meal.locked,
+            cooked: meal.cooked,
+          })}
+        />
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>必要な食材</Text>
@@ -81,7 +85,9 @@ const CookingDetailScreen = ({ route, navigation }) => {
               <Image
                 key={index}
                 style={styles.material}
-                source={images[material.pass2Photo]}
+                source={getImageSource({
+                  pass2Photo: material.pass2Photo,
+                })}
               />
               <Text>{`×${material.needNum}`}</Text>
             </View>
@@ -89,9 +95,7 @@ const CookingDetailScreen = ({ route, navigation }) => {
         </View>
       </View>
       <TouchableOpacity
-        onPress={() =>
-         cookCheck()
-        }
+        onPress={() => cookCheck()}
         style={[styles.button.outerRadius]}
       >
         <View style={[styles.button.innerRadius]}>
