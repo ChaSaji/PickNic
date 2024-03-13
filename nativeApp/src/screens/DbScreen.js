@@ -2,7 +2,7 @@ import React from "react";
 import { View, Button, StyleSheet } from "react-native";
 import {
   CreateAllTable,
-  DropAllTable,
+  dropAllTable,
   getTables,
   insert_item,
   update_item,
@@ -442,7 +442,7 @@ const DbScreen = () => {
   };
   const functionD = () => {
     console.log("テーブルを削除します");
-    DropAllTable();
+    dropAllTable();
   };
   const functionE = () => {
     console.log("テーブルの確認をおこないます");

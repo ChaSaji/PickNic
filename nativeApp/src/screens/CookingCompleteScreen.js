@@ -1,7 +1,9 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Text, Image } from "react-native";
+import getImageSource from "../lib/images";
 
-const CookingCompleteScreen = ({ navigation }) => {
+const CookingCompleteScreen = ({ route, navigation }) => {
+  const meal = route.params.meal;
   return (
     <TouchableOpacity
       style={styles.container}
@@ -11,7 +13,7 @@ const CookingCompleteScreen = ({ navigation }) => {
       <Text style={styles.title}>Complete!!</Text>
       <Image
         style={styles.material}
-        source={require("../../assets/icons8-camera-64.png")}
+        source={getImageSource({ pass2Photo: meal.pass2Photo })}
       />
     </TouchableOpacity>
   );

@@ -1,10 +1,14 @@
 import React, { useLayoutEffect } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Image } from "react-native";
+import getImageSource from "../lib/images";
 
 const BadgeDetailScreen = ({ route, navigation }) => {
+  const badge = route.params.badge;
+  const meals = route.params.meals;
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: route.params.recipeName,
+      title: badge.name,
     });
   }, []);
 
@@ -13,18 +17,25 @@ const BadgeDetailScreen = ({ route, navigation }) => {
       <View style={styles.section}>
         <Image
           style={styles.meal}
-          source={require("../../assets/icons8-camera-64.png")}
+          source={getImageSource({
+            pass2Photo: badge.pass2Photo,
+            locked: badge.IsHave,
+          })}
         />
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>解放条件</Text>
         <View style={styles.materialsView}>
-          {[...Array(9)].map((_, index) => (
+          {meals.map((meal, index) => (
             // 10個くらい限度にしよう
             <Image
               key={index}
               style={styles.material}
-              source={require("../../assets/icons8-camera-64.png")}
+              source={getImageSource({
+                pass2Photo: meal.pass2Photo,
+                locked: meal.locked,
+                cooked: meal.cooked,
+              })}
             />
           ))}
         </View>

@@ -1,22 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import ItemCard from "../components/ItemCard";
+import { fetchData } from "../lib/dataBaseHelper";
+import { Material } from "../lib/databaseQueryText";
+import { useDbUpdate } from "../context/DbUpdateContext";
+import getImageSource from "../lib/images";
 
 const BagScreen = () => {
-  const handleItemClick = (name) => {
-    alert(`${name}番のボタンが押されました`);
+  const [materials, setMaterials] = useState([]);
+
+  const { materialUpdate } = useDbUpdate();
+
+  useEffect(() => {
+    fetchData(Material.tablename).then((data) => {
+      setMaterials(data);
+    });
+  }, [materialUpdate]);
+
+  const handleItemClick = (material) => {
+    alert(`${material.name}のボタンが押されました`);
   };
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {[...Array(31)].map((_, index) => (
+        {materials.map((material, index) => (
           <ItemCard
             key={index}
-            source={require("../../assets/icons8-camera-64.png")}
-            name={String(index)}
-            onPress={handleItemClick}
+            source={getImageSource({
+              pass2Photo: material.pass2Photo,
+            })}
+            name={material.name}
+            onPress={() => handleItemClick(material)}
             backgroundColor="#FFE8AD"
-            text="×1"
+            text={`×${material.stock}`}
           />
         ))}
       </ScrollView>

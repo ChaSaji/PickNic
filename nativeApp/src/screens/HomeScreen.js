@@ -14,25 +14,35 @@ const ASPECT_RATIO = windowWidth / windowHeight;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+async function SetAppAndHomeScreen() {
+  try {
+    await CreateAndInitTableIfNotExist(); // 非同期処理CreateAndInitTableIfNotExistの完了を待つ
+    const resultB = await fetchData(Photo.tablename); // 非同期処理Bの完了を待つ
+    // 両処理が完了した後の処理を行う
+    return resultB;
+  } catch (error) {
+    console.error("エラー:", error);
+  }
+}
+
 const HomeScreen = ({ navigation }) => {
+  const [pictures, setPictures] = useState([]);
+
   const { location, granted } = useLocation();
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
     useCamera();
 
-  // photoテーブル全検索
-  // 川口くんのハンドラusage
-  const [pictures, setPictures] = useState([]);
-  // CreateAndInitTableIfNotExist().then = () => {
   useEffect(() => {
-    fetchData(Photo.tablename)
-      .then((data) => {
-        setPictures(data);
+    SetAppAndHomeScreen()
+      .then((picture) => {
+        // console.log("return data SetAppAndHomeScreen =");
+        // console.log(picture);
+        setPictures(picture);
       })
       .catch((error) => {
         console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
       });
-  }, [isCameraEnabled]);
-  // };
+  }, []);
 
   const handleNavigatePictureClick = ({ picture }) => {
     navigation.navigate("PictureView", {
