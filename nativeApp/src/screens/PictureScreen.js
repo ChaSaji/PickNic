@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { StyleSheet, View, Image, Dimensions } from "react-native";
 import { useCamera } from "../context/CameraContext";
 import { useDbUpdate } from "../context/DbUpdateContext";
@@ -17,6 +17,12 @@ const PictureScreen = ({ navigation }) => {
 
   const { picture, setIsCameraEnabled } = useCamera();
   const { setMaterialUpdate } = useDbUpdate();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: !loading,
+    });
+  }, [loading, navigation]);
 
   const handleSubmitToAPI = () => {
     setLoading(true);
