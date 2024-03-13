@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, View } from "react-native";
 import ItemCard from "../components/ItemCard";
 import { fetchData, selectData } from "../lib/dataBaseHelper";
-import { Badge, Meal, RO } from "../lib/databaseQueryText";
+import { Badge, Meal, RO, MealStatus } from "../lib/databaseQueryText";
+import getImageSource from "../lib/images";
 
 const BadgeScreen = ({ navigation }) => {
   const [badges, setBadges] = useState([]);
@@ -19,10 +20,29 @@ const BadgeScreen = ({ navigation }) => {
       RO.Eqqual,
       badge.id
     ).then((meals) =>
-      navigation.navigate("BadgeDetail", {
-        badge: badge,
-        meals: meals,
-      })
+      Promise.all(
+        meals.map((meal) =>
+          selectData(
+            MealStatus.tablename,
+            MealStatus.elementsKey.id,
+            RO.Eqqual,
+            meal.id
+          ).then((mealStatus) => {
+            const status =
+              mealStatus > 0 ? mealStatus[0] : { cooked: 0, locked: 1 };
+            return {
+              ...meal,
+              cooked: status.cooked,
+              locked: status.locked,
+            };
+          })
+        )
+      ).then((meals) =>
+        navigation.navigate("BadgeDetail", {
+          badge: badge,
+          meals: meals,
+        })
+      )
     );
   };
   return (
@@ -31,7 +51,10 @@ const BadgeScreen = ({ navigation }) => {
         {badges.map((badge, index) => (
           <ItemCard
             key={index}
-            source={badge.pass2Photo}
+            source={getImageSource({
+              pass2Photo: badge.pass2Photo,
+              locked: badge.IsHave,
+            })}
             name={String(index)}
             onPress={() => handleItemClick(badge)}
             backgroundColor="#b8d4f4"

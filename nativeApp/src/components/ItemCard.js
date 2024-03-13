@@ -1,6 +1,5 @@
 import React from "react";
 import { Image, Text, TouchableOpacity, StyleSheet } from "react-native";
-import images from "../lib/images";
 
 // propsで受け取る値はサンプル
 const ItemCard = ({
@@ -25,7 +24,7 @@ const ItemCard = ({
 
   return (
     <TouchableOpacity style={styles.item} onPress={onPress}>
-      <Image source={images[source]} style={{ width: 75, height: 75 }} />
+      <Image source={source} style={{ width: 75, height: 75 }} />
       {isTextVisiable && <Text style={{ fontSize: 30 }}>{text}</Text>}
     </TouchableOpacity>
   );

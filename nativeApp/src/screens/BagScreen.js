@@ -4,6 +4,7 @@ import ItemCard from "../components/ItemCard";
 import { fetchData } from "../lib/dataBaseHelper";
 import { Material } from "../lib/databaseQueryText";
 import { useDbUpdate } from "../context/DbUpdateContext";
+import getImageSource from "../lib/images";
 
 const BagScreen = () => {
   const [materials, setMaterials] = useState([]);
@@ -26,7 +27,9 @@ const BagScreen = () => {
         {materials.map((material, index) => (
           <ItemCard
             key={index}
-            source={material.pass2Photo}
+            source={getImageSource({
+              pass2Photo: material.pass2photo,
+            })}
             name={material.name}
             onPress={() => handleItemClick(material)}
             backgroundColor="#FFE8AD"

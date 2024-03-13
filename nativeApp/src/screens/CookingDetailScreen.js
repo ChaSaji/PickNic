@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import images from "../lib/images";
+import getImageSource from "../lib/images";
 
 const CookingDetailScreen = ({ route, navigation }) => {
   useLayoutEffect(() => {
@@ -15,7 +15,14 @@ const CookingDetailScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Image style={styles.meal} source={images[meal.pass2Photo]} />
+        <Image
+          style={styles.meal}
+          source={getImageSource({
+            pass2Photo: meal.pass2Photo,
+            locked: meal.locked,
+            cooked: meal.cooked,
+          })}
+        />
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>必要な食材</Text>
@@ -26,7 +33,9 @@ const CookingDetailScreen = ({ route, navigation }) => {
               <Image
                 key={index}
                 style={styles.material}
-                source={images[material.pass2Photo]}
+                source={getImageSource({
+                  pass2Photo: material.pass2photo,
+                })}
               />
               <Text>{`×${material.needNum}`}</Text>
             </View>

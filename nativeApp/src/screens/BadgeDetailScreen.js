@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import images from "../lib/images";
+import { Text, View, StyleSheet, Image } from "react-native";
+import getImageSource from "../lib/images";
 
 const BadgeDetailScreen = ({ route, navigation }) => {
   const badge = route.params.badge;
@@ -15,7 +15,13 @@ const BadgeDetailScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Image style={styles.meal} source={images[badge.pass2Photo]} />
+        <Image
+          style={styles.meal}
+          source={getImageSource({
+            pass2Photo: badge.pass2Photo,
+            locked: badge.IsHave,
+          })}
+        />
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>解放条件</Text>
@@ -25,7 +31,11 @@ const BadgeDetailScreen = ({ route, navigation }) => {
             <Image
               key={index}
               style={styles.material}
-              source={images[meal.pass2Photo]}
+              source={getImageSource({
+                pass2Photo: meal.pass2Photo,
+                locked: meal.locked,
+                cooked: meal.cooked,
+              })}
             />
           ))}
         </View>

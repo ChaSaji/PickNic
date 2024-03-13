@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Text, Image } from "react-native";
-import images from "../lib/images";
+import getImageSource from "../lib/images";
 
 const CookingCompleteScreen = ({ route, navigation }) => {
   const meal = route.params.meal;
@@ -11,7 +11,10 @@ const CookingCompleteScreen = ({ route, navigation }) => {
     >
       <Text style={styles.title}>Cooking</Text>
       <Text style={styles.title}>Complete!!</Text>
-      <Image style={styles.material} source={images[meal.pass2Photo]} />
+      <Image
+        style={styles.material}
+        source={getImageSource({ pass2Photo: meal.pass2Photo })}
+      />
     </TouchableOpacity>
   );
 };
