@@ -48,6 +48,7 @@ class MealementKey {
   static pass2Photo = "pass2Photo";
   static name = "name";
   static stock = "stock";
+  static placeId = "placeId"
 }
 export class MealElement {
   id;
@@ -206,6 +207,8 @@ export const createTableMeal =
   Meal.elementsKey.name +
   " TEXT," +
   Meal.elementsKey.stock +
+  " INTEGER," +
+  Meal.elementsKey.placeId +
   " INTEGER" +
   ");";
 

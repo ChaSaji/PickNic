@@ -340,13 +340,15 @@ function insert_meal(InsertItem) {
     QueryConst.Meal.elementsKey.name +
     "," +
     QueryConst.Meal.elementsKey.stock +
+    "," +
+    QueryConst.Meal.elementsKey.placeId +
     ")";
   let QueryText =
     QueryConst.InsertQuery +
     QueryConst.Meal.tablename +
     items +
     QueryConst.values +
-    "(?,?,?,?,?)";
+    "(?,?,?,?,?,?)";
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
@@ -359,7 +361,8 @@ function insert_meal(InsertItem) {
           InsertItem.mealStatusId,
           InsertItem.pass2Photo,
           InsertItem.name,
-          InsertItem.stock
+          InsertItem.stock,
+          InsertItem.placeId
         ],
         (_, result) => {
           // 成功時の処理
@@ -704,6 +707,8 @@ export function update_meal(updateItem) {
     QueryConst.Meal.elementsKey.name +
     " = ?,"+
     QueryConst.Meal.elementsKey.stock +
+    " = ?,"+
+    QueryConst.Meal.elementsKey.placeId +
     " = ?"
     ;
   let QueryText =
@@ -720,6 +725,7 @@ export function update_meal(updateItem) {
       updateItem.pass2Photo,
       updateItem.name,
       updateItem.stock,
+      updateItem.placeId,
       updateItem.id
     );
   }
@@ -733,6 +739,7 @@ export function update_meal(updateItem) {
           updateItem.pass2Photo,
           updateItem.name,
           updateItem.stock,
+          updateItem.placeId,
           updateItem.id,
         ],
         (_, { rowsAffected }) => {
