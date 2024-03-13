@@ -55,6 +55,8 @@ const DbScreen = () => {
     badge.name = "1BadgeName";
     badge.pass2Photo = "pass2Photo/日本語テキスト1/x.png";
     badge.isHave = 1;
+    now = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    badge.gottenDate = now.toString();
     insert_item(Badge.tablename, badge)
       .then((id) => {
         /*ここにIDを用いた処理を記述*/
@@ -110,6 +112,8 @@ const DbScreen = () => {
     badge.name = "ヤマ梨";
     badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";
     badge.isHave = 1;
+    now = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    badge.gottenDate = now.toString();
     insert_item(Badge.tablename, badge)
       .then((id) => {
         /*ここにIDを用いた処理を記述*/
@@ -126,6 +130,7 @@ const DbScreen = () => {
     meal.mealStatusId = 789;
     meal.pass2Photo = "mealpass2Photo";
     meal.name = "meal name";
+    meal.stock = 5;
     insert_item(Meal.tablename, meal)
       .then((id) => {
         /*ここにIDを用いた処理を記述*/
@@ -193,6 +198,8 @@ const DbScreen = () => {
     photo.longitude = 35.1234567890123456789;
     photo.visited = 1;
     photo.pass2Photo = "photoPass";
+    now = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    photo.gottenDate = now.toString();
     insert_item(Photo.tablename, photo)
       .then((id) => {
         /*ここにIDを用いた処理を記述*/
@@ -300,6 +307,8 @@ const DbScreen = () => {
     badge.name = "BadgeUpdated";
     badge.pass2Photo = "pass2Photo/日本語テキスト/BadgeUpdated.png";
     badge.isHave = 0;
+    now = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    badge.gottenDate = now.toString();
     update_item(Badge.tablename, badge);
     meal = new MealElement();
     meal.id = 1;
@@ -307,6 +316,7 @@ const DbScreen = () => {
     meal.mealStatusId = 333;
     meal.pass2Photo = "meal/pass2Photo/updated.btm";
     meal.name = "meal name updated";
+    meal.stock = 10
     update_item(Meal.tablename, meal);
     mealstatus = new MelaStatusElement();
     mealstatus.id = 1;
@@ -339,6 +349,8 @@ const DbScreen = () => {
     photo.longitude = -35.1234567890123456789;
     photo.visited = 0;
     photo.pass2Photo = "photoPass/Updated.svg";
+    now = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    photo.gottenDate = now.toString();
     update_item(Photo.tablename, photo);
   };
   const functionCheckSelect = () => {
@@ -454,6 +466,10 @@ const DbScreen = () => {
         console.error("テーブル一覧を取得できませんでした:", error);
       });
   };
+    const functionDate =() =>{
+      ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+      console.log(ToDay);
+    }
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -467,6 +483,7 @@ const DbScreen = () => {
       <Button title="DeleteItem" onPress={functionDelete} />
       <Button title="DropTable" onPress={functionD} />
       <Button title="CheckTable" onPress={functionE} />
+      <Button title="functionDate" onPress={functionDate} />
     </View>
   );
 };
