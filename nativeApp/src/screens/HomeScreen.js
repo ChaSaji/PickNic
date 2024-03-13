@@ -68,10 +68,9 @@ const HomeScreen = ({ navigation }) => {
           },
           (location) => {
             setMyLocation(location);
-            /* debug用 */
-            // console.log(
-            //   `latitude: ${location.coords.latitude}, longitude: ${location.coords.longitude}`
-            // );
+            console.log(
+              `latitude: ${location.coords.latitude}, longitude: ${location.coords.longitude}`
+            );
           }
         );
         return () => {

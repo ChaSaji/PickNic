@@ -31,12 +31,9 @@ const GetMaterialScreen = ({ route, navigation }) => {
       style={styles.container}
       onPress={() => navigation.navigate("Home")}
     >
-        <Text style={styles.title}>GET</Text>
-        <Image
-          style={styles.material}
-          source={images[getMaterial.pass2Photo]}
-        />
-        <Text style={styles.materialNumText}>{`× ${getMaterialNum}`}</Text>
+      <Text style={styles.title}>GET</Text>
+      <Image style={styles.material} source={images[getMaterial.pass2Photo]} />
+      <Text style={styles.materialNumText}>{`× ${getMaterialNum}`}</Text>
     </TouchableOpacity>
   );
 };

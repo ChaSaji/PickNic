@@ -26,7 +26,7 @@ async function sendImage({ uri }) {
         },
       }
     );
-    console.log("responce data: " + res.data);
+    console.log(res.data);
     return res.data;
   } catch (error) {
     console.error(error);
