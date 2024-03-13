@@ -34,7 +34,7 @@ const CookingDetailScreen = ({ route, navigation }) => {
                 key={index}
                 style={styles.material}
                 source={getImageSource({
-                  pass2Photo: material.pass2photo,
+                  pass2Photo: material.pass2Photo,
                 })}
               />
               <Text>{`×${material.needNum}`}</Text>
