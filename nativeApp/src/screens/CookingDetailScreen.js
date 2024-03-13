@@ -1,8 +1,17 @@
 import React, { useLayoutEffect } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import getImageSource from "../lib/images";
+import { selectDataById, update_item } from "../lib/dataBaseHelper";
+import {
+  MealStatus,
+  MelaStatusElement,
+  Material,
+  MaterialElement,
+} from "../lib/databaseQueryText";
+import { useDbUpdate } from "../context/DbUpdateContext";
 
 const CookingDetailScreen = ({ route, navigation }) => {
+  const { setMealUpdate, setMaterialUpdate } = useDbUpdate();
   useLayoutEffect(() => {
     navigation.setOptions({
       title: route.params.meal.name,
@@ -11,6 +20,56 @@ const CookingDetailScreen = ({ route, navigation }) => {
 
   const meal = route.params.meal;
   const materials = route.params.materials;
+
+  const isCookableCheck = () => {
+    if (meal.locked)
+      return { isCookable: false, msg: "このレシピはロックがかかっています。" };
+    for (let i = 0; i < materials.length; i++) {
+      if (materials[i].stock < materials[i].needNum) {
+        return { isCookable: false, msg: "食材が足りません。" };
+      }
+    }
+    return { isCookable: true, msg: "" };
+  };
+
+  const updateMealStatusCooked = () => {
+    selectDataById(MealStatus.tablename, meal.mealStatusId)
+      .then((data) => {
+        mealStatus = new MelaStatusElement();
+        mealStatus.id = data[0].id;
+        mealStatus.cooked = 1;
+        mealStatus.locked = data[0].locked;
+        update_item(MealStatus.tablename, mealStatus);
+      })
+      .then(setMealUpdate(Date.now()));
+  };
+
+  const updateMaterialStock = () => {
+    Promise.all(
+      materials.map((material) => {
+        newMaterial = new MaterialElement();
+        newMaterial.id = material.id;
+        newMaterial.name = material.name;
+        newMaterial.pass2Photo = material.pass2Photo;
+        newMaterial.colorId = material.colorId;
+        newMaterial.stock = material.stock - material.needNum;
+        update_item(Material.tablename, newMaterial);
+      })
+    ).then(setMaterialUpdate(Date.now()));
+  };
+
+  const cookCheck = () => {
+    const isCookableResult = isCookableCheck();
+    if (isCookableResult.isCookable) {
+      updateMealStatusCooked();
+      updateMaterialStock();
+      navigation.navigate("CookingAnimation", {
+        meal: meal,
+      });
+    } else {
+      return alert(isCookableResult.msg);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -43,11 +102,7 @@ const CookingDetailScreen = ({ route, navigation }) => {
         </View>
       </View>
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("CookingAnimation", {
-            meal: meal,
-          })
-        }
+        onPress={() => cookCheck()}
         style={[styles.button.outerRadius]}
       >
         <View style={[styles.button.innerRadius]}>
