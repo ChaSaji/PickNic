@@ -8,8 +8,10 @@ import {
   Material,
   MaterialElement,
 } from "../lib/databaseQueryText";
+import { useDbUpdate } from "../context/DbUpdateContext";
 
 const CookingDetailScreen = ({ route, navigation }) => {
+  const { setMealUpdate, setMaterialUpdate } = useDbUpdate();
   useLayoutEffect(() => {
     navigation.setOptions({
       title: route.params.meal.name,
@@ -31,27 +33,29 @@ const CookingDetailScreen = ({ route, navigation }) => {
   };
 
   const updateMealStatusCooked = () => {
-    selectDataById(MealStatus.tablename, meal.mealStatusId).then((data) => {
-      mealStatus = new MelaStatusElement();
-      mealStatus.id = data[0].id;
-      mealStatus.cooked = 1;
-      mealStatus.locked = data[0].locked;
-      update_item(MealStatus.tablename, mealStatus);
-    });
+    selectDataById(MealStatus.tablename, meal.mealStatusId)
+      .then((data) => {
+        mealStatus = new MelaStatusElement();
+        mealStatus.id = data[0].id;
+        mealStatus.cooked = 1;
+        mealStatus.locked = data[0].locked;
+        update_item(MealStatus.tablename, mealStatus);
+      })
+      .then(setMealUpdate(Date.now()));
   };
 
   const updateMaterialStock = () => {
-    for (let i = 0; i < materials.length; i++) {
-      selectDataById(Material.tablename, materials[i].id).then((data) => {
-        material = new MaterialElement();
-        material.id = data[0].id;
-        material.name = data[0].name;
-        material.pass2Photo = data[0].pass2Photo;
-        material.colorId = data[0].colorId;
-        material.stock = materials[i].stock - materials[i].needNum;
-        update_item(Material.tablename, material);
-      });
-    }
+    Promise.all(
+      materials.map((material) => {
+        newMaterial = new MaterialElement();
+        newMaterial.id = material.id;
+        newMaterial.name = material.name;
+        newMaterial.pass2Photo = material.pass2Photo;
+        newMaterial.colorId = material.colorId;
+        newMaterial.stock = material.stock - material.needNum;
+        update_item(Material.tablename, newMaterial);
+      })
+    ).then(setMaterialUpdate(Date.now()));
   };
 
   const cookCheck = () => {

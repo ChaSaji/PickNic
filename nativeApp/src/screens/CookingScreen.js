@@ -10,9 +10,11 @@ import {
   MealStatus,
 } from "../lib/databaseQueryText";
 import getImageSource from "../lib/images";
+import { useDbUpdate } from "../context/DbUpdateContext";
 
 const CookingScreen = ({ navigation }) => {
   const [meals, setMeals] = useState([]);
+  const { mealUpdate } = useDbUpdate();
   useEffect(() => {
     fetchData(Meal.tablename).then((meals) => {
       Promise.all(
@@ -36,7 +38,7 @@ const CookingScreen = ({ navigation }) => {
         setMeals(meals);
       });
     });
-  }, []);
+  }, [mealUpdate]);
 
   const handleItemClick = (meal) => {
     selectData(
