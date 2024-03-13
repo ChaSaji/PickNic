@@ -20,6 +20,9 @@ const PictureScreen = ({ navigation }) => {
 
   const handleSubmitToAPI = () => {
     setLoading(true);
+    // ローディングの最低時間を指定可能
+    const minLoadingTime = 2000;
+    const startTime = Date.now();
     try {
       sendImage({ uri: picture.uri })
         .then((response) => {
@@ -58,10 +61,21 @@ const PictureScreen = ({ navigation }) => {
         .then(({ gottenMaterial, gottenMaterialNum }) => {
           setIsCameraEnabled(false);
           setMaterialUpdate(Date.now);
-          navigation.navigate("GetMaterial", {
-            getMaterial: gottenMaterial,
-            getMaterialNum: gottenMaterialNum,
-          });
+          const endTime = Date.now();
+          const elapsedTime = endTime - startTime;
+          if (elapsedTime < minLoadingTime) {
+            setTimeout(() => {
+              navigation.navigate("GetMaterial", {
+                getMaterial: gottenMaterial,
+                getMaterialNum: gottenMaterialNum,
+              });
+            }, minLoadingTime - elapsedTime);
+          } else {
+            navigation.navigate("GetMaterial", {
+              getMaterial: gottenMaterial,
+              getMaterialNum: gottenMaterialNum,
+            });
+          }
         });
     } catch (error) {
       navigation.navigate("Home");
