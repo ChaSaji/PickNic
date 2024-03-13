@@ -281,6 +281,8 @@ export async function insert_item(Table, InsertItemItem) {
 }
 
 function insert_badge(InsertItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  InsertItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   let items =
     " (" +
     QueryConst.Badge.elementsKey.name +
@@ -536,6 +538,8 @@ function insert_material_photo_relation(InsertItem) {
   });
 }
 function insert_photo(InsertItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  InsertItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   console.log("insert_photo");
   let items =
     "(" +
@@ -629,6 +633,8 @@ export async function update_item(Table, updateItemItem) {
 }
 
 export function update_badge(updateItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  updateItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   //console.log("elements:"+QueryConst.Badge.elementsKey.name+":"+QueryConst.Badge.elementsKey.isHave+":"+QueryConst.Badge.elementsKey.pass2Photo);
   let items =
     QueryConst.Badge.elementsKey.name +
@@ -686,6 +692,8 @@ export function update_badge(updateItem) {
 }
 
 export function update_meal(updateItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  updateItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   let items =
     QueryConst.Meal.elementsKey.badgeId +
     " = ?," +
@@ -720,7 +728,6 @@ export function update_meal(updateItem) {
       tx.executeSql(
         QueryText,
         [
-          updateItem.recipeId,
           updateItem.badgeId,
           updateItem.mealStatusId,
           updateItem.pass2Photo,
@@ -924,6 +931,8 @@ export function update_material_photo_relation(updateItem) {
 }
 
 export function update_photo(updateItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  updateItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   console.log("update_photo");
   let items =
     QueryConst.Photo.elementsKey.name +
