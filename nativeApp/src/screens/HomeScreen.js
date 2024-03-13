@@ -7,6 +7,7 @@ import { useLocation } from "../context/LocationContext";
 import { CreateAndInitTableIfNotExist, fetchData } from "../lib/dataBaseHelper";
 import { Photo } from "../lib/databaseQueryText";
 import PictureMarker from "../components/PictureMarker";
+import { useDbUpdate } from "../context/DbUpdateContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -31,6 +32,7 @@ const HomeScreen = ({ navigation }) => {
   const { location, granted } = useLocation();
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
     useCamera();
+  const { photoUpdate } = useDbUpdate();
 
   useEffect(() => {
     SetAppAndHomeScreen()
@@ -42,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
       .catch((error) => {
         console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
       });
-  }, []);
+  }, [photoUpdate]);
 
   const handleNavigatePictureClick = ({ picture }) => {
     navigation.navigate("PictureView", {

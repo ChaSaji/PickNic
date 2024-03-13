@@ -6,12 +6,14 @@ import { useCamera } from "../context/CameraContext";
 import { insert_item } from "../lib/dataBaseHelper";
 import { Photo, PhotoElement } from "../lib/databaseQueryText";
 import { useLocation } from "../context/LocationContext";
+import { useDbUpdate } from "../context/DbUpdateContext";
 
 const CameraScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
-  const { setIsCameraEnabled, setPicture, setInsertedPhotId } = useCamera();
+  const { setPicture, setInsertedPhotId } = useCamera();
   const { location } = useLocation();
+  const { setPhotoUpdate } = useDbUpdate();
 
   const takePicture = async () => {
     if (camera) {
@@ -24,7 +26,7 @@ const CameraScreen = ({ navigation }) => {
       photo.visited = 1;
       photo.pass2Photo = image.uri;
       insert_item(Photo.tablename, photo).then((id) => setInsertedPhotId(id));
-      setIsCameraEnabled(false);
+      setPhotoUpdate(Date.now);
       navigation.navigate("Picture");
     }
   };
