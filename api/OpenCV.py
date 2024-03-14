@@ -2,40 +2,55 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
+from typing import Optional
+from fastapi import FastAPI
+
+from fastapi.responses import JSONResponse
+from ultralytics import YOLO
 import cv2
 import numpy as np
-from ultralytics import YOLO
+from PIL import Image
+
 
 app = FastAPI()
 
-@app.post("/uploadfile/")
-async def upload_files(file):
+@app.post("/uploadfile")
+async def upload_files(file: UploadFile = File(...)):
+    # アップロードされたファイルの情報を出力
+    file_info = {
+        "filename": file.filename,
+        "content_type": file.content_type,
+    }
+    # モデル読み込み
+    model = YOLO("yolov8x-oiv7.pt")
     contents = await file.read()
     nparr = np.frombuffer(contents, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    #hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-    #hsv_arr = np.vstack(hsv)
-    #hsv_code = ['{:02}{:02x}{:02x}'.format(*color) for color in hsv_arr]
 
-   # モデル読み込み
-    model = YOLO("yolov8x-oiv7.pt")
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    src = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    if img is None:
+        sys.exit('Can not read image')
+    
     results = model(img) 
     boxes = results[0].boxes
+
+    h, w, _ = img.shape
     max_area = 0
+    max_x1=0
+    max_y1=0
+    max_x2=3*h
+    max_y2=3*w
+
     for box in boxes:
-        #x1,y1,x2,y2 = [int(i) for i in box.xyxy[0]]
+
         x1,y1,x2,y2 = [int(i) for i in box.xyxy[0]]
 
         # 面積の領域を計算
         area = (x2-x1)*(y2-y1)
 
-        #area = w * h
-        # ノイズ（小さすぎる領域）と全体の輪郭（大きすぎる領域）を除外
-        if area < 1e2 :
+        if area < 1e2 or area > 1e5 :
             continue
         
-        print("x1,x2,y1,y2",x1,x2,y1,y2)
-        print("area",area)
 
         if max_area < area:
             max_area = area
@@ -45,12 +60,18 @@ async def upload_files(file):
             max_y2=y2
 
     cv2.rectangle(img, (max_x1, max_y1), (max_x2, max_y2), (0, 0, 255), 2)
+    #cv2.imshow("result",img)
 
-    hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
+    src = src[max_x1:max_x2,max_y1:max_y2]
+    #cv2.imshow("src",src)
+
+    hsv = cv2.cvtColor(src,cv2.COLOR_BGR2HSV)
+    #cv2.imshow("hsv",hsv)
     h = hsv[:,:,0]
     h_flat = h.flatten()
     count = np.bincount(h_flat)
     md = np.argmax(count)
+    print("md",md)
 
     if 0 <= md <= 15:
         #red
@@ -83,15 +104,27 @@ async def upload_files(file):
         #red
         color = 0    
 
-
     return {"return":str(color)}
-    # 外接矩形された画像を表示
-    #cv2.imshow('output', img)
-    #cv2.waitKey(0)
 
-    # 終了処理
-    #cv2.destroyAllWindows()
+    #if s_mean < 15 and 240 < v_mean:
+        # whilte
+        #color = 9
 
+    #if v_mean < 20:
+        # black
+        #color = 10
+    print (color)
+    return {"return":str(color)}
+    #print(file_info)
+    #print(file)
+    #with open(file.filename, "wb") as f:
+        #f.write(file.file.read())
+    #return {"filename": file.filename}
+
+    #print(file_info)
+    #print(file)
+    #return file_info
+    
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello World1"}
