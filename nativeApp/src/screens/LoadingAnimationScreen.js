@@ -5,7 +5,7 @@ import getRandomNum from "../lib/getRandomNum";
 
 const LoadingAnimationScreen = () => {
   const animation = useRef(null);
-  const randomAnimationNum = 0//getRandomNum(3);
+  const randomAnimationNum = getRandomNum(3);
   const loadingAnimationMap = {
     0 : require("../../assets/material_animation_1.json"), // トラクター
     1 : require("../../assets/material_animation_2.json"), // ぐるぐる
@@ -15,7 +15,7 @@ const LoadingAnimationScreen = () => {
   const loadingAnimation = loadingAnimationMap[randomAnimationNum];
 
   return (
-    <View style={styles.animationContainer_0}>
+    <View style={styles.animationContainer}>
       <LottieView
         autoPlay
         loop={true}
@@ -33,23 +33,9 @@ const LoadingAnimationScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  animationContainer_0: {
+  animationContainer: {
     // lottieでカラーセット色々あるから試してみた方がいいかも
     backgroundColor: "F8DAD1",
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-  },
-  animationContainer_1: {
-    // lottieでカラーセット色々あるから試してみた方がいいかも
-    backgroundColor: "#F8DAD1",
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-  },
-  animationContainer_2: {
-    // lottieでカラーセット色々あるから試してみた方がいいかも
-    backgroundColor: "#F8DAD1",
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
