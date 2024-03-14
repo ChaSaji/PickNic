@@ -8,6 +8,7 @@ import { CreateAndInitTableIfNotExist, fetchData } from "../lib/dataBaseHelper";
 import { Photo } from "../lib/databaseQueryText";
 import PictureMarker from "../components/PictureMarker";
 import { useDbUpdate } from "../context/DbUpdateContext";
+import InformationButton from "../components/InformationButton";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -57,6 +58,10 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate("Camera");
   };
 
+  const handleNavigateCopyrightClick = () => {
+    navigation.navigate("Copyright");
+  };
+
   const handleComplete = () => {
     console.log("set camera enable");
     setCameraKey((prevKey) => prevKey + 1);
@@ -84,10 +89,11 @@ const HomeScreen = ({ navigation }) => {
               coordinate={{
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-              }}>
-                <View style={styles.outerRadius}>
-                  <View style={styles.innerRadius}/>
-                </View>
+              }}
+            >
+              <View style={styles.outerRadius}>
+                <View style={styles.innerRadius} />
+              </View>
             </Marker>
             {pictures.map((picture, index) => (
               <PictureMarker
@@ -99,6 +105,20 @@ const HomeScreen = ({ navigation }) => {
               />
             ))}
           </MapView>
+          <View
+            style={{
+              position: "absolute",
+              justifyContent: "center",
+              alignItems: "center",
+              width: 30,
+              height: 30,
+              borderRadius: 200,
+              right: 30,
+              top: 30,
+            }}
+          >
+            <InformationButton onPress={handleNavigateCopyrightClick} />
+          </View>
           <View
             style={{
               position: "absolute",
