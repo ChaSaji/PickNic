@@ -7,10 +7,18 @@ export const useDbUpdate = () => useContext(DbUpdateContext);
 export const DbUpdateProvider = ({ children }) => {
   const [materialUpdate, setMaterialUpdate] = useState(Date.now);
   const [mealUpdate, setMealUpdate] = useState(Date.now);
+  const [photoUpdate, setPhotoUpdate] = useState(Date.now);
 
   return (
     <DbUpdateContext.Provider
-      value={{ materialUpdate, setMaterialUpdate, mealUpdate, setMealUpdate }}
+      value={{
+        materialUpdate,
+        setMaterialUpdate,
+        mealUpdate,
+        setMealUpdate,
+        photoUpdate,
+        setPhotoUpdate,
+      }}
     >
       {children}
     </DbUpdateContext.Provider>
