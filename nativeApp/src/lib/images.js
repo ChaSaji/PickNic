@@ -29,6 +29,9 @@ const images = {
   potato: require("../../assets/potato.png"),
   sakuranbo: require("../../assets/sakuranbo.png"),
   tamago: require("../../assets/tamago.png"),
+  fish: require("../../assets/fish.png"),
+  blueberry: require("../../assets/blueberry.png"),
+  satsumaimo: require("../../assets/satsumaimo.png"),
   un: require("../../assets/un.png"),
   lock: require("../../assets/lock.png"),
 };
