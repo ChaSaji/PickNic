@@ -16,7 +16,7 @@ const CookingScreen = ({ navigation }) => {
   const [meals, setMeals] = useState([]);
   const { mealUpdate } = useDbUpdate();
   useEffect(() => {
-    fetchData(Meal.tablename).then((meals) => {
+    fetchData(Meal.tablename, 0, 1000, false).then((meals) => {
       Promise.all(
         meals.map((meal) =>
           selectData(

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Dimensions, Button } from "react-native";
+import { Text, View, StyleSheet, Dimensions } from "react-native";
 import CameraButton from "../components/CameraButton";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
 import { useCamera } from "../context/CameraContext";
+import { useLocation } from "../context/LocationContext";
 import { CreateAndInitTableIfNotExist, fetchData } from "../lib/dataBaseHelper";
 import { Photo } from "../lib/databaseQueryText";
+import PictureMarker from "../components/PictureMarker";
+import { useDbUpdate } from "../context/DbUpdateContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -15,7 +17,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 async function SetAppAndHomeScreen() {
   try {
-    const resultA = await CreateAndInitTableIfNotExist(); // 非同期処理CreateAndInitTableIfNotExistの完了を待つ
+    await CreateAndInitTableIfNotExist(); // 非同期処理CreateAndInitTableIfNotExistの完了を待つ
     const resultB = await fetchData(Photo.tablename); // 非同期処理Bの完了を待つ
     // 両処理が完了した後の処理を行う
     return resultB;
@@ -25,25 +27,33 @@ async function SetAppAndHomeScreen() {
 }
 
 const HomeScreen = ({ navigation }) => {
-  const [myLocation, setMyLocation] = useState(null);
-  const [granted, setGranted] = useState(false);
+  const [pictures, setPictures] = useState([]);
+
+  const { location, granted } = useLocation();
+  const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
+    useCamera();
+  const { photoUpdate } = useDbUpdate();
 
   useEffect(() => {
     SetAppAndHomeScreen()
-      .then((data) => {
-        console.log("return data SetAppAndHomeScreen =");
-        console.log(data);
+      .then((picture) => {
+        // console.log("return data SetAppAndHomeScreen =");
+        // console.log(picture);
+        setPictures(picture);
       })
       .catch((error) => {
         console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
       });
-  }, []);
+  }, [photoUpdate]);
 
-  const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
-    useCamera();
+  const handleNavigatePictureClick = ({ picture }) => {
+    navigation.navigate("PictureView", {
+      id: picture.id,
+      uri: picture.pass2Photo,
+    });
+  };
 
   const handleNavigateCameraClick = () => {
-    console.log("click");
     navigation.navigate("Camera");
   };
 
@@ -53,59 +63,41 @@ const HomeScreen = ({ navigation }) => {
     setIsCameraEnabled(true);
   };
 
-  useEffect(() => {
-    (async () => {
-      let locationSubscription;
-
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === "granted") {
-        setGranted(true);
-        locationSubscription = await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.Highest,
-            timeInterval: 1000, //android専用らしいけどわからん
-            distanceInterval: 1,
-          },
-          (location) => {
-            setMyLocation(location);
-            /* debug用 */
-            // console.log(
-            //   `latitude: ${location.coords.latitude}, longitude: ${location.coords.longitude}`
-            // );
-          }
-        );
-        return () => {
-          if (locationSubscription) {
-            locationSubscription.remove();
-          }
-        };
-      }
-    })();
-  }, []);
-
   return (
     <View style={styles.container}>
       {granted === false ? (
         <Text>Permission to access location was denied</Text>
-      ) : myLocation === null ? (
+      ) : location === null ? (
         <Text>Obtaining location information...</Text>
       ) : (
         <>
           <MapView
             style={styles.map}
             initialRegion={{
-              latitude: myLocation.coords.latitude,
-              longitude: myLocation.coords.longitude,
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
           >
             <Marker
               coordinate={{
-                latitude: myLocation.coords.latitude,
-                longitude: myLocation.coords.longitude,
-              }}
-            />
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+              }}>
+                <View style={styles.outerRadius}>
+                  <View style={styles.innerRadius}/>
+                </View>
+            </Marker>
+            {pictures.map((picture, index) => (
+              <PictureMarker
+                key={index}
+                uri={picture.pass2Photo}
+                latitude={picture.ratitude}
+                longitude={picture.longitude}
+                onPress={() => handleNavigatePictureClick({ picture: picture })}
+              />
+            ))}
           </MapView>
           <View
             style={{
@@ -142,6 +134,25 @@ const styles = StyleSheet.create({
   map: {
     width: windowWidth,
     height: windowHeight,
+  },
+  outerRadius: {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 25,
+    height: 25,
+    borderRadius: 200,
+    backgroundColor: "#1BB8E8",
+  },
+  innerRadius: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 20,
+    height: 20,
+    borderRadius: 200,
+    borderWidth: 2,
+    borderColor: "white",
+    backgroundColor: "#1BB8E8",
   },
 });
 

@@ -1,4 +1,86 @@
 //reset
+export const RecipeDetail =[
+    {
+        "mealId": 1,
+        "materialId": 1,
+        "needNum": 1
+    },
+    {
+        "mealId": 1,
+        "materialId": 3,
+        "needNum": 1
+    },
+    {
+        "mealId": 1,
+        "materialId": 9,
+        "needNum": 2
+    },
+    {
+        "mealId": 1,
+        "materialId": 11,
+        "needNum": 2
+    },
+    {
+        "mealId": 4,
+        "materialId": 11,
+        "needNum": 3
+    },
+    {
+        "mealId": 4,
+        "materialId": 3,
+        "needNum": 1
+    },
+    {
+        "mealId": 4,
+        "materialId": 2,
+        "needNum": 1
+    },
+    {
+        "mealId": 9,
+        "materialId": 4,
+        "needNum": 1
+    },
+    {
+        "mealId": 9,
+        "materialId": 6,
+        "needNum": 3
+    },
+    {
+        "mealId": 9,
+        "materialId": 10,
+        "needNum": 2
+    },
+    {
+        "mealId": 9,
+        "materialId": 13,
+        "needNum": 6
+    },
+    {
+        "mealId": 10,
+        "materialId": 2,
+        "needNum": 2
+    },
+    {
+        "mealId": 10,
+        "materialId": 5,
+        "needNum": 1
+    },
+    {
+        "mealId": 10,
+        "materialId": 7,
+        "needNum": 1
+    },
+    {
+        "mealId": 10,
+        "materialId": 8,
+        "needNum": 3
+    },
+    {
+        "mealId": 10,
+        "materialId": 13,
+        "needNum": 1
+    }
+];
 export const Badge =[
     {
         "name": "\u7d66\u98df",
@@ -121,7 +203,31 @@ export const Meal =[
 ];
 export const MealStatus =[
     {
-        "locked": 1,
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
         "cooked": 0
     },
     {
@@ -134,42 +240,18 @@ export const MealStatus =[
     },
     {
         "locked": 1,
-        "cooked": 1
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
         "cooked": 0
     },
     {
         "locked": 1,
-        "cooked": 1
+        "cooked": 0
     },
     {
         "locked": 1,
-        "cooked": 1
-    },
-    {
-        "locked": 0,
         "cooked": 0
     },
     {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
+        "locked": 1,
         "cooked": 0
     },
     {
@@ -185,6 +267,21 @@ export const MealStatus =[
         "cooked": null
     }
 ];
+export const MaterialPhotoRelation =[
+    {
+        "materialId": 123,
+        "photoId": 555
+    },
+    {
+        "materialId": 456,
+        "photoId": 789
+    },
+    {
+        "materialId": 6,
+        "photoId": 3
+    }
+];
+export const Photo =[];
 export const Material =[
     {
         "name": "\u725b\u8089",
@@ -281,102 +378,5 @@ export const Material =[
         "pass2Photo": "satsumaimo",
         "stock": 2,
         "colorId": 7
-    }
-];
-export const MaterialPhotoRelation =[
-    {
-        "materialId": 123,
-        "photoId": 555
-    },
-    {
-        "materialId": 456,
-        "photoId": 789
-    },
-    {
-        "materialId": 6,
-        "photoId": 3
-    }
-];
-export const Photo =[];
-export const RecipeDetail =[
-    {
-        "mealId": 1,
-        "materialId": 1,
-        "needNum": 1
-    },
-    {
-        "mealId": 1,
-        "materialId": 3,
-        "needNum": 1
-    },
-    {
-        "mealId": 1,
-        "materialId": 9,
-        "needNum": 2
-    },
-    {
-        "mealId": 1,
-        "materialId": 11,
-        "needNum": 2
-    },
-    {
-        "mealId": 4,
-        "materialId": 11,
-        "needNum": 3
-    },
-    {
-        "mealId": 4,
-        "materialId": 3,
-        "needNum": 1
-    },
-    {
-        "mealId": 4,
-        "materialId": 2,
-        "needNum": 1
-    },
-    {
-        "mealId": 9,
-        "materialId": 4,
-        "needNum": 1
-    },
-    {
-        "mealId": 9,
-        "materialId": 6,
-        "needNum": 3
-    },
-    {
-        "mealId": 9,
-        "materialId": 10,
-        "needNum": 2
-    },
-    {
-        "mealId": 9,
-        "materialId": 13,
-        "needNum": 6
-    },
-    {
-        "mealId": 10,
-        "materialId": 2,
-        "needNum": 2
-    },
-    {
-        "mealId": 10,
-        "materialId": 5,
-        "needNum": 1
-    },
-    {
-        "mealId": 10,
-        "materialId": 7,
-        "needNum": 1
-    },
-    {
-        "mealId": 10,
-        "materialId": 8,
-        "needNum": 3
-    },
-    {
-        "mealId": 10,
-        "materialId": 13,
-        "needNum": 1
     }
 ];
