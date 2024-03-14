@@ -97,6 +97,7 @@ export async function CreateAllTable() {
     await CreateEachTable(QueryConst.createTableMaterialPhotoRelation);
     await CreateEachTable(QueryConst.createTableMeal);
     await CreateEachTable(QueryConst.createTableMeal_Status);
+    await CreateEachTable(QueryConst.createPlace);
     await CreateEachTable(QueryConst.createTablePhoto);
     await CreateEachTable(QueryConst.createTableRecipe_Detail);
   } catch (error) {
@@ -108,6 +109,7 @@ export async function CreateAllTable() {
     console.log(QueryConst.createTableMaterialPhotoRelation);
     console.log(QueryConst.createTableMeal);
     console.log(QueryConst.createTableMeal_Status);
+    console.log(QueryConst.createPlace);
     console.log(QueryConst.createTablePhoto);
     console.log(QueryConst.createTableRecipe_Detail);
   }
@@ -246,6 +248,22 @@ export async function insert_item(Table, InsertItemItem) {
         const lastInsertedId = await insert_material_photo_relation(
           InsertItemItem
         );
+        if (QueryConst.debugDataBaseLevel > 0) {
+          console.log("Last inserted ID:", lastInsertedId);
+        }
+        return lastInsertedId;
+        // ここでlastInsertedIdを使用する
+      } catch (error) {
+        console.error("Error inserting and getting ID:", error);
+        return -1;
+      }
+      break;
+      case QueryConst.Place.tablename: //7
+      if (QueryConst.debugDataBaseLevel > 0) {
+        console.log("insert " + QueryConst.Place.tablename);
+      }
+      try {
+        const lastInsertedId = await insert_place(InsertItemItem);
         if (QueryConst.debugDataBaseLevel > 0) {
           console.log("Last inserted ID:", lastInsertedId);
         }
@@ -526,6 +544,48 @@ function insert_material_photo_relation(InsertItem) {
     });
   });
 }
+function insert_place(InsertItem) {
+  let items =
+    "("+
+    QueryConst.Place.elementsKey.name+
+    ","+
+    QueryConst.Place.elementsKey.visited+    
+    ")";
+  let QueryText =
+    QueryConst.InsertQuery +
+    QueryConst.Place.tablename +
+    items +
+    QueryConst.values +
+    "(?,?)";
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryText,
+      InsertItem.name,
+      InsertItem.visited);
+  }
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        QueryText,
+        [
+          InsertItem.name,
+          InsertItem.visited
+        ],
+        (_, result) => {
+          // 成功時の処理
+          const lastInsertedId = result.insertId;
+          resolve(lastInsertedId);
+          if (QueryConst.debugDataBaseLevel > 1) {
+            console.log("Data Inserted meal id:" + lastInsertedId);
+          }
+        },
+        (_, error) => {
+          console.error("Insert meal error", error);
+        }
+      );
+    });
+  });
+}
+
 function insert_photo(InsertItem) {
   console.log("insert_photo");
   let items =
@@ -602,6 +662,9 @@ export async function update_item(Table, updateItemItem) {
     case QueryConst.MaterialPhotoRelation.tablename: //6
       await update_material_photo_relation(updateItemItem);
       break;
+    case QueryConst.Place.tablename:
+      await update_place(updateItemItem);
+      break;
     case QueryConst.Photo.tablename: //7
       await update_photo(updateItemItem);
       break;
@@ -655,7 +718,7 @@ export function update_badge(updateItem) {
         },
         (_, error) => {
           // エラー時の処理
-          console.error("update erro", error);
+          console.error("update error Budge", error);
         }
       );
     });
@@ -710,7 +773,7 @@ export function update_meal(updateItem) {
         },
         (_, error) => {
           // エラー時の処理
-          console.error("update erro", error);
+          console.error("update error meal", error);
         }
       );
     });
@@ -748,7 +811,7 @@ export function update_meal_status(updateItem) {
         },
         (_, error) => {
           // エラー時の処理
-          console.error("update erro", error);
+          console.error("update error MealStatus", error);
         }
       );
     });
@@ -789,12 +852,12 @@ export function update_recipe_detail(updateItem) {
               console.log("Data updateed RecipeDetail");
             }
           } else {
-            console.log("erro updateed RecipeDetail" + QueryText);
+            console.warn("erro updateed RecipeDetail" + QueryText);
           }
         },
         (_, error) => {
           // エラー時の処理
-          console.error("update erro", error);
+          console.error("update error RecipeDetail", error);
         }
       );
     });
@@ -844,7 +907,7 @@ export function update_material(updateItem) {
               console.log("Data updateed Material");
             }
           } else {
-            console.log("erro updateed Material" + QueryText);
+            console.warn("erro updateed Material" + QueryText);
           }
         },
         (_, error) => {
@@ -882,12 +945,57 @@ export function update_material_photo_relation(updateItem) {
           if (rowsAffected > 0) {
             console.log("Data updateed MaterialPhotoRelation");
           } else {
-            console.log("erro updateed MaterialPhotoRelation" + QueryText);
+            console.warn("erro updateed MaterialPhotoRelation" + QueryText);
           }
         },
         (_, error) => {
           // エラー時の処理
-          console.error("update erro", error);
+          console.error("update error mealphotorelation", error);
+        }
+      );
+    });
+  });
+}
+
+export function update_place(updateItem) {
+  console.log("update_photo");
+  let items =
+    QueryConst.Place.elementsKey.name +
+    " = ?," +
+    QueryConst.Place.elementsKey.visited +
+    " = ?";
+  let QueryText =
+    QueryConst.UpdateQuery +
+    QueryConst.Place.tablename +
+    QueryConst.Set +
+    items +
+    QueryConst.WhereId;
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(
+      QueryText,
+      updateItem.name,
+      updateItem.visited,
+      updateItem.id
+    );
+  }
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        QueryText,
+        [
+          updateItem.name,
+          updateItem.visited,
+          updateItem.id
+        ],
+        (_, { rowsAffected }) => {
+          if (rowsAffected > 0) {
+            console.log("Data Updated place");
+          } else {
+            console.warn("error Updated place" + QueryText);
+          }
+        },
+        (_, error) => {
+          console.error("update error place:", error);
         }
       );
     });
@@ -940,11 +1048,11 @@ export function update_photo(updateItem) {
           if (rowsAffected > 0) {
             console.log("Data Updated Photo");
           } else {
-            console.log("error Updated Photo" + QueryText);
+            console.warn("error Updated Photo" + QueryText);
           }
         },
         (_, error) => {
-          console.error("update erro:", error);
+          console.error("update error photo:", error);
         }
       );
     });
@@ -1426,6 +1534,7 @@ export async function dropAllTable() {
     console.log(
       QueryConst.DropTableQuery + QueryConst.Material.tablename + ";"
     );
+    console.log(QueryConst.DropTableQuery + QueryConst.Place.tablename+ ";");
     console.log(
       QueryConst.DropTableQuery +
         QueryConst.MaterialPhotoRelation.tablename +
@@ -1450,6 +1559,9 @@ export async function dropAllTable() {
   );
   await dropEachTable(
     QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.Place.tablename + ";"
   );
   await dropEachTable(
     QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";"
