@@ -12,7 +12,7 @@ const AppNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home_tab"
-      activeColor="#f0edf6" // タッチした時の文字色
+      // activeColor="#f0edf6" // タッチした時の文字色
       inactiveColor="#3e2465" //他のタブがタッチされている時の文字色
       barStyle={{ backgroundColor: "#ffd700" }} //タブの背景色
     >
@@ -69,14 +69,14 @@ const AppNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Db_tab"
         component={DbScreen}
         options={{
           tabBarLabel: "DB",
           tabBarIcon: () => <></>,
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 };
