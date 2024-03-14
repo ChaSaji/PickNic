@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { CameraProvider } from "../../context/CameraContext";
 import GetMaterialScreen from "../../screens/GetMaterialScreen";
 import { LocationProvider } from "../../context/LocationContext";
+import CopyrightScreen from "../../screens/CopyrightScreen";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const HomeScreenNavigator = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="PictureView" component={PictureViewScreen} />
+          <Stack.Screen name="Copyright" component={CopyrightScreen} />
         </Stack.Navigator>
       </LocationProvider>
     </CameraProvider>
