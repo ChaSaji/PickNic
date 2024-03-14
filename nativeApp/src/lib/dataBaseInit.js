@@ -1,19 +1,4 @@
 //reset
-export const Photo =[];
-export const MaterialPhotoRelation =[
-    {
-        "materialId": 123,
-        "photoId": 555
-    },
-    {
-        "materialId": 456,
-        "photoId": 789
-    },
-    {
-        "materialId": 6,
-        "photoId": 3
-    }
-];
 export const RecipeDetail =[
     {
         "mealId": 1,
@@ -282,6 +267,21 @@ export const MealStatus =[
         "cooked": null
     }
 ];
+export const MaterialPhotoRelation =[
+    {
+        "materialId": 123,
+        "photoId": 555
+    },
+    {
+        "materialId": 456,
+        "photoId": 789
+    },
+    {
+        "materialId": 6,
+        "photoId": 3
+    }
+];
+export const Photo =[];
 export const Material =[
     {
         "name": "\u725b\u8089",
@@ -360,5 +360,23 @@ export const Material =[
         "pass2Photo": "tamago",
         "stock": 7,
         "colorId": 2
+    },
+    {
+        "name": "\u3055\u304b\u306a",
+        "pass2Photo": "fish",
+        "stock": 2,
+        "colorId": 5
+    },
+    {
+        "name": "\u30d6\u30eb\u30fc\u30d9\u30ea\u30fc",
+        "pass2Photo": "blueberry",
+        "stock": 3,
+        "colorId": 6
+    },
+    {
+        "name": "\u3055\u3064\u307e\u3044\u3082",
+        "pass2Photo": "satsumaimo",
+        "stock": 2,
+        "colorId": 7
     }
 ];
