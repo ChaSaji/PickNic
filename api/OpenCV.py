@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
 import cv2
 import numpy as np
+from ultralytics import YOLO
 
 app = FastAPI()
 
@@ -16,51 +17,34 @@ async def upload_files(file):
     #hsv_arr = np.vstack(hsv)
     #hsv_code = ['{:02}{:02x}{:02x}'.format(*color) for color in hsv_arr]
 
-    img = cv2.imread('apple.jpg')
-    if img is None:
-        sys.exit('Can not read image')
-
-    # 指定した画像(path)の物体を検出し、外接矩形の画像を出力します
-    # グレースケール画像へ変換
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # 2値化
-    retval, bw = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-
-    # 輪郭を抽出
-    #   contours : [領域][Point No][0][x=0, y=1]
-    #   cv2.CHAIN_APPROX_NONE: 中間点も保持する
-    #   cv2.CHAIN_APPROX_SIMPLE: 中間点は保持しない
-    contours, hierarchy = cv2.findContours(bw, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-
-    # 矩形検出された数（デフォルトで0を指定）
-    detect_count = 0
-
+   # モデル読み込み
+    model = YOLO("yolov8x-oiv7.pt")
+    results = model(img) 
+    boxes = results[0].boxes
     max_area = 0
-    max_i = 0
+    for box in boxes:
+        #x1,y1,x2,y2 = [int(i) for i in box.xyxy[0]]
+        x1,y1,x2,y2 = [int(i) for i in box.xyxy[0]]
 
-    # 各輪郭に対する処理
-    for i in range(0, len(contours)):
+        # 面積の領域を計算
+        area = (x2-x1)*(y2-y1)
 
-        # 輪郭の領域を計算
-        area = cv2.contourArea(contours[i])
-
+        #area = w * h
         # ノイズ（小さすぎる領域）と全体の輪郭（大きすぎる領域）を除外
-        if area < 1e2 or 1e5 < area:
+        if area < 1e2 :
             continue
-
-        if i == 0:
-            max_area = area
+        
+        print("x1,x2,y1,y2",x1,x2,y1,y2)
+        print("area",area)
 
         if max_area < area:
-            max_i = i
+            max_area = area
+            max_x1=x1
+            max_y1=y1
+            max_x2=x2
+            max_y2=y2
 
-    # 外接矩形
-    if len(contours[max_i]) > 0:
-        rect = contours[max_i]
-        x, y, w, h = cv2.boundingRect(rect)
-        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
+    cv2.rectangle(img, (max_x1, max_y1), (max_x2, max_y2), (0, 0, 255), 2)
 
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
     h = hsv[:,:,0]
