@@ -79,7 +79,7 @@ export class Badge {
 |name |TEXT|バッジ名|
 |IsHave |INTEGER|保持しているか0か1の入力を想定|
 |pass2Photo|TEXT|画像へのパス(url)も入力可能|
-  
+|gottenData|TEXT|ISO形式で日付を保存、自動取得|
 **Material**
 |要素名|データ型|説明|
 |:------|:--------------|:--------------|
@@ -101,6 +101,9 @@ export class Badge {
 |badgeId      |INTEGER  |対応するBadgeのID|
 |mealStatusId |INTEGER  |対応するMealStatusのID|
 |pass2Photo   |TEXT     |画像へのパス(url)も入力可能|
+|stock        |INTEGER  |料理の所持数|
+|placeId      |INTEGER  |対応する場所(Place)のID(定数で定義)|
+
 
 
 **MealStatus**
@@ -119,13 +122,14 @@ export class Badge {
 |longitude  |INTEGER  |経度(指数表記を使わないこと)|
 |pass2Photo |TEXT     |画像へのパス(url)も入力可能|
 |visited    |INTEGER  |訪れているか,0か１を保持|
-
+|gottenData|TEXT|ISO形式で日付を保存、自動取得|
 **RecipeDetail**
 |要素名|データ型|説明|
 |:------|:--------------|:--------------|
 |mealId     |INTEGER |対応するMealのID|
 |materialId |INTEGER |対応するMaterialのID|
 |needNum    |INTEGER |必要数|
+
 
 ## 本プロジェクトで用いるテーブルと型
 

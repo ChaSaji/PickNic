@@ -162,6 +162,9 @@ export async function insert_item(Table, InsertItemItem) {
   }
   switch (Table) {
     case QueryConst.Badge.tablename: //1
+    if (QueryConst.debugDataBaseLevel > 0) {
+      console.log("insert " + QueryConst.Badge.tablename);
+    }
       try {
         const lastInsertedId = await insert_badge(InsertItemItem);
         if (QueryConst.debugDataBaseLevel > 0) {
@@ -278,6 +281,8 @@ export async function insert_item(Table, InsertItemItem) {
 }
 
 function insert_badge(InsertItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  InsertItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   let items =
     " (" +
     QueryConst.Badge.elementsKey.name +
@@ -285,24 +290,26 @@ function insert_badge(InsertItem) {
     QueryConst.Badge.elementsKey.isHave +
     "," +
     QueryConst.Badge.elementsKey.pass2Photo +
+    ","+
+    QueryConst.Badge.elementsKey.gottenDate +
     ")";
   let QueryText =
     QueryConst.InsertQuery +
     QueryConst.Badge.tablename +
     items +
     QueryConst.values +
-    "(?, ?, ?)";
-
+    "(?, ?, ?, ?)";
   if (QueryText.debugDataBaseLevel > 0) {
     console.log(
-      QueryText + InsertItem.name + InsertItem.isHave + InsertItem.pass2Photo
+      QueryText
     );
+    console.log( + InsertItem.name + InsertItem.isHave + InsertItem.pass2Photo+InsertItem.gottenDate);
   }
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
         QueryText,
-        [InsertItem.name, InsertItem.isHave, InsertItem.pass2Photo],
+        [InsertItem.name, InsertItem.isHave, InsertItem.pass2Photo,InsertItem.gottenDate],
         (_, result) => {
           // 成功時の処理
           const lastInsertedId = result.insertId;
@@ -313,7 +320,8 @@ function insert_badge(InsertItem) {
         },
         (_, error) => {
           // エラー時の処理
-          console.error("Insert error", error);
+          console.error(QueryText);
+          console.error("Insert error budge", error);
         }
       );
     });
@@ -330,13 +338,17 @@ function insert_meal(InsertItem) {
     QueryConst.Meal.elementsKey.pass2Photo +
     "," +
     QueryConst.Meal.elementsKey.name +
+    "," +
+    QueryConst.Meal.elementsKey.stock +
+    "," +
+    QueryConst.Meal.elementsKey.placeId +
     ")";
   let QueryText =
     QueryConst.InsertQuery +
     QueryConst.Meal.tablename +
     items +
     QueryConst.values +
-    "(?,?,?,?)";
+    "(?,?,?,?,?,?)";
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
@@ -349,6 +361,8 @@ function insert_meal(InsertItem) {
           InsertItem.mealStatusId,
           InsertItem.pass2Photo,
           InsertItem.name,
+          InsertItem.stock,
+          InsertItem.placeId
         ],
         (_, result) => {
           // 成功時の処理
@@ -527,6 +541,8 @@ function insert_material_photo_relation(InsertItem) {
   });
 }
 function insert_photo(InsertItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  InsertItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   console.log("insert_photo");
   let items =
     "(" +
@@ -539,15 +555,23 @@ function insert_photo(InsertItem) {
     QueryConst.Photo.elementsKey.pass2Photo +
     "," +
     QueryConst.Photo.elementsKey.visited +
+    "," +
+    QueryConst.Photo.elementsKey.gottenDate +
     ")";
   let QueryText =
     QueryConst.InsertQuery +
     QueryConst.Photo.tablename +
     items +
     QueryConst.values +
-    "(?,?,?,?,?)";
+    "(?,?,?,?,?,?);";
   if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryText);
+    console.log(QueryText,        
+      InsertItem.name,
+      InsertItem.ratitude,
+      InsertItem.longitude,
+      InsertItem.pass2Photo,
+      InsertItem.visited,
+      InsertItem.gottenDate);
   }
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -559,6 +583,7 @@ function insert_photo(InsertItem) {
           InsertItem.longitude,
           InsertItem.pass2Photo,
           InsertItem.visited,
+          InsertItem.gottenDate
         ],
         (_, result) => {
           // 成功時の処理
@@ -611,6 +636,8 @@ export async function update_item(Table, updateItemItem) {
 }
 
 export function update_badge(updateItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  updateItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   //console.log("elements:"+QueryConst.Badge.elementsKey.name+":"+QueryConst.Badge.elementsKey.isHave+":"+QueryConst.Badge.elementsKey.pass2Photo);
   let items =
     QueryConst.Badge.elementsKey.name +
@@ -618,7 +645,10 @@ export function update_badge(updateItem) {
     QueryConst.Badge.elementsKey.isHave +
     " = ?," +
     QueryConst.Badge.elementsKey.pass2Photo +
-    " = ?";
+    " = ?,"+
+    QueryConst.Badge.elementsKey.gottenDate +
+    " = ?"
+    ;
   let QueryText =
     QueryConst.UpdateQuery +
     QueryConst.Badge.tablename +
@@ -631,6 +661,7 @@ export function update_badge(updateItem) {
       updateItem.name,
       updateItem.isHave,
       updateItem.pass2Photo,
+      updateItem.gottenDate,
       updateItem.id
     );
   }
@@ -642,7 +673,8 @@ export function update_badge(updateItem) {
           updateItem.name,
           updateItem.isHave,
           updateItem.pass2Photo,
-          updateItem.id,
+          updateItem.gottenDate,
+          updateItem.id
         ],
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) {
@@ -650,12 +682,12 @@ export function update_badge(updateItem) {
               console.log("Data updated Badge");
             }
           } else {
-            console.log("erro update Badge" + QueryText);
+            console.warn("erro update Badge " + QueryText);
           }
         },
         (_, error) => {
           // エラー時の処理
-          console.error("update erro", error);
+          console.error("update error Badge", error);
         }
       );
     });
@@ -663,6 +695,8 @@ export function update_badge(updateItem) {
 }
 
 export function update_meal(updateItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  updateItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   let items =
     QueryConst.Meal.elementsKey.badgeId +
     " = ?," +
@@ -671,7 +705,12 @@ export function update_meal(updateItem) {
     QueryConst.Meal.elementsKey.pass2Photo +
     " = ?," +
     QueryConst.Meal.elementsKey.name +
-    " = ?";
+    " = ?,"+
+    QueryConst.Meal.elementsKey.stock +
+    " = ?,"+
+    QueryConst.Meal.elementsKey.placeId +
+    " = ?"
+    ;
   let QueryText =
     QueryConst.UpdateQuery +
     QueryConst.Meal.tablename +
@@ -685,6 +724,8 @@ export function update_meal(updateItem) {
       updateItem.mealStatusId,
       updateItem.pass2Photo,
       updateItem.name,
+      updateItem.stock,
+      updateItem.placeId,
       updateItem.id
     );
   }
@@ -693,10 +734,12 @@ export function update_meal(updateItem) {
       tx.executeSql(
         QueryText,
         [
-          updateItem.recipeId,
           updateItem.badgeId,
           updateItem.mealStatusId,
           updateItem.pass2Photo,
+          updateItem.name,
+          updateItem.stock,
+          updateItem.placeId,
           updateItem.id,
         ],
         (_, { rowsAffected }) => {
@@ -705,12 +748,12 @@ export function update_meal(updateItem) {
               console.log("Data updated Meal");
             }
           } else {
-            console.log("erro up meal" + QueryText);
+            console.warn("error update meal " + QueryText);
           }
         },
         (_, error) => {
           // エラー時の処理
-          console.error("update erro", error);
+          console.error("update error", error);
         }
       );
     });
@@ -743,12 +786,12 @@ export function update_meal_status(updateItem) {
               console.log("Data updated MealStatus");
             }
           } else {
-            console.log("erro updated MealStatus" + QueryText);
+            console.warn("errorr updata MealStatus " + QueryText);
           }
         },
         (_, error) => {
           // エラー時の処理
-          console.error("update erro", error);
+          console.error("update error", error);
         }
       );
     });
@@ -786,7 +829,7 @@ export function update_recipe_detail(updateItem) {
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) {
             if (QueryConst.debugDataBaseLevel > 1) {
-              console.log("Data updateed RecipeDetail");
+              console.log("Data updated RecipeDetail");
             }
           } else {
             console.log("erro updateed RecipeDetail" + QueryText);
@@ -794,7 +837,7 @@ export function update_recipe_detail(updateItem) {
         },
         (_, error) => {
           // エラー時の処理
-          console.error("update erro", error);
+          console.error("update error RecipeDetail", error);
         }
       );
     });
@@ -844,13 +887,13 @@ export function update_material(updateItem) {
               console.log("Data updateed Material");
             }
           } else {
-            console.log("erro updateed Material" + QueryText);
+            console.warn("erro updateed Material " + QueryText);
           }
         },
         (_, error) => {
           // エラー時の処理
           //console.log(QueryText,updateItem.name,updateItem.pass2Photo,updateItem.stock,updateItem.id);
-          console.error("update erro material", error);
+          console.error("update error material", error);
         }
       );
     });
@@ -895,6 +938,8 @@ export function update_material_photo_relation(updateItem) {
 }
 
 export function update_photo(updateItem) {
+  ToDay = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  updateItem.gottenDate = ToDay.toString().replace('/', '-').replace('/', '-').replace(' ', 'T')+".000Z";
   console.log("update_photo");
   let items =
     QueryConst.Photo.elementsKey.name +
@@ -906,7 +951,10 @@ export function update_photo(updateItem) {
     QueryConst.Photo.elementsKey.pass2Photo +
     " = ?," +
     QueryConst.Photo.elementsKey.visited +
-    " = ?";
+    " = ?,"  +
+    QueryConst.Photo.elementsKey.gottenDate +
+    " = ?"
+    ;
   let QueryText =
     QueryConst.UpdateQuery +
     QueryConst.Photo.tablename +
@@ -921,6 +969,7 @@ export function update_photo(updateItem) {
       updateItem.longitude,
       updateItem.pass2Photo,
       updateItem.visited,
+      updateItem.gottenDate,
       updateItem.id
     );
   }
@@ -934,17 +983,18 @@ export function update_photo(updateItem) {
           updateItem.longitude,
           updateItem.pass2Photo,
           updateItem.visited,
-          updateItem.id,
+          updateItem.gottenDate,
+          updateItem.id
         ],
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) {
             console.log("Data Updated Photo");
           } else {
-            console.log("error Updated Photo" + QueryText);
+            console.warn("error Updated Photo" + QueryText);
           }
         },
         (_, error) => {
-          console.error("update erro:", error);
+          console.error("error update Photo", error);
         }
       );
     });

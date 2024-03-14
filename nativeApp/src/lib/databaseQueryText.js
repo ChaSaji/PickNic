@@ -47,6 +47,8 @@ class MealementKey {
   static mealStatusId = "mealStatusId";
   static pass2Photo = "pass2Photo";
   static name = "name";
+  static stock = "stock";
+  static placeId = "placeId"
 }
 export class MealElement {
   id;
@@ -54,6 +56,7 @@ export class MealElement {
   mealStatusId;
   pass2Photo;
   name;
+  stock;
 }
 export class Meal {
   static tablename = "Meal";
@@ -64,6 +67,7 @@ class BadgeElementKey {
   static name = "name";
   static pass2Photo = "pass2Photo";
   static isHave = "IsHave";
+  static gottenDate = "gottenDate";
 }
 
 export class BadgeElement {
@@ -71,6 +75,7 @@ export class BadgeElement {
   name;
   pass2Photo;
   isHave;
+  gottenDate;
 }
 
 export class Badge {
@@ -153,6 +158,7 @@ class PhotoElementKey {
   static longitude = "longitude";
   static pass2Photo = "pass2Photo";
   static visited = "visited";
+  static gottenDate = "gottenDate";
 }
 export class PhotoElement {
   id;
@@ -161,6 +167,7 @@ export class PhotoElement {
   longitude;
   pass2Photo;
   visited;
+  gottenDate;
 }
 
 export class Photo {
@@ -180,6 +187,8 @@ export const createTableBadge =
   Badge.elementsKey.isHave +
   " INTEGER," +
   Badge.elementsKey.pass2Photo +
+  " TEXT," +
+  Badge.elementsKey.gottenDate +
   " TEXT" +
   ");";
 
@@ -196,7 +205,11 @@ export const createTableMeal =
   Meal.elementsKey.pass2Photo +
   " TEXT," +
   Meal.elementsKey.name +
-  " TEXT" +
+  " TEXT," +
+  Meal.elementsKey.stock +
+  " INTEGER," +
+  Meal.elementsKey.placeId +
+  " INTEGER" +
   ");";
 
 export const createTableMeal_Status =
@@ -264,5 +277,7 @@ export const createTablePhoto =
   Photo.elementsKey.pass2Photo +
   " TEXT," +
   Photo.elementsKey.visited +
-  " INTEGER" +
+  " INTEGER," +
+  Photo.elementsKey.gottenDate +
+  " TEXT" +
   ");";

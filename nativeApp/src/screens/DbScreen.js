@@ -110,6 +110,8 @@ const DbScreen = () => {
     badge.name = "ヤマ梨";
     badge.pass2Photo = "pass2Photo/日本語テキスト4/x.png";
     badge.isHave = 1;
+    now = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    badge.gottenDate = now.toString();
     insert_item(Badge.tablename, badge)
       .then((id) => {
         /*ここにIDを用いた処理を記述*/
@@ -126,6 +128,8 @@ const DbScreen = () => {
     meal.mealStatusId = 789;
     meal.pass2Photo = "mealpass2Photo";
     meal.name = "meal name";
+    meal.stock = 5;
+    meal.placeId = 47;
     insert_item(Meal.tablename, meal)
       .then((id) => {
         /*ここにIDを用いた処理を記述*/
@@ -304,9 +308,11 @@ const DbScreen = () => {
     meal = new MealElement();
     meal.id = 1;
     meal.badgeId = 222;
-    meal.mealStatusId = 333;
+    meal.mealStatusId = 555;
     meal.pass2Photo = "meal/pass2Photo/updated.btm";
-    meal.name = "meal name updated";
+    meal.name = "meal=name=updated";
+    meal.stock = 10;
+    meal.placeId = 1;
     update_item(Meal.tablename, meal);
     mealstatus = new MelaStatusElement();
     mealstatus.id = 1;
@@ -321,8 +327,8 @@ const DbScreen = () => {
     update_item(RecipeDetail.tablename, recipe);
     */
     material = new MaterialElement();
-    material.mealId = 1;
-    material.name = "updated material";
+    material.id = 1;
+    material.name = "updated_material";
     material.pass2Photo = "pass/To/photo/Is/Updated.jpg";
     material.stock = 555;
     material.colorId = 3;
@@ -454,6 +460,13 @@ const DbScreen = () => {
         console.error("テーブル一覧を取得できませんでした:", error);
       });
   };
+    const functionDate =() =>{
+      
+      console.log(ISOx);
+      RePrace = new Date(ISOx);
+      console.log(RePrace);
+      console.log(RePrace.toString());
+    }
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -467,6 +480,7 @@ const DbScreen = () => {
       <Button title="DeleteItem" onPress={functionDelete} />
       <Button title="DropTable" onPress={functionD} />
       <Button title="CheckTable" onPress={functionE} />
+      <Button title="functionDate" onPress={functionDate} />
     </View>
   );
 };
