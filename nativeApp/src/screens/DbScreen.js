@@ -37,6 +37,8 @@ import {
   parb,
   OrderByQuery,
   Descending_order,
+  Place,
+  PlaceElement,
 } from "../lib/databaseQueryText";
 
 const DbScreen = () => {
@@ -187,6 +189,17 @@ const DbScreen = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+    place = new PlaceElement();
+    place.name = "佐治県"
+    place.visited = 0;
+    insert_item(Place.tablename, place)
+      .then((id) => {
+        /*ここにIDを用いた処理を記述*/
+        console.log("place id = " + id);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     photo = new PhotoElement();
     photo.name = "photoName";
     photo.ratitude = 135.1234567890123456789;
@@ -245,6 +258,13 @@ const DbScreen = () => {
       .catch((error) => {
         console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
       });
+      fetchData(Place.tablename)
+      .then((data) => {
+        console.log("Place", data); // getData関数の戻り値を受け取り、出力
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });  
     fetchData(Photo.tablename)
       .then((data) => {
         console.log("Photo", data); // getData関数の戻り値を受け取り、出力
@@ -321,6 +341,7 @@ const DbScreen = () => {
     update_item(RecipeDetail.tablename, recipe);
     */
     material = new MaterialElement();
+    material.id = 1;
     material.mealId = 1;
     material.name = "updated material";
     material.pass2Photo = "pass/To/photo/Is/Updated.jpg";
@@ -332,6 +353,11 @@ const DbScreen = () => {
       relation.materialId = "194";relation.photoId="514";
       update_item(MaterialPhotoRelation.tablename,relation);
       */
+      place = new PlaceElement();
+      place.id = 1;
+      place.name = "茶匙県";
+      place.visited = 1;
+      update_item(Place.tablename,place);
     photo = new PhotoElement();
     photo.id = 1;
     photo.name = "Updated";
@@ -425,6 +451,8 @@ const DbScreen = () => {
   const functionDelete = () => {
     console.log("要素削除テスト");
     delete_item_ById(RecipeDetail.tablename, 1);
+    delete_item_ById(Place.tablename, 1);
+    
     delete_item_ById(Badge.tablename, 2);
     ExecuteQuery("delete from Badge where id <= 2;");
     delete_item(
