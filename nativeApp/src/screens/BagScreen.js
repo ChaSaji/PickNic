@@ -12,7 +12,7 @@ const BagScreen = () => {
   const { materialUpdate } = useDbUpdate();
 
   useEffect(() => {
-    fetchData(Material.tablename).then((data) => {
+    fetchData(Material.tablename, 0, 1000, false).then((data) => {
       setMaterials(data);
     });
   }, [materialUpdate]);
