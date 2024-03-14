@@ -1,6 +1,6 @@
 const images = {
   curry: require("../../assets/curry.png"),
-  uncarry: require("../../assets/uncarry.png"),
+  uncurry: require("../../assets/uncurry.png"),
   guratan: require("../../assets/guratan.png"),
   unguratan: require("../../assets/unguratan.png"),
   gyoza: require("../../assets/gyoza.png"),
