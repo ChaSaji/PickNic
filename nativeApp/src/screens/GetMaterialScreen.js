@@ -1,32 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet, Text, Image, TouchableOpacity } from "react-native";
-import images from "../lib/images";
-import getRandomNum from "../lib/getRandomNum";
-import { update_item } from "../lib/dataBaseHelper";
-import { Material, MaterialElement } from "../lib/databaseQueryText";
-import { useDbUpdate } from "../context/DbUpdateContext";
-import { useCamera } from "../context/CameraContext";
 import getImageSource from "../lib/images";
 
 const GetMaterialScreen = ({ route, navigation }) => {
   const getMaterial = route.params.getMaterial;
-  const getMaterialNum = getRandomNum(4) + 1;
-  console.log(getMaterialNum);
-
-  const { setIsCameraEnabled } = useCamera();
-  const { setMaterialUpdate } = useDbUpdate();
-
-  useEffect(() => {
-    const material = new MaterialElement();
-    material.id = getMaterial.id;
-    material.colorId = getMaterial.colorId;
-    material.name = getMaterial.name;
-    material.pass2Photo = getMaterial.pass2Photo;
-    material.stock = getMaterial.stock + getMaterialNum;
-    update_item(Material.tablename, material);
-    setIsCameraEnabled(false);
-    setMaterialUpdate(Date.now);
-  }, []);
+  const getMaterialNum = route.params.getMaterialNum;
 
   return (
     <TouchableOpacity
