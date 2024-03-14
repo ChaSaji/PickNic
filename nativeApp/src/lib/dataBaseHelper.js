@@ -1432,7 +1432,7 @@ function deleteDataFromDb(QueryText) {
   });
 }
 //Idから削除
-export async function deleteDataById(Tablename, ID) {
+export async function delete_item_ById(Tablename, ID) {
   // 関数を呼び出してデータを取得し、結果を処理する
   Key = QueryConst.PrimaryKey;
   if (Tablename == QueryConst.MaterialPhotoRelation.tablename) {
@@ -1452,7 +1452,7 @@ export async function deleteDataById(Tablename, ID) {
 }
 //ユーザが任意で条件を指定して削除
 //Need(Tablename:string),Option(use (key:relational operators:val) logical operators (key:relational operators:val))
-export async function deleteData(Tablename, ...args) {
+export async function delete_item(Tablename, ...args) {
   // 関数を呼び出してデータを取得し、結果を処理する
   let CONDITIONTEXT = QueryConst.Where;
   for (i = 0; i < args.length; i++) {
