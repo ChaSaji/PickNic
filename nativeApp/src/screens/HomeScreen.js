@@ -84,8 +84,11 @@ const HomeScreen = ({ navigation }) => {
               coordinate={{
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-              }}
-            />
+              }}>
+                <View style={styles.outerRadius}>
+                  <View style={styles.innerRadius}/>
+                </View>
+            </Marker>
             {pictures.map((picture, index) => (
               <PictureMarker
                 key={index}
@@ -131,6 +134,25 @@ const styles = StyleSheet.create({
   map: {
     width: windowWidth,
     height: windowHeight,
+  },
+  outerRadius: {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 25,
+    height: 25,
+    borderRadius: 200,
+    backgroundColor: "#1BB8E8",
+  },
+  innerRadius: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 20,
+    height: 20,
+    borderRadius: 200,
+    borderWidth: 2,
+    borderColor: "white",
+    backgroundColor: "#1BB8E8",
   },
 });
 
