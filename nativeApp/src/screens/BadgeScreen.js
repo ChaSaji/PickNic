@@ -53,7 +53,7 @@ const BadgeScreen = ({ navigation }) => {
             key={index}
             source={getImageSource({
               pass2Photo: badge.pass2Photo,
-              locked: badge.IsHave,
+              locked: !badge.IsHave,
             })}
             name={String(index)}
             onPress={() => handleItemClick(badge)}

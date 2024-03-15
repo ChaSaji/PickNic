@@ -33,7 +33,7 @@ const BadgeDetailScreen = ({ route, navigation }) => {
               style={styles.material}
               source={getImageSource({
                 pass2Photo: meal.pass2Photo,
-                locked: meal.locked,
+                locked: !meal.locked,
                 cooked: meal.cooked,
               })}
             />
