@@ -1,4 +1,151 @@
 //reset
+export const MaterialPhotoRelation =[
+    {
+        "materialId": 123,
+        "photoId": 555
+    },
+    {
+        "materialId": 456,
+        "photoId": 789
+    },
+    {
+        "materialId": 6,
+        "photoId": 3
+    }
+];
+export const MealStatus =[
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": null,
+        "cooked": null
+    },
+    {
+        "locked": null,
+        "cooked": null
+    },
+    {
+        "locked": null,
+        "cooked": null
+    }
+];
+export const Badge =[
+    {
+        "name": "\u7d66\u98df",
+        "pass2Photo": "kyushokub",
+        "isHave": 1
+    },
+    {
+        "name": "\u671d\u3054\u306f\u3093",
+        "pass2Photo": "morningb",
+        "isHave": 1
+    },
+    {
+        "name": "\u30a4\u30bf\u30ea\u30a2\u30f3",
+        "pass2Photo": "italyb",
+        "isHave": 1
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 1
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    }
+];
 export const RecipeDetail =[
     {
         "mealId": 1,
@@ -79,252 +226,6 @@ export const RecipeDetail =[
         "mealId": 10,
         "materialId": 13,
         "needNum": 1
-    }
-];
-export const Photo =[];
-export const Badge =[
-    {
-        "name": "\u7d66\u98df",
-        "pass2Photo": "kyushokub",
-        "isHave": 1
-    },
-    {
-        "name": "\u671d\u3054\u306f\u3093",
-        "pass2Photo": "morningb",
-        "isHave": 1
-    },
-    {
-        "name": "\u30a4\u30bf\u30ea\u30a2\u30f3",
-        "pass2Photo": "italyb",
-        "isHave": 1
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 1
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    }
-];
-export const MaterialPhotoRelation =[
-    {
-        "materialId": 123,
-        "photoId": 555
-    },
-    {
-        "materialId": 456,
-        "photoId": 789
-    },
-    {
-        "materialId": 6,
-        "photoId": 3
-    }
-];
-export const Meal =[
-    {
-        "badgeId": 1,
-        "mealStatusId": 1,
-        "pass2Photo": "curry",
-        "name": "\u30ab\u30ec\u30fc\u30e9\u30a4\u30b9"
-    },
-    {
-        "badgeId": 3,
-        "mealStatusId": 2,
-        "pass2Photo": "guratan",
-        "name": "\u30b0\u30e9\u30bf\u30f3"
-    },
-    {
-        "badgeId": 4,
-        "mealStatusId": 3,
-        "pass2Photo": "gyoza",
-        "name": "\u9903\u5b50"
-    },
-    {
-        "badgeId": 1,
-        "mealStatusId": 4,
-        "pass2Photo": "korokke",
-        "name": "\u30b3\u30ed\u30c3\u30b1"
-    },
-    {
-        "badgeId": 2,
-        "mealStatusId": 5,
-        "pass2Photo": "miso",
-        "name": "\u5473\u564c\u6c41"
-    },
-    {
-        "badgeId": 4,
-        "mealStatusId": 6,
-        "pass2Photo": "oden",
-        "name": "\u304a\u3067\u3093"
-    },
-    {
-        "badgeId": 3,
-        "mealStatusId": 7,
-        "pass2Photo": "pasta",
-        "name": "\u30d1\u30b9\u30bf"
-    },
-    {
-        "badgeId": 3,
-        "mealStatusId": 8,
-        "pass2Photo": "piza",
-        "name": "\u30d4\u30b6"
-    },
-    {
-        "badgeId": 1,
-        "mealStatusId": 9,
-        "pass2Photo": "ponchi",
-        "name": "\u30d5\u30eb\u30fc\u30c4\u30dd\u30f3\u30c1"
-    },
-    {
-        "badgeId": null,
-        "mealStatusId": 10,
-        "pass2Photo": "ramen",
-        "name": "\u30e9\u30fc\u30e1\u30f3"
-    },
-    {
-        "badgeId": 2,
-        "mealStatusId": 11,
-        "pass2Photo": "sake",
-        "name": "\u9bad"
-    },
-    {
-        "badgeId": 2,
-        "mealStatusId": 12,
-        "pass2Photo": "tkg",
-        "name": "\u5375\u304b\u3051\u3054\u306f\u3093"
-    },
-    {
-        "badgeId": 4,
-        "mealStatusId": 13,
-        "pass2Photo": "unagi",
-        "name": "\u3046\u306a\u91cd"
-    },
-    {
-        "badgeId": null,
-        "mealStatusId": null,
-        "pass2Photo": "",
-        "name": null
-    },
-    {
-        "badgeId": null,
-        "mealStatusId": null,
-        "pass2Photo": "",
-        "name": null
-    },
-    {
-        "badgeId": null,
-        "mealStatusId": null,
-        "pass2Photo": "",
-        "name": null
-    }
-];
-export const MealStatus =[
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 1,
-        "cooked": 0
-    },
-    {
-        "locked": 1,
-        "cooked": 0
-    },
-    {
-        "locked": 1,
-        "cooked": 0
-    },
-    {
-        "locked": 1,
-        "cooked": 0
-    },
-    {
-        "locked": null,
-        "cooked": null
-    },
-    {
-        "locked": null,
-        "cooked": null
-    },
-    {
-        "locked": null,
-        "cooked": null
     }
 ];
 export const Material =[
@@ -425,3 +326,102 @@ export const Material =[
         "colorId": 7
     }
 ];
+export const Meal =[
+    {
+        "badgeId": 1,
+        "mealStatusId": 1,
+        "pass2Photo": "curry",
+        "name": "\u30ab\u30ec\u30fc\u30e9\u30a4\u30b9"
+    },
+    {
+        "badgeId": 3,
+        "mealStatusId": 2,
+        "pass2Photo": "guratan",
+        "name": "\u30b0\u30e9\u30bf\u30f3"
+    },
+    {
+        "badgeId": 4,
+        "mealStatusId": 3,
+        "pass2Photo": "gyoza",
+        "name": "\u9903\u5b50"
+    },
+    {
+        "badgeId": 1,
+        "mealStatusId": 4,
+        "pass2Photo": "korokke",
+        "name": "\u30b3\u30ed\u30c3\u30b1"
+    },
+    {
+        "badgeId": 2,
+        "mealStatusId": 5,
+        "pass2Photo": "miso",
+        "name": "\u5473\u564c\u6c41"
+    },
+    {
+        "badgeId": 4,
+        "mealStatusId": 6,
+        "pass2Photo": "oden",
+        "name": "\u304a\u3067\u3093"
+    },
+    {
+        "badgeId": 3,
+        "mealStatusId": 7,
+        "pass2Photo": "pasta",
+        "name": "\u30d1\u30b9\u30bf"
+    },
+    {
+        "badgeId": 3,
+        "mealStatusId": 8,
+        "pass2Photo": "piza",
+        "name": "\u30d4\u30b6"
+    },
+    {
+        "badgeId": 1,
+        "mealStatusId": 9,
+        "pass2Photo": "ponchi",
+        "name": "\u30d5\u30eb\u30fc\u30c4\u30dd\u30f3\u30c1"
+    },
+    {
+        "badgeId": null,
+        "mealStatusId": 10,
+        "pass2Photo": "ramen",
+        "name": "\u30e9\u30fc\u30e1\u30f3"
+    },
+    {
+        "badgeId": 2,
+        "mealStatusId": 11,
+        "pass2Photo": "sake",
+        "name": "\u9bad"
+    },
+    {
+        "badgeId": 2,
+        "mealStatusId": 12,
+        "pass2Photo": "tkg",
+        "name": "\u5375\u304b\u3051\u3054\u306f\u3093"
+    },
+    {
+        "badgeId": 4,
+        "mealStatusId": 13,
+        "pass2Photo": "unagi",
+        "name": "\u3046\u306a\u91cd"
+    },
+    {
+        "badgeId": null,
+        "mealStatusId": null,
+        "pass2Photo": "",
+        "name": null
+    },
+    {
+        "badgeId": null,
+        "mealStatusId": null,
+        "pass2Photo": "",
+        "name": null
+    },
+    {
+        "badgeId": null,
+        "mealStatusId": null,
+        "pass2Photo": "",
+        "name": null
+    }
+];
+export const Photo =[];
