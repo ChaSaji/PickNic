@@ -81,6 +81,7 @@ export const RecipeDetail =[
         "needNum": 1
     }
 ];
+export const Photo =[];
 export const Badge =[
     {
         "name": "\u7d66\u98df",
@@ -95,12 +96,71 @@ export const Badge =[
     {
         "name": "\u30a4\u30bf\u30ea\u30a2\u30f3",
         "pass2Photo": "italyb",
+        "isHave": 1
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 1
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
         "isHave": 0
     },
     {
         "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
         "pass2Photo": "shizuokab",
         "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    }
+];
+export const MaterialPhotoRelation =[
+    {
+        "materialId": 123,
+        "photoId": 555
+    },
+    {
+        "materialId": 456,
+        "photoId": 789
+    },
+    {
+        "materialId": 6,
+        "photoId": 3
     }
 ];
 export const Meal =[
@@ -267,21 +327,6 @@ export const MealStatus =[
         "cooked": null
     }
 ];
-export const MaterialPhotoRelation =[
-    {
-        "materialId": 123,
-        "photoId": 555
-    },
-    {
-        "materialId": 456,
-        "photoId": 789
-    },
-    {
-        "materialId": 6,
-        "photoId": 3
-    }
-];
-export const Photo =[];
 export const Material =[
     {
         "name": "\u725b\u8089",
