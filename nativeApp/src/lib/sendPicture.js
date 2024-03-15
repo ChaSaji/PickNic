@@ -18,7 +18,7 @@ async function sendImage({ uri }) {
   // axiosを使用してデータをPOST
   try {
     const res = await axios.post(
-      "https://rendertest-yx4z.onrender.com/uploadfile",
+      "https://rendertest-1-5i8v.onrender.com/uploadfile",
       data,
       {
         headers: {
