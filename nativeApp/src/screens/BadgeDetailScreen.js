@@ -19,7 +19,7 @@ const BadgeDetailScreen = ({ route, navigation }) => {
           style={styles.meal}
           source={getImageSource({
             pass2Photo: badge.pass2Photo,
-            locked: badge.IsHave,
+            locked: !badge.IsHave,
           })}
         />
       </View>
