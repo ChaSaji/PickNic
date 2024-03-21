@@ -2,71 +2,76 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
+from typing import Optional
+from fastapi import FastAPI
+
+from fastapi.responses import JSONResponse
+from ultralytics import YOLO
 import cv2
 import numpy as np
+from PIL import Image
+
 
 app = FastAPI()
 
-@app.post("/uploadfile/")
-async def upload_files(file):
+@app.post("/uploadfile")
+async def upload_files(file: UploadFile = File(...)):
+    # アップロードされたファイルの情報を出力
+    file_info = {
+        "filename": file.filename,
+        "content_type": file.content_type,
+    }
+    # モデル読み込み
+    model = YOLO("yolov8x-oiv7.pt")
     contents = await file.read()
     nparr = np.frombuffer(contents, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    #hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-    #hsv_arr = np.vstack(hsv)
-    #hsv_code = ['{:02}{:02x}{:02x}'.format(*color) for color in hsv_arr]
 
-    img = cv2.imread('apple.jpg')
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    src = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     if img is None:
         sys.exit('Can not read image')
+    
+    results = model(img) 
+    boxes = results[0].boxes
 
-    # 指定した画像(path)の物体を検出し、外接矩形の画像を出力します
-    # グレースケール画像へ変換
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # 2値化
-    retval, bw = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-
-    # 輪郭を抽出
-    #   contours : [領域][Point No][0][x=0, y=1]
-    #   cv2.CHAIN_APPROX_NONE: 中間点も保持する
-    #   cv2.CHAIN_APPROX_SIMPLE: 中間点は保持しない
-    contours, hierarchy = cv2.findContours(bw, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-
-    # 矩形検出された数（デフォルトで0を指定）
-    detect_count = 0
-
+    h, w, _ = img.shape
     max_area = 0
-    max_i = 0
+    max_x1=0
+    max_y1=0
+    max_x2=3*h
+    max_y2=3*w
 
-    # 各輪郭に対する処理
-    for i in range(0, len(contours)):
+    for box in boxes:
 
-        # 輪郭の領域を計算
-        area = cv2.contourArea(contours[i])
+        x1,y1,x2,y2 = [int(i) for i in box.xyxy[0]]
 
-        # ノイズ（小さすぎる領域）と全体の輪郭（大きすぎる領域）を除外
-        if area < 1e2 or 1e5 < area:
+        # 面積の領域を計算
+        area = (x2-x1)*(y2-y1)
+
+        if area < 1e2 or area > 1e5 :
             continue
-
-        if i == 0:
-            max_area = area
+        
 
         if max_area < area:
-            max_i = i
+            max_area = area
+            max_x1=x1
+            max_y1=y1
+            max_x2=x2
+            max_y2=y2
 
-    # 外接矩形
-    if len(contours[max_i]) > 0:
-        rect = contours[max_i]
-        x, y, w, h = cv2.boundingRect(rect)
-        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    cv2.rectangle(img, (max_x1, max_y1), (max_x2, max_y2), (0, 0, 255), 2)
+    #cv2.imshow("result",img)
 
+    src = src[max_x1:max_x2,max_y1:max_y2]
+    #cv2.imshow("src",src)
 
-    hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(src,cv2.COLOR_BGR2HSV)
+    #cv2.imshow("hsv",hsv)
     h = hsv[:,:,0]
     h_flat = h.flatten()
     count = np.bincount(h_flat)
     md = np.argmax(count)
+    print("md",md)
 
     if 0 <= md <= 15:
         #red
@@ -99,15 +104,27 @@ async def upload_files(file):
         #red
         color = 0    
 
-
     return {"return":str(color)}
-    # 外接矩形された画像を表示
-    #cv2.imshow('output', img)
-    #cv2.waitKey(0)
 
-    # 終了処理
-    #cv2.destroyAllWindows()
+    #if s_mean < 15 and 240 < v_mean:
+        # whilte
+        #color = 9
 
+    #if v_mean < 20:
+        # black
+        #color = 10
+    print (color)
+    return {"return":str(color)}
+    #print(file_info)
+    #print(file)
+    #with open(file.filename, "wb") as f:
+        #f.write(file.file.read())
+    #return {"filename": file.filename}
+
+    #print(file_info)
+    #print(file)
+    #return file_info
+    
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello World1"}
