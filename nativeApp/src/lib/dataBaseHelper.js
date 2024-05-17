@@ -2,9 +2,9 @@ import * as SQLite from "expo-sqlite";
 import * as QueryConst from "./databaseQueryText";
 import * as InitDB from "./dataBaseInit";
 // データベースを作成またはオープン
-const db = SQLite.openDatabase("database.db");
+const db = SQLite.openDatabaseSync("database.db");
+//openDatabase
 //### start First Start Init DB
-
 export async function CreateAndInitTableIfNotExist() {
   try {
     const tablenum = await GetTableNum();
@@ -32,64 +32,26 @@ export async function CreateAndInitTableIfNotExist() {
     throw new Error("CreateAndInitTableIfNotExistでエラーが発生しました");
   }
 }
-function GetTableNum() {
+
+async function GetTableNum() {
   // アプリの起動時にデータベースの存在を確認
   if (QueryConst.debugDataBaseLevel >= 1) {
     console.log("CreateAndInitTableIfNotExist");
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT name FROM sqlite_master WHERE type="table";',
-        [],
-        (_, { rows }) => {
-          const tablenum = rows.length;
-          if (QueryConst.debugDataBaseLevel >= 1) {
-            console.log("table Length = " + tablenum);
-          }
-          // テーブルが存在しない場合はInitDatabaseTable()を呼び出す
-          resolve(tablenum);
-        },
-        (_, error) => {
-          // エラー時の処理
-          if (QueryConst.debugDataBaseLevel >= 2) {
-            console.log("No sqlite_master");
-          }
-          const tablenum = -1;
-          reject(tablenum);
-        }
-      );
-    });
-  });
+  //let object = await db.runAsync('SELECT name FROM sqlite_master WHERE type="table";');
+  //return object.length;
+  try{
+    let object = await db.getAllAsync('SELECT name FROM sqlite_master WHERE type="table";');
+    if (QueryConst.debugDataBaseLevel >= 1) {
+      console.log("cullent table");
+      console.log(object);
+    }
+    return object.length;
+  }catch(error){
+    console.error("Error at GetTableNum" + error);
+  }
 }
 
-//### end First Start Init DB
-function CreateEachTable(QueryText) {
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log("Cleate Text");
-  }
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryText);
-  }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [],
-        () => {
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("テーブルが作成されました。");
-          }
-          resolve(); // テーブル作成が成功したらresolveを呼び出す
-        },
-        (_, error) => {
-          console.error("テーブルの作成に失敗しました:", error);
-          reject(error); // エラーが発生したらrejectを呼び出す
-        }
-      );
-    });
-  });
-}
 export async function CreateAllTable() {
   try {
     await CreateEachTable(QueryConst.createTableBadge);
@@ -111,6 +73,69 @@ export async function CreateAllTable() {
     console.log(QueryConst.createTablePhoto);
     console.log(QueryConst.createTableRecipe_Detail);
   }
+}
+
+async function CreateEachTable(QueryText) {
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log("Cleate Text");
+  }
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryText);
+  }
+  await db.execAsync(QueryText);
+}
+
+async function dropEachTable(QueryText) {
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log("drop Table");
+  }
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryText);
+  }
+  await db.execAsync(QueryText);
+}
+export async function dropAllTable() {
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";");
+    console.log(QueryConst.DropTableQuery + QueryConst.Meal.tablename + ";");
+    console.log(
+      QueryConst.DropTableQuery + QueryConst.MealStatus.tablename + ";"
+    );
+    console.log(
+      QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename + ";"
+    );
+    console.log(
+      QueryConst.DropTableQuery + QueryConst.Material.tablename + ";"
+    );
+    console.log(
+      QueryConst.DropTableQuery +
+        QueryConst.MaterialPhotoRelation.tablename +
+        ";"
+    );
+    console.log(QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";");
+  }
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.Meal.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.MealStatus.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.Material.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";"
+  );
+  return;
 }
 //###start Read Excel data
 export async function InitDatabaseTable() {
@@ -154,7 +179,6 @@ export async function InitDatabaseTable() {
   return 1;
 }
 //###end Read Excel data
-
 //###start insert
 export async function insert_item(Table, InsertItemItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
@@ -277,47 +301,37 @@ export async function insert_item(Table, InsertItemItem) {
   }
 }
 
-function insert_badge(InsertItem) {
+async function insert_badge(InsertItem) {
   let items =
-    " (" +
+    " ( " +
     QueryConst.Badge.elementsKey.name +
-    "," +
+    ", " +
     QueryConst.Badge.elementsKey.isHave +
-    "," +
+    ", " +
     QueryConst.Badge.elementsKey.pass2Photo +
-    ")";
+    " )";
   let QueryText =
     QueryConst.InsertQuery +
     QueryConst.Badge.tablename +
     items +
     QueryConst.values +
-    "(?, ?, ?)";
-
+    "(?,?,?)";
+    console.log(
+      QueryText +","+ InsertItem.name +","+ InsertItem.isHave +","+ InsertItem.pass2Photo
+    );
+  //const statement = await db.prepareAsync(values);
   if (QueryText.debugDataBaseLevel > 0) {
     console.log(
       QueryText + InsertItem.name + InsertItem.isHave + InsertItem.pass2Photo
     );
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [InsertItem.name, InsertItem.isHave, InsertItem.pass2Photo],
-        (_, result) => {
-          // 成功時の処理
-          const lastInsertedId = result.insertId;
-          resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data Inserted badge id:" + lastInsertedId);
-          }
-        },
-        (_, error) => {
-          // エラー時の処理
-          console.error("Insert error", error);
-        }
-      );
-    });
-  });
+  try {
+    const result =  await db.runAsync(QueryText,InsertItem.name,InsertItem.isHave,InsertItem.pass2Photo);
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  }catch(error){
+    console.error("Insert error" + error);
+  }
 }
 
 function insert_meal(InsertItem) {
@@ -576,6 +590,63 @@ function insert_photo(InsertItem) {
   });
 }
 //###end insert
+
+
+export async function fetchData(Tablename, ...args) {
+  if (args.length > 0) {
+    offset = args[0];
+  } else {
+    offset = QueryConst.OffsetDefault;
+  }
+  if (args.length > 1) {
+    limit = args[1];
+  } else {
+    limit = QueryConst.LimitDefault;
+  }
+  if (args.length > 2) {
+    isdesc = args[2];
+  } else {
+    isdesc = true;
+  }
+  if (args.length > 3) {
+    sortkey = args[3];
+  } else {
+    sortkey = QueryConst.PrimaryKey;
+    if (Tablename == QueryConst.RecipeDetail.tablename) {
+      sortkey = QueryConst.RecipeDetail.elementsKey.mealId;
+    }
+    if (Tablename == QueryConst.MaterialPhotoRelation.tablename) {
+      sortkey = QueryConst.MaterialPhotoRelation.elementsKey.materialId;
+    }
+  }
+  return 0;
+}
+/*
+export const getTables = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT name FROM sqlite_master WHERE type="table"',
+        [],
+        (_, { rows }) => {
+          const tables = rows._array.map((row) => row.name);
+          resolve(tables);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  });
+};
+
+
+
+//### end First Start Init DB
+
+
+
+
 
 //###start Update
 export async function update_item(Table, updateItemItem) {
@@ -1387,90 +1458,5 @@ export async function ExecuteQuery(QueryText) {
 }
 
 //### end exec arbitrary text
-function dropEachTable(QueryText) {
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log("drop Table");
-  }
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryText);
-  }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [],
-        () => {
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("テーブルが削除されました。");
-          }
-          resolve(); // テーブル作成が成功したらresolveを呼び出す
-        },
-        (_, error) => {
-          console.error("テーブルの削除に失敗しました:", error);
-          reject(error); // エラーが発生したらrejectを呼び出す
-        }
-      );
-    });
-  });
-}
-export async function dropAllTable() {
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";");
-    console.log(QueryConst.DropTableQuery + QueryConst.Meal.tablename + ";");
-    console.log(
-      QueryConst.DropTableQuery + QueryConst.MealStatus.tablename + ";"
-    );
-    console.log(
-      QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename + ";"
-    );
-    console.log(
-      QueryConst.DropTableQuery + QueryConst.Material.tablename + ";"
-    );
-    console.log(
-      QueryConst.DropTableQuery +
-        QueryConst.MaterialPhotoRelation.tablename +
-        ";"
-    );
-    console.log(QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";");
-  }
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.Meal.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.MealStatus.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.Material.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";"
-  );
-  return;
-}
 
-export const getTables = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT name FROM sqlite_master WHERE type="table"',
-        [],
-        (_, { rows }) => {
-          const tables = rows._array.map((row) => row.name);
-          resolve(tables);
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-    });
-  });
-};
+*/
