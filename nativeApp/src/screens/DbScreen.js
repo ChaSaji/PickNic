@@ -14,8 +14,8 @@ import {
   selectDataDesc,
   ExecuteQuery,
   InitDatabaseTable,
-  delete_item_ById,
-  delete_item,
+  deleteDataById,
+  deleteData,
 } from "../lib/dataBaseHelper";
 import {
   RO,
@@ -424,10 +424,10 @@ const DbScreen = () => {
   };
   const functionDelete = () => {
     console.log("要素削除テスト");
-    delete_item_ById(RecipeDetail.tablename, 1);
-    delete_item_ById(Badge.tablename, 2);
+    deleteDataById(RecipeDetail.tablename, 1);
+    deleteDataById(Badge.tablename, 2);
     ExecuteQuery("delete from Badge where id <= 2;");
-    delete_item(
+    deleteData(
       Badge.tablename,
       Badge.elementsKey.name,
       RO.LIKE,
