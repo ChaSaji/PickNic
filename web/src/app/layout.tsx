@@ -1,3 +1,4 @@
+import Header from "@/components/Header/Header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -16,7 +17,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body
+        className={inter.className}
+        style={{
+          height: "100%",
+          marginTop: 20,
+          marginRight: 30,
+          marginLeft: 30,
+          backgroundColor: "#FFF2D1",
+        }}
+      >
+        <Header />
+        <div
+          style={{
+            display: "flex",
+            paddingTop: 20,
+            paddingRight: 40,
+            paddingLeft: 40,
+          }}
+        >
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
