@@ -69,14 +69,14 @@ const AppNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Db_tab"
         component={DbScreen}
         options={{
           tabBarLabel: "DB",
           tabBarIcon: () => <></>,
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 };

@@ -8,7 +8,7 @@ import getImageSource from "../lib/images";
 const BadgeScreen = ({ navigation }) => {
   const [badges, setBadges] = useState([]);
   useEffect(() => {
-    fetchData(Badge.tablename).then((data) => {
+    fetchData(Badge.tablename, 0, 1000, false).then((data) => {
       setBadges(data);
     });
   }, []);
@@ -29,7 +29,7 @@ const BadgeScreen = ({ navigation }) => {
             meal.id
           ).then((mealStatus) => {
             const status =
-              mealStatus > 0 ? mealStatus[0] : { cooked: 0, locked: 1 };
+              mealStatus.length > 0 ? mealStatus[0] : { cooked: 0, locked: 1 };
             return {
               ...meal,
               cooked: status.cooked,
@@ -53,7 +53,7 @@ const BadgeScreen = ({ navigation }) => {
             key={index}
             source={getImageSource({
               pass2Photo: badge.pass2Photo,
-              locked: badge.IsHave,
+              locked: !badge.IsHave,
             })}
             name={String(index)}
             onPress={() => handleItemClick(badge)}
