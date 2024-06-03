@@ -32,6 +32,24 @@ export async function CreateAndInitTableIfNotExist() {
     throw new Error("CreateAndInitTableIfNotExistでエラーが発生しました");
   }
 }
+export async function getTables(){
+    // アプリの起動時にデータベースの存在を確認
+    if (QueryConst.debugDataBaseLevel >= 1) {
+      console.log("CreateAndInitTableIfNotExist");
+    }
+    //let object = await db.runAsync('SELECT name FROM sqlite_master WHERE type="table";');
+    //return object.length;
+    try{
+      let object = await db.getAllAsync('SELECT name FROM sqlite_master WHERE type="table";');
+      if (QueryConst.debugDataBaseLevel >= 1) {
+        console.log("cullent table");
+        console.log(object);
+      }
+      return object;
+    }catch(error){
+      console.error("Error at GetTableNum" + error);
+    }
+}
 
 async function GetTableNum() {
   // アプリの起動時にデータベースの存在を確認
@@ -797,14 +815,15 @@ async function fetchDataFromDb(Tablename, offset, limit, DecOrAsc, sortkey) {
     offset +
     ";";
   if (QueryConst.debugDataBaseLevel > 0) {
+    console.log("fetchDataFromDb")
     console.log(QueryText);
   }
   try {
-    const result =  await db.getFirstAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
-    console.log(result.lastInsertRowId, result.changes);
-    return result.lastInsertRowId;
+    const result =  await db.getAllAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    //console.log(result.lastInsertRowId, result.changes);
+    return result;
   }catch(error){
-    console.error("Insert error" + error);
+    console.error("fetchData error" + error);
   }
 }
 
@@ -927,11 +946,12 @@ async function selectDataFromDb(QueryText) {
     console.log(QueryText);
   }
   try {
-    const result =  await db.getAllAsync(QueryText);
+    const result =  await db.getAllAsync(QueryText+" ");
     //console.log(result.lastInsertRowId, result.changes);
     return result;
   }catch(error){
-    console.error("Insert error" + error);
+    console.error("Select:" + error);
+    console.error("Query : "+QueryText+":");
   }
 }
 //Idから検索
@@ -1087,14 +1107,14 @@ async function deleteDataFromDb(QueryText) {
   }
   // SQLクエリを実行してデータベースから要素を削除
   try {
-    const result = await db.runAsync(QueryText); // fetchData関数の実行結果を待ち受ける
+    const result = await db.runAsync(QueryText+" "); // fetchData関数の実行結果を待ち受ける
     if (QueryConst.debugDataBaseLevel > 1) {
       console.log("Data:", result);
     } // 取得したデータを出力
     return result; // 非同期処理の結果を戻り値として返す
   } catch (error) {
+    console.error("delete data"+error); // エラーが発生した場合はエラーメッセージを出力
     console.error(QueryText);
-    console.error("Error:", error); // エラーが発生した場合はエラーメッセージを出力
     throw error; // エラーを再度スローする（上位のコードでキャッチされる）
   }
 }
@@ -1139,7 +1159,7 @@ async function ExecQueryText(QueryText) {
   }
   // SQLクエリを実行
   try {
-    const result =  await db.executeAsync(QueryText);
+    const result =  await db.runAsync(QueryText);
     //console.log(result.lastInsertRowId, result.changes);
     return result;
   }catch(error){
