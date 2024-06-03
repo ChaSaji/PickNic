@@ -2,12 +2,20 @@ import * as SQLite from "expo-sqlite";
 import * as QueryConst from "./databaseQueryText";
 import * as InitDB from "./dataBaseInit";
 // データベースを作成またはオープン
-const db = SQLite.openDatabase("database.db");
+const db = SQLite.openDatabaseSync("database.db");
+console.log(db);
 //### start First Start Init DB
 
 export async function CreateAndInitTableIfNotExist() {
+  console.log("CreateAndInitTableIfNotExistの処理を始めました");
   try {
     const tablenum = await GetTableNum();
+    // GetTableNumの中でエラー起こってるかも
+    // console.log("tablenum:");
+    // console.log(tablenum);
+    // console.log("debugDataBaseLevel");
+    // console.log(QueryConst.debugDataBaseLevel);
+
     if (QueryConst.debugDataBaseLevel >= 1) {
       console.log("CreateAndInitTableIfNotExist");
       console.log(tablenum);
@@ -36,6 +44,7 @@ function GetTableNum() {
   // アプリの起動時にデータベースの存在を確認
   if (QueryConst.debugDataBaseLevel >= 1) {
     console.log("CreateAndInitTableIfNotExist");
+    // console.log("queryconst = " + QueryConst.debugDataBaseLevel);
   }
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -44,6 +53,7 @@ function GetTableNum() {
         [],
         (_, { rows }) => {
           const tablenum = rows.length;
+          // console.log("tablenum = " + tablenum);
           if (QueryConst.debugDataBaseLevel >= 1) {
             console.log("table Length = " + tablenum);
           }
