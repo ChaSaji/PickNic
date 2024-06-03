@@ -38,8 +38,8 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     SetAppAndHomeScreen()
       .then((picture) => {
-        // console.log("return data SetAppAndHomeScreen =");
-        // console.log(picture);
+        console.log("return data SetAppAndHomeScreen =");
+        console.log(picture);
         setPictures(picture);
       })
       .catch((error) => {
