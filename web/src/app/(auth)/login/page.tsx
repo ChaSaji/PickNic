@@ -4,7 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchemaType, loginSchema } from "@/schemas/loginSchema";
 import Button from "@/components/Button/Button";
-import Input from "@/components/InputField/InputField";
+import InputField from "@/components/InputField/InputField";
 
 const LoginPage = () => {
   const formMethods = useForm<LoginSchemaType>({
@@ -48,7 +48,7 @@ const LoginPage = () => {
             gap: 20,
           }}
         >
-          <Input
+          <InputField
             size="large"
             direction="row"
             name={"email"}
@@ -56,7 +56,7 @@ const LoginPage = () => {
             placeholder={"chasaji@example.com"}
           />
 
-          <Input
+          <InputField
             type="password"
             size="large"
             direction="row"
