@@ -2,10 +2,16 @@ import React from "react";
 
 type PropsType = {
   label: string;
-  onClick: () => void;
+  onClick?: () => void;
+  size?: "medium" | "fit";
 };
 
-const Button = (props: PropsType) => {
+const Button = ({ size = "medium", ...props }: PropsType) => {
+  const styleMap = {
+    medium: { width: 150 },
+    fit: { width: "100%" },
+  };
+
   return (
     <button
       style={{
@@ -15,12 +21,12 @@ const Button = (props: PropsType) => {
         padding: 10,
         paddingTop: 5,
         paddingBottom: 5,
-        width: 150,
+        width: styleMap[size].width,
         fontSize: 20,
         fontWeight: 700,
         cursor: "pointer",
       }}
-      onClick={props.onClick}
+      {...props}
     >
       {props.label}
     </button>
