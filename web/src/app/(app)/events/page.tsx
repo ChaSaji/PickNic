@@ -33,12 +33,13 @@ export default function App() {
     
     </div>
 
+
     <table {...getTableProps()}>      
       <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>
+        {headerGroups.map((headerGroup, idx) => (
+          <tr {...headerGroup.getHeaderGroupProps()} key={idx}>
+            {headerGroup.headers.map((column, idx) => (
+              <th {...column.getHeaderProps()} key={idx}>
                 {column.render("Header")}
               </th>
             ))}
@@ -50,10 +51,10 @@ export default function App() {
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
+            <tr {...row.getRowProps()} key={i}>
+              {row.cells.map((cell, i) => {
                 return (
-                  <td {...cell.getCellProps()}>
+                  <td {...cell.getCellProps()} key={i}>
                     {cell.render("Cell")}
                   </td>
                 )
@@ -69,13 +70,7 @@ export default function App() {
   );
 }
 
-export function Tittle() {
-  return (
-    <h1>
-      イベント一覧
-    </h1>
-  );
-}
+
 
 
 
