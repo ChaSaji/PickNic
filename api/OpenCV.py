@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
 import cv2
 import numpy as np
+import sys
 
 app = FastAPI()
 
