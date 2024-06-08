@@ -10,7 +10,7 @@ con = sqlite3.connect("userData.db")
 
 # データベースを操作するためのカーソルを作成
 cur = con.cursor()
-
+ 
 # クエリ
 CREATE_TABLE = "CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);"
 INSERT_RECORDS = "INSERT INTO user (name) VALUES (?);"
