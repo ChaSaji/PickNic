@@ -19,11 +19,20 @@ export default function App() {
     data
   });
 
+  const router = useRouter();
+  const handleClickPictures = () => {
+    router.push(`/events/create`);
+  };
+
   return (
     // <div>
     // <Tittle />
     <PageTemplate titleLabel="イベント一覧">
-    <Button onClick={handleClickPictures} label="イベント登録" />
+    <div style={{display:"flex",justifyContent:"end",padding:0,marginBottom:10}}>    
+      <Button onClick={handleClickPictures} label="イベント登録" />
+    
+    </div>
+
     <table {...getTableProps()}>      
       <thead>
         {headerGroups.map((headerGroup) => (
@@ -68,7 +77,5 @@ export function Tittle() {
   );
 }
 
-const handleClickPictures = () => {
-  const router = useRouter();
-  router.push(`/events/Events`);
-};
+
+
