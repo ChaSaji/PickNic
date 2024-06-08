@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Sequence
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import sqlalchemy
-
+ 
 # データベースの設定
 DATABASE_URL = "sqlite:///userData.db"
 engine = create_engine(DATABASE_URL, echo=True) # SQLAlchemyが実行するSQL文全てを標準出力する
