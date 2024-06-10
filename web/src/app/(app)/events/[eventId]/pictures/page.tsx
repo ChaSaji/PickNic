@@ -4,11 +4,17 @@ import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import { Aladin } from "next/font/google";
 import photoData from "./test.json";
+import Image from 'next/image';
 //import {functionX} from "./funcs.js"
 
 const EventPicturePage = () => {
   //ハンドルをここに
-  const [photos, setPhotos] = useState([]); // 写真のURLのリストを保持する状態
+  const [photos, setPhotos] = 
+  useState<Array<{
+          id: number,
+          url: string,
+          title: string,
+          }>>([]); // 写真のURLのリストを保持する状態
   function functionX() {
     // 関数が何かのデータを計算または取得すると仮定
     return "Updated content from functiontext";
@@ -36,51 +42,45 @@ const EventPicturePage = () => {
     fetchPhotos();
   }, []);
 
-  const galleryStyle = {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)", // 4列のグリッドを作成
-    gap: "10px", // グリッドアイテム間の間隔
-    padding: "10px",
-    maxWidth: "100%",
-  };
-
-  const itemStyle = {
-    display: "flex",
-    flexDirection: "column", // アイテムを縦に並べる
-    alignItems: "center", // 中央揃え
-  };
-
-  const imageStyle = {
-    width: "100%", // アイテムコンテナに合わせて幅を100%に設定
-    height: "auto", // アスペクト比を保持
-  };
-  const itembox = {
-    display: "flex",
-    gap: 10,
-  };
-  const buttonStyle = {
-    marginTop: "5px", // 画像とボタンの間にマージンを設定
-    width: "45%",
-  };
-
   return (
     <PageTemplate titleLabel="投稿された写真">
-      <div id="displayphoto" style={galleryStyle}>
+      <div id="displayphoto" 
+      style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(4, 1fr)", // 4列のグリッドを作成
+      gap: "10px", // グリッドアイテム間の間隔
+      padding: "10px",
+      maxWidth: "100%",
+  }}>
         {photos.map((photo, index) => (
-          <div key={index} style={itemStyle}>
-            <div style={itembox}>
+          <div style={{
+            //display: "flex",
+            flexDirection: "column", 
+            alignItems: "center",
+            width:"25%" 
+            }} key={index} >
+            <div style={{
+                display: "flex",
+                
+                gap: 10,
+                }}>
               <Button label="非表示" />
               <Button label="詳細" />
             </div>
-            <img
+
+            <Image
               src={photo.url}
               alt={photo.title || `Photo ${index + 1}`}
-              style={imageStyle}
+              //width="100%"
+              layout="fill"
+              objectFit="contain" 
+              //width={500}
+              //height={500}
             />
           </div>
         ))}
       </div>
-      <p>{content}</p>
+      
     </PageTemplate>
   );
 };
