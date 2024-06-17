@@ -5,6 +5,7 @@ import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import { Aladin } from "next/font/google";
 import photoData from "./test.json";
 import Image from 'next/image';
+//import { View, Image, StyleSheet } from 'react-native';
 //import {functionX} from "./funcs.js"
 
 const EventPicturePage = () => {
@@ -44,44 +45,56 @@ const EventPicturePage = () => {
 
   return (
     <PageTemplate titleLabel="投稿された写真">
+
       <div id="displayphoto" 
-      style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(4, 1fr)", // 4列のグリッドを作成
-      gap: "10px", // グリッドアイテム間の間隔
-      padding: "10px",
-      maxWidth: "100%",
-  }}>
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          //gridTemplateRows: "repeat(2, 1fr)", 
+          //alignItems: "center",
+          justifyContent: "center",
+          gap: "100px",
+          width: "100%",
+          height: "250%",
+        }}
+      >
         {photos.map((photo, index) => (
           <div style={{
             //display: "flex",
             flexDirection: "column", 
             alignItems: "center",
-            width:"25%" 
+            width:"100%" ,
+            height:"100%"
             }} key={index} >
+            
+  
+         
+            <Button label="非表示" />
+            <Button label="詳細" />
+            
             <div style={{
-                display: "flex",
-                
-                gap: 10,
-                }}>
-              <Button label="非表示" />
-              <Button label="詳細" />
-            </div>
-
+              position: "relative",
+              width:"100%",
+              height:"100%",
+              //alignItems: "center",
+              //flexDirection: "column", 
+            }}>
             <Image
               src={photo.url}
               alt={photo.title || `Photo ${index + 1}`}
               //width="100%"
+              
+              //layout="responsive"
               layout="fill"
               objectFit="contain" 
-              //width={500}
-              //height={500}
-            />
-          </div>
-        ))}
+              />
+              
+            </div>
+            </div>
+      ))}
       </div>
-      
     </PageTemplate>
+    
   );
 };
 export default EventPicturePage;
