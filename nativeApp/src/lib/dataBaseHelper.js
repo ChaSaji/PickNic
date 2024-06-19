@@ -32,23 +32,25 @@ export async function CreateAndInitTableIfNotExist() {
     throw new Error("CreateAndInitTableIfNotExistでエラーが発生しました");
   }
 }
-export async function getTables(){
-    // アプリの起動時にデータベースの存在を確認
+export async function getTables() {
+  // アプリの起動時にデータベースの存在を確認
+  if (QueryConst.debugDataBaseLevel >= 1) {
+    console.log("CreateAndInitTableIfNotExist");
+  }
+  //let object = await db.runAsync('SELECT name FROM sqlite_master WHERE type="table";');
+  //return object.length;
+  try {
+    let object = await db.getAllAsync(
+      'SELECT name FROM sqlite_master WHERE type="table";'
+    );
     if (QueryConst.debugDataBaseLevel >= 1) {
-      console.log("CreateAndInitTableIfNotExist");
+      console.log("cullent table");
+      console.log(object);
     }
-    //let object = await db.runAsync('SELECT name FROM sqlite_master WHERE type="table";');
-    //return object.length;
-    try{
-      let object = await db.getAllAsync('SELECT name FROM sqlite_master WHERE type="table";');
-      if (QueryConst.debugDataBaseLevel >= 1) {
-        console.log("cullent table");
-        console.log(object);
-      }
-      return object;
-    }catch(error){
-      console.error("Error at GetTableNum" + error);
-    }
+    return object;
+  } catch (error) {
+    console.error("Error at GetTableNum" + error);
+  }
 }
 
 async function GetTableNum() {
@@ -58,14 +60,16 @@ async function GetTableNum() {
   }
   //let object = await db.runAsync('SELECT name FROM sqlite_master WHERE type="table";');
   //return object.length;
-  try{
-    let object = await db.getAllAsync('SELECT name FROM sqlite_master WHERE type="table";');
+  try {
+    let object = await db.getAllAsync(
+      'SELECT name FROM sqlite_master WHERE type="table";'
+    );
     if (QueryConst.debugDataBaseLevel >= 1) {
       console.log("cullent table");
       console.log(object);
     }
     return object.length;
-  }catch(error){
+  } catch (error) {
     console.error("Error at GetTableNum" + error);
   }
 }
@@ -334,9 +338,15 @@ async function insert_badge(InsertItem) {
     items +
     QueryConst.values +
     "(?,?,?)";
-    console.log(
-      QueryText +","+ InsertItem.name +","+ InsertItem.isHave +","+ InsertItem.pass2Photo
-    );
+  console.log(
+    QueryText +
+      "," +
+      InsertItem.name +
+      "," +
+      InsertItem.isHave +
+      "," +
+      InsertItem.pass2Photo
+  );
   //const statement = await db.prepareAsync(values);
   if (QueryText.debugDataBaseLevel > 0) {
     console.log(
@@ -344,10 +354,15 @@ async function insert_badge(InsertItem) {
     );
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.name,InsertItem.isHave,InsertItem.pass2Photo);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.name,
+      InsertItem.isHave,
+      InsertItem.pass2Photo
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -373,10 +388,16 @@ async function insert_meal(InsertItem) {
     console.log(QueryText);
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.badgeId,InsertItem.mealStatusId,InsertItem.pass2Photo,InsertItem.name);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.badgeId,
+      InsertItem.mealStatusId,
+      InsertItem.pass2Photo,
+      InsertItem.name
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -398,10 +419,14 @@ async function insert_meal_status(InsertItem) {
     console.log(QueryText);
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.locked,InsertItem.cooked);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.locked,
+      InsertItem.cooked
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -425,10 +450,15 @@ async function insert_recipe_detail(InsertItem) {
     console.log(QueryText);
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.mealId,InsertItem.materialId,InsertItem.needNum);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.mealId,
+      InsertItem.materialId,
+      InsertItem.needNum
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -454,10 +484,16 @@ async function insert_material(InsertItem) {
     console.log(QueryText);
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.name,InsertItem.pass2Photo,InsertItem.stock,InsertItem.colorId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.name,
+      InsertItem.pass2Photo,
+      InsertItem.stock,
+      InsertItem.colorId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -479,10 +515,14 @@ async function insert_material_photo_relation(InsertItem) {
     console.log(QueryText);
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -510,10 +550,14 @@ async function insert_photo(InsertItem) {
     console.log(QueryText);
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -539,9 +583,7 @@ export const getTables = () => {
 };
 */
 
-
 //### end First Start Init DB
-
 
 //###start Update
 export async function update_item(Table, updateItemItem) {
@@ -601,10 +643,14 @@ export async function update_badge(updateItem) {
     );
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -636,10 +682,14 @@ export async function update_meal(updateItem) {
     );
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -660,10 +710,14 @@ export async function update_meal_status(updateItem) {
     console.log(QueryText, updateItem.locked, updateItem.cooked, updateItem.id);
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -692,10 +746,14 @@ export async function update_recipe_detail(updateItem) {
     );
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -727,10 +785,14 @@ export async function update_material(updateItem) {
     );
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -752,10 +814,14 @@ export async function update_material_photo_relation(updateItem) {
     console.log(QueryText, updateItem.materialId, updateItem.photoId);
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -791,10 +857,14 @@ export async function update_photo(updateItem) {
     );
   }
   try {
-    const result =  await db.runAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
@@ -815,14 +885,14 @@ async function fetchDataFromDb(Tablename, offset, limit, DecOrAsc, sortkey) {
     offset +
     ";";
   if (QueryConst.debugDataBaseLevel > 0) {
-    console.log("fetchDataFromDb")
+    console.log("fetchDataFromDb");
     console.log(QueryText);
   }
   try {
-    const result =  await db.getAllAsync(QueryText,InsertItem.materialId,InsertItem.photoId);
+    const result = await db.getAllAsync(QueryText);
     //console.log(result.lastInsertRowId, result.changes);
     return result;
-  }catch(error){
+  } catch (error) {
     console.error("fetchData error" + error);
   }
 }
@@ -946,12 +1016,12 @@ async function selectDataFromDb(QueryText) {
     console.log(QueryText);
   }
   try {
-    const result =  await db.getAllAsync(QueryText+" ");
+    const result = await db.getAllAsync(QueryText + " ");
     //console.log(result.lastInsertRowId, result.changes);
     return result;
-  }catch(error){
+  } catch (error) {
     console.error("Select:" + error);
-    console.error("Query : "+QueryText+":");
+    console.error("Query : " + QueryText + ":");
   }
 }
 //Idから検索
@@ -1107,13 +1177,13 @@ async function deleteDataFromDb(QueryText) {
   }
   // SQLクエリを実行してデータベースから要素を削除
   try {
-    const result = await db.runAsync(QueryText+" "); // fetchData関数の実行結果を待ち受ける
+    const result = await db.runAsync(QueryText + " "); // fetchData関数の実行結果を待ち受ける
     if (QueryConst.debugDataBaseLevel > 1) {
       console.log("Data:", result);
     } // 取得したデータを出力
     return result; // 非同期処理の結果を戻り値として返す
   } catch (error) {
-    console.error("delete data"+error); // エラーが発生した場合はエラーメッセージを出力
+    console.error("delete data" + error); // エラーが発生した場合はエラーメッセージを出力
     console.error(QueryText);
     throw error; // エラーを再度スローする（上位のコードでキャッチされる）
   }
@@ -1159,10 +1229,10 @@ async function ExecQueryText(QueryText) {
   }
   // SQLクエリを実行
   try {
-    const result =  await db.runAsync(QueryText);
+    const result = await db.runAsync(QueryText);
     //console.log(result.lastInsertRowId, result.changes);
     return result;
-  }catch(error){
+  } catch (error) {
     console.error("Insert error" + error);
   }
 }
