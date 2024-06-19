@@ -97,7 +97,7 @@ async def upload_files(file):
         color = 8
     elif 165<md<180:
         #red
-        color = 0    
+        color = 0
 
 
     return {"return":str(color)}
