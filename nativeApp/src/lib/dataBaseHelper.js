@@ -635,18 +635,16 @@ export async function update_badge(updateItem) {
     QueryConst.WhereId;
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(
-      QueryText,
-      updateItem.name,
-      updateItem.isHave,
-      updateItem.pass2Photo,
-      updateItem.id
+      QueryText
     );
   }
   try {
     const result = await db.runAsync(
       QueryText,
-      InsertItem.materialId,
-      InsertItem.photoId
+      updateItem.name,
+      updateItem.isHave,
+      updateItem.pass2Photo,
+      updateItem.id
     );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
@@ -684,8 +682,11 @@ export async function update_meal(updateItem) {
   try {
     const result = await db.runAsync(
       QueryText,
-      InsertItem.materialId,
-      InsertItem.photoId
+      updateItem.badgeId,
+      updateItem.mealStatusId,
+      updateItem.pass2Photo,
+      updateItem.name,
+      updateItem.id
     );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
@@ -707,13 +708,19 @@ export async function update_meal_status(updateItem) {
     items +
     QueryConst.WhereId;
   if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryText, updateItem.locked, updateItem.cooked, updateItem.id);
+    console.log(
+      QueryText,
+      updateItem.locked, 
+      updateItem.cooked, 
+      updateItem.id
+    );
   }
   try {
     const result = await db.runAsync(
       QueryText,
-      InsertItem.materialId,
-      InsertItem.photoId
+      updateItem.locked, 
+      updateItem.cooked, 
+      updateItem.id
     );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
@@ -748,8 +755,10 @@ export async function update_recipe_detail(updateItem) {
   try {
     const result = await db.runAsync(
       QueryText,
-      InsertItem.materialId,
-      InsertItem.photoId
+      updateItem.materialId,
+      updateItem.needNum,
+      updateItem.needNum,
+      updateItem.id
     );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
@@ -787,8 +796,11 @@ export async function update_material(updateItem) {
   try {
     const result = await db.runAsync(
       QueryText,
-      InsertItem.materialId,
-      InsertItem.photoId
+      updateItem.name,
+      updateItem.pass2Photo,
+      updateItem.stock,
+      updateItem.colorId,
+      updateItem.id
     );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
@@ -811,13 +823,17 @@ export async function update_material_photo_relation(updateItem) {
     QueryConst.values +
     "(?,?)";
   if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryText, updateItem.materialId, updateItem.photoId);
+    console.log(
+      QueryText, 
+      updateItem.materialId, 
+      updateItem.photoId
+    );
   }
   try {
     const result = await db.runAsync(
-      QueryText,
-      InsertItem.materialId,
-      InsertItem.photoId
+      QueryText, 
+      updateItem.materialId, 
+      updateItem.photoId
     );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
@@ -859,8 +875,12 @@ export async function update_photo(updateItem) {
   try {
     const result = await db.runAsync(
       QueryText,
-      InsertItem.materialId,
-      InsertItem.photoId
+      updateItem.name,
+      updateItem.ratitude,
+      updateItem.longitude,
+      updateItem.pass2Photo,
+      updateItem.visited,
+      updateItem.id
     );
     console.log(result.lastInsertRowId, result.changes);
     return result.lastInsertRowId;
