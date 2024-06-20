@@ -1,25 +1,11 @@
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import StreamingResponse
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.exceptions import HTTPException
+import sys
 import cv2
 import numpy as np
-import sys
-app = FastAPI()
 
-@app.post("/uploadfile/")
-async def upload_files(file):
-
+def convert(contents):
+    # 指定した画像(path)の物体を検出し、外接矩形の画像を出力します
     nparr = np.frombuffer(contents, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    #hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-    #hsv_arr = np.vstack(hsv)
-    #hsv_code = ['{:02}{:02x}{:02x}'.format(*color) for color in hsv_arr]
-
-    if img is None:
-        sys.exit('Can not read image')
-
-    # 指定した画像(path)の物体を検出し、外接矩形の画像を出力します
     # グレースケール画像へ変換
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -98,15 +84,4 @@ async def upload_files(file):
         #red
         color = 0    
 
-
-    return {"return":str(color)}
-    # 外接矩形された画像を表示
-    #cv2.imshow('output', img)
-    #cv2.waitKey(0)
-
-    # 終了処理
-    #cv2.destroyAllWindows()
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+    return color
