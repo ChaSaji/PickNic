@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
-from datetime import date
+from datetime import datetime
 
 class EventBase(BaseModel):
     id: int = None  # DBで自動生成されるIDを入れるので, とりあえずNULLにしました
     event_name: str = Field(..., title="イベント名")
     organizer: str = Field(..., title="主催者")
-    start_date: date = Field(..., title="開始日")
-    end_date: date = Field(..., title="終了日")
+    start_date: datetime = Field(..., title="開始日")
+    end_date: datetime = Field(..., title="終了日")
 
 class EventDetail(EventBase): # EventBaseを継承する
     overview: str = Field(..., title="概要")
