@@ -10,5 +10,5 @@ async def upload_files(file):
     return {"return":str(ret)}
 
 @router.get("/")
-async def color_number():
+async def color():
     return {"return":str(color)}
