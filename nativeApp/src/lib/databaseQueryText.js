@@ -1,5 +1,5 @@
 //SQL Funcs
-export const debugDataBaseLevel = 2; //0:No Debug,1:Easy Debug,2:Full Debug;
+export const debugDataBaseLevel = 0; //0:No Debug,1:Easy Debug,2:Full Debug;
 
 export const PassToExcelTemplate = "../../DBtemplate/";
 export const FileExtension = ".xlsx";
