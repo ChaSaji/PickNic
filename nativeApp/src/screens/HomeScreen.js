@@ -4,7 +4,7 @@ import CameraButton from "../components/CameraButton";
 import MapView, { Marker } from "react-native-maps";
 import { useCamera } from "../context/CameraContext";
 import { useLocation } from "../context/LocationContext";
-import { CreateAndInitTableIfNotExist, fetchData } from "../lib/dataBaseHelper";
+import { fetchData } from "../lib/dataBaseHelper";
 import { Photo } from "../lib/databaseQueryText";
 import PictureMarker from "../components/PictureMarker";
 import { useDbUpdate } from "../context/DbUpdateContext";
@@ -15,17 +15,6 @@ const ASPECT_RATIO = windowWidth / windowHeight;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-async function SetAppAndHomeScreen() {
-  try {
-    await CreateAndInitTableIfNotExist(); // 非同期処理CreateAndInitTableIfNotExistの完了を待つ
-    const resultB = await fetchData(Photo.tablename); // 非同期処理Bの完了を待つ
-    // 両処理が完了した後の処理を行う
-    return resultB;
-  } catch (error) {
-    console.error("エラー:", error);
-  }
-}
-
 const HomeScreen = ({ navigation }) => {
   const [pictures, setPictures] = useState([]);
 
@@ -35,7 +24,7 @@ const HomeScreen = ({ navigation }) => {
   const { photoUpdate } = useDbUpdate();
 
   useEffect(() => {
-    SetAppAndHomeScreen()
+    fetchData(Photo.tablename)
       .then((picture) => {
         // console.log("return data SetAppAndHomeScreen =");
         // console.log(picture);
@@ -84,12 +73,13 @@ const HomeScreen = ({ navigation }) => {
               coordinate={{
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-              }}>
-                <View style={styles.outerRadius}>
-                  <View style={styles.innerRadius}/>
-                </View>
+              }}
+            >
+              <View style={styles.outerRadius}>
+                <View style={styles.innerRadius} />
+              </View>
             </Marker>
-            {[].map((picture, index) => (
+            {pictures.map((picture, index) => (
               <PictureMarker
                 key={index}
                 uri={picture.pass2Photo}
