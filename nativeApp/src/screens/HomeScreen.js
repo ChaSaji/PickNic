@@ -89,7 +89,7 @@ const HomeScreen = ({ navigation }) => {
                   <View style={styles.innerRadius}/>
                 </View>
             </Marker>
-            {pictures.map((picture, index) => (
+            {[].map((picture, index) => (
               <PictureMarker
                 key={index}
                 uri={picture.pass2Photo}
