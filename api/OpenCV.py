@@ -7,18 +7,14 @@ import numpy as np
 
 app = FastAPI()
 
-@app.post("/uploadfile/")
-async def upload_files(file):
+@app.post("/uploadfile")
+async def upload_files(file: UploadFile = File(...)):
     contents = await file.read()
     nparr = np.frombuffer(contents, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     #hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
     #hsv_arr = np.vstack(hsv)
     #hsv_code = ['{:02}{:02x}{:02x}'.format(*color) for color in hsv_arr]
-
-    img = cv2.imread('apple.jpg')
-    if img is None:
-        sys.exit('Can not read image')
 
     # 指定した画像(path)の物体を検出し、外接矩形の画像を出力します
     # グレースケール画像へ変換
