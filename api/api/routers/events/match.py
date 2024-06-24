@@ -1,17 +1,14 @@
 from fastapi import APIRouter, UploadFile, File
-from ..lib.akaze import akaze
+from ...lib.akaze import akaze
 
 router=APIRouter()
 
 #テンプレートどうやってもってくる？ランキングは？
-@router.post("/events/uploadfile/")
-async def upload_files(file,latitude,longitude):
-#async def upload_files(file: UploadFile = File(...)):
-    contents = await file.read()
-    original = await file.read()
+@router.post("/events/{event_id}/uploadfile/")
+async def upload_files(file1,file2):
+#async def upload_files(file1: UploadFile = File(...),file2: UploadFile = File(...)):
+    contents = await file1.read()
+    original = await file2.read()
     ret = akaze(contents,original)
     return {"return":str(ret)}
 
-@router.get("/")
-async def match():
-    return {"return":str(match_per)}

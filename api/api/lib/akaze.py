@@ -5,8 +5,10 @@ import numpy as np
 #pip install opencv-contrib-python
 
 def akaze(contents,original):
-    img1 = cv2.imread(contents)
-    img2 = cv2.imread(original)
+    nparr = np.frombuffer(contents, np.uint8)
+    img1 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    nparr = np.frombuffer(original, np.uint8)
+    img2 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     gray1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
