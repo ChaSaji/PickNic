@@ -3,5 +3,8 @@ from api.routers import event
 
 app = FastAPI()
 
-app.include_router(event.router)
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
+app.include_router(event.router)
