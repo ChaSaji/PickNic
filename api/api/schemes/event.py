@@ -15,3 +15,12 @@ class EventDetail(EventBase): # EventBaseを継承する
     target_name: str = Field(..., title="撮影対象名前")
     latitude: float = Field(..., title="緯度")
     longitude: float = Field(..., title="経度")
+
+class EventCreate(EventDetail):
+    pass
+
+class EventCreateResponse(EventCreate):
+    id: int = Field(..., title="ID")
+
+    class Config:
+        from_attributes = True
