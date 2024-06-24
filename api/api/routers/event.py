@@ -2,7 +2,6 @@ from fastapi import APIRouter
 from typing import List
 from datetime import datetime
 import api.schemes.event as event_schema
-from datetime import date
 
 router = APIRouter()
 
@@ -16,7 +15,7 @@ async def create_event(event_body: event_schema.EventCreate):
     new_id = 1
     event_data = event_body.model_dump()
     event_data["id"] = new_id
-    return event_schema.EventCreateResponse(**event_data) # 現状はidをNULLで返す
+    return event_schema.EventCreateResponse(**event_data)
 
 @router.get("/events/{event_id}", response_model=event_schema.EventDetail)
 async def read_event():
