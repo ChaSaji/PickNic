@@ -9,9 +9,13 @@ router = APIRouter()
 async def list_events():
     return [event_schema.EventBase(id=1, event_name="イベント1", organizer="主催者1", start_date=datetime(2024, 5, 10), end_date=datetime(2025, 3, 22))]
 
-@router.post("/events/create")
-async def create_event():
-    pass
+@router.post("/events/create", response_model=event_schema.EventCreateResponse)
+async def create_event(event_body: event_schema.EventCreate):
+    # 新しいイベントのIDを生成します（ここでは仮に1としていますが、実際にはDBから取得します）
+    new_id = 1
+    event_data = event_body.model_dump()
+    event_data["id"] = new_id
+    return event_schema.EventCreateResponse(**event_data) # 現状はidをNULLで返す
 
 @router.get("/events/{event_id}", response_model=event_schema.EventDetail)
 async def read_event():
