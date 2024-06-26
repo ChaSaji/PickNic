@@ -3,13 +3,11 @@ from datetime import datetime, timedelta
 from typing import Union
 from jose import JWTError, jwt
 
-SECRET_KEY = "your_secret_key"
+SECRET_KEY = "xxx"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 999999
 
-# トークンブラックリスト
-token_blacklistDayOdd = set()
-token_blacklistDayEven = set()
+
 
 def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
     to_encode = data.copy()
@@ -24,8 +22,10 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
 def decode_access_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print(f"Decoded payload: {payload}")  # デバッグ情報を追加
         return payload
-    except JWTError:
+    except JWTError as e:
+        print(f"JWTError: {e}")
         return None
 
 def days_since():
@@ -39,19 +39,23 @@ def days_since():
     days_elapsed = delta.days
     return days_elapsed
 
-OddCeleard=False
-EvenCleard=False
+# トークンブラックリスト
+token_blacklist0 = set()
+token_blacklist1 = set()
+token_blacklist2 = set()
+
 def add_token_to_blacklist(token: str):
-    token_blacklistDayOdd.add(token)
-    token_blacklistDayEven.add(token)
-    if(days_since()%2==0 and not OddCeleard):
-        OddCeleard=True
-        EvenCleard=False
-        token_blacklistDayOdd.clear()
-    if(days_since()%2==1 and not EvenCleard):
-        EvenCleard=True
-        EvenCleard=False
-        token_blacklistDayEven.clear()
+    token_blacklist0.add(token)
+    token_blacklist1.add(token)
+    token_blacklist2.add(token)
+    
+    if(days_since()%3==0):
+        token_blacklist0.clear()
+    if(days_since()%3==1):
+        token_blacklist1.clear()
+    if(days_since()%3==2):
+        token_blacklist2.clear()
+    
 
 def is_token_in_blacklist(token: str):
-    return token in token_blacklistDayEven or token in token_blacklistDayOdd
+    return token in token_blacklist0 or token in token_blacklist1 or token in token_blacklist2
