@@ -29,7 +29,7 @@ async def update_event(event_id: int, event_body: event_schema.EventUpdate):
 
     return event_schema.EventCreateResponse(**event_data)
 
-@router.delete("/events/{event_id}/delete", response_model=None)
+@router.delete("/events/{event_id}/delete", response_model=event_schema.EventDetail)
 async def delete_event(event_id: int):
     #
     # DB内のイベント情報を削除する処理
