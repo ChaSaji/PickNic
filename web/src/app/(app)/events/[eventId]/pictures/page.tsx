@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import photoData from "./test.json";
 import Image from "next/image";
+import { getImage } from "./getImageFromR2";
 
 const EventPicturePage = () => {
   //ハンドルをここに
@@ -41,8 +42,21 @@ const EventPicturePage = () => {
     fetchPhotos();
   }, []);
 
+  const key = "66448766.jpg"
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+
+  const handleClick = async() => {
+    const src = await getImage(key)
+    setImageSrc(src)
+  }
+
   return (
     <PageTemplate titleLabel="投稿された写真">
+      <div>
+        <button onClick={handleClick}>aiueo</button>
+        {imageSrc && <img src={imageSrc} alt="Fetched from S3" />}
+
+      </div>
       <div
         id="displayphoto"
         style={{
@@ -79,7 +93,7 @@ const EventPicturePage = () => {
                 //flexDirection: "column",
               }}
             >
-              <Image
+                <Image
                 src={photo.url}
                 alt={photo.title || `Photo ${index + 1}`}
                 //width="100%"
