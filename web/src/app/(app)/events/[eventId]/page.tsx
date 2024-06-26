@@ -4,10 +4,27 @@ import Button from "@/components/Button/Button";
 import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 type PropsType = {
   label: string;
   value: string;
+};
+
+// 型定義
+type EventData = {
+  event_name: string;
+  organizer: string;
+  start_date: string;
+  end_date: string;
+  overview: string;
+  badge_img: string;
+  target_img: string;
+  target_name: string;
+  latitude: number;
+  longitude: number;
+  id: number;
 };
 
 const EventDetailText = (props: PropsType) => {
@@ -30,10 +47,12 @@ const EventDetailText = (props: PropsType) => {
 };
 
 const EventDetailPage = () => {
+  const [items, setItems] = useState<EventData | null>(null);
   const router = useRouter();
   const params = useParams();
   const eventId = params["eventId"];
 
+  console.log(items)
   const handleClickPictures = () => {
     router.push(`/events/${eventId}/pictures`);
   };
@@ -44,7 +63,20 @@ const EventDetailPage = () => {
     console.log("公開する");
   };
 
-  const eventInfo = {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/events/${eventId}`);
+        setItems(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const eventInfo =  {
     id: "",
     name: "浜松城バナナ合戦〜春の部〜",
     overview: "春が始まる...戦じゃ！皆のもの、バナナを持てぃ！",
@@ -56,7 +88,7 @@ const EventDetailPage = () => {
     longitude: 135,
   };
   return (
-    <PageTemplate titleLabel="イベント一覧">
+    <PageTemplate titleLabel="イベント詳細">
       <div style={{ display: "flex", justifyContent: "end", gap: 10 }}>
         <Button onClick={handleClickPictures} label="写真一覧" />
         <Button onClick={handleClickEdit} label="編集" />
@@ -69,19 +101,22 @@ const EventDetailPage = () => {
           padding: 20,
           gap: 10,
         }}
-      >
-        <EventDetailText label="イベント名" value={eventInfo.name} />
-        <EventDetailText label="概要" value={eventInfo.overview} />
+      >{items && (
+        <>
+        <EventDetailText label="イベント名" value={items.event_name} />
+        <EventDetailText label="概要" value={items.overview} />
         <EventDetailText
           label="期間"
-          value={`${eventInfo.startDate} ~ ${eventInfo.endDate}`}
+          value={`${items.start_date} ~ ${items.end_date}`}
         />
-        <EventDetailText label="バッジ画像" value={eventInfo.img} />
-        <EventDetailText label="撮影対象" value={eventInfo.photTarget} />
+        <EventDetailText label="バッジ画像" value={items.badge_img} />
+        <EventDetailText label="撮影対象" value={items.target_img} />
         <EventDetailText
           label="座標"
-          value={`（経度：${eventInfo.longitude}、 緯度：${eventInfo.latitude}）`}
+          value={`（緯度：${items.latitude}、経度：${items.longitude}）`}
         />
+        </>
+      )}
       </div>
     </PageTemplate>
   );
