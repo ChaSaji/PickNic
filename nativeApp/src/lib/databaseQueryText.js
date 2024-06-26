@@ -146,6 +146,22 @@ export class MaterialPhotoRelation {
   static elementsKey = MaterialPhotoRelationElemantText;
 }
 
+class PlaceElementKey {
+  static id = PrimaryKey;
+  static name = "name";
+  static visited = "visited";
+}
+export class PlaceElement {
+  id;
+  name;
+  visited;
+}
+
+export class Place {
+  static tablename = "Place";
+  static elementsKey = PlaceElementKey;
+}
+
 class PhotoElementKey {
   static id = PrimaryKey;
   static name = "name";
@@ -154,6 +170,7 @@ class PhotoElementKey {
   static pass2Photo = "pass2Photo";
   static visited = "visited";
 }
+
 export class PhotoElement {
   id;
   name;
@@ -167,6 +184,7 @@ export class Photo {
   static tablename = "Photo";
   static elementsKey = PhotoElementKey;
 }
+
 // IF NOT EXISTS
 // テーブルを作成するクエリ
 export const createTableBadge =
@@ -246,6 +264,18 @@ export const createTableMaterialPhotoRelation =
   MaterialPhotoRelation.elementsKey.materialId +
   " INTEGER," +
   MaterialPhotoRelation.elementsKey.photoId +
+  " INTEGER" +
+  ");";
+
+export const createPlace =
+  `CREATE TABLE IF NOT EXISTS ` +
+  Place.tablename +
+  ` (` +
+  Place.elementsKey.id +
+  " INTEGER PRIMARY KEY AUTOINCREMENT," +
+  Place.elementsKey.name +
+  " TEXT UNIQUE," +
+  Place.elementsKey.visited +
   " INTEGER" +
   ");";
 

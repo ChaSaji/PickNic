@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
 import cv2
 import numpy as np
-
+import sys
 app = FastAPI()
 
 @app.post("/uploadfile")
@@ -93,7 +93,7 @@ async def upload_files(file: UploadFile = File(...)):
         color = 8
     elif 165<md<180:
         #red
-        color = 0    
+        color = 0
 
 
     return {"return":str(color)}

@@ -81,6 +81,7 @@ export async function CreateAllTable() {
     await CreateEachTable(QueryConst.createTableMaterialPhotoRelation);
     await CreateEachTable(QueryConst.createTableMeal);
     await CreateEachTable(QueryConst.createTableMeal_Status);
+    await CreateEachTable(QueryConst.createPlace);
     await CreateEachTable(QueryConst.createTablePhoto);
     await CreateEachTable(QueryConst.createTableRecipe_Detail);
   } catch (error) {
@@ -92,6 +93,7 @@ export async function CreateAllTable() {
     console.log(QueryConst.createTableMaterialPhotoRelation);
     console.log(QueryConst.createTableMeal);
     console.log(QueryConst.createTableMeal_Status);
+    console.log(QueryConst.createPlace);
     console.log(QueryConst.createTablePhoto);
     console.log(QueryConst.createTableRecipe_Detail);
   }
@@ -292,6 +294,22 @@ export async function insert_item(Table, InsertItemItem) {
         const lastInsertedId = await insert_material_photo_relation(
           InsertItemItem
         );
+        if (QueryConst.debugDataBaseLevel > 0) {
+          console.log("Last inserted ID:", lastInsertedId);
+        }
+        return lastInsertedId;
+        // ここでlastInsertedIdを使用する
+      } catch (error) {
+        console.error("Error inserting and getting ID:", error);
+        return -1;
+      }
+      break;
+      case QueryConst.Place.tablename: //7
+      if (QueryConst.debugDataBaseLevel > 0) {
+        console.log("insert " + QueryConst.Place.tablename);
+      }
+      try {
+        const lastInsertedId = await insert_place(InsertItemItem);
         if (QueryConst.debugDataBaseLevel > 0) {
           console.log("Last inserted ID:", lastInsertedId);
         }
@@ -613,6 +631,9 @@ export async function update_item(Table, updateItemItem) {
       break;
     case QueryConst.MaterialPhotoRelation.tablename: //6
       await update_material_photo_relation(updateItemItem);
+      break;
+    case QueryConst.Place.tablename:
+      await update_place(updateItemItem);
       break;
     case QueryConst.Photo.tablename: //7
       await update_photo(updateItemItem);
@@ -1202,7 +1223,7 @@ async function deleteDataFromDb(QueryText) {
   }
 }
 //Idから削除
-export async function deleteDataById(Tablename, ID) {
+export async function delete_item_ById(Tablename, ID) {
   // 関数を呼び出してデータを取得し、結果を処理する
   Key = QueryConst.PrimaryKey;
   if (Tablename == QueryConst.MaterialPhotoRelation.tablename) {
@@ -1222,7 +1243,7 @@ export async function deleteDataById(Tablename, ID) {
 }
 //ユーザが任意で条件を指定して削除
 //Need(Tablename:string),Option(use (key:relational operators:val) logical operators (key:relational operators:val))
-export async function deleteData(Tablename, ...args) {
+export async function delete_item(Tablename, ...args) {
   // 関数を呼び出してデータを取得し、結果を処理する
   let CONDITIONTEXT = QueryConst.Where;
   for (i = 0; i < args.length; i++) {
