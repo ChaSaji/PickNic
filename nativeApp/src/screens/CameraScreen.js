@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { Camera } from "expo-camera";
-import { useState } from "react";
+import React, { useEffect, useRef } from "react";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { Text, View, TouchableOpacity, SafeAreaView } from "react-native";
 import { useCamera } from "../context/CameraContext";
 import { insert_item } from "../lib/dataBaseHelper";
@@ -9,53 +8,51 @@ import { useLocation } from "../context/LocationContext";
 import { useDbUpdate } from "../context/DbUpdateContext";
 
 const CameraScreen = ({ navigation }) => {
-  const [hasPermission, setHasPermission] = useState(null);
-  const [camera, setCamera] = useState(null);
+  const [status, requestPermission] = useCameraPermissions(null);
+  const cameraRef = useRef();
   const { setPicture, setInsertedPhotId } = useCamera();
   const { location } = useLocation();
   const { setPhotoUpdate } = useDbUpdate();
 
   const takePicture = async () => {
-    if (camera) {
-      const image = await camera.takePictureAsync();
-      setPicture(image);
-      const photo = new PhotoElement();
-      photo.name = "photoName";
-      photo.ratitude = location.coords.latitude;
-      photo.longitude = location.coords.longitude;
-      photo.visited = 1;
-      photo.pass2Photo = image.uri;
-      insert_item(Photo.tablename, photo).then((id) => setInsertedPhotId(id));
-      setPhotoUpdate(Date.now);
-      navigation.navigate("Picture");
+    if (cameraRef.current) {
+      cameraRef.current.takePictureAsync({
+        onPictureSaved: async (picture) => {
+          setPicture(picture);
+          const photo = new PhotoElement();
+          photo.name = "photoName";
+          photo.ratitude = location.coords.latitude;
+          photo.longitude = location.coords.longitude;
+          photo.visited = 1;
+          photo.pass2Photo = picture.uri;
+          insert_item(Photo.tablename, photo).then((id) =>
+            setInsertedPhotId(id)
+          );
+          setPhotoUpdate(Date.now);
+          navigation.navigate("Picture");
+        },
+      });
     }
   };
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
+      await requestPermission();
     })();
   }, []);
 
-  if (hasPermission === null) {
+  if (status && status.granted === null) {
     //許可を出す表示が出来ない．
     return <View />;
   }
-  if (hasPermission === false) {
+  if (status && status.granted === false) {
     //許可を拒否された．
     return <Text>No access to camera</Text>;
   }
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      <Camera
-        style={{ flex: 1 }}
-        ref={(ref) => {
-          setCamera(ref);
-        }}
-        autoFocus={Camera.Constants.AutoFocus.on}
-      />
+      <CameraView style={{ flex: 1 }} ref={cameraRef} autoFocus={"on"} />
       <View
         style={{
           height: 60,
@@ -65,7 +62,7 @@ const CameraScreen = ({ navigation }) => {
         }}
       >
         <TouchableOpacity
-          onPress={() => takePicture()}
+          onPress={takePicture}
           style={{
             width: 40,
             height: 40,
