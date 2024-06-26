@@ -9,7 +9,7 @@ from .database import SessionLocal, engine,Base,DATABASE_URL
 from .schemas import UserCreate, User
 from .crud import get_user_by_username, get_user_by_email, create_user
 from .auth_utils import verify_password
-from .token_utils import create_access_token, decode_access_token,ACCESS_TOKEN_EXPIRE_MINUTES
+from .token_utils import create_access_token, decode_access_token,add_token_to_blacklist,is_token_in_blacklist,ACCESS_TOKEN_EXPIRE_MINUTES
 
 # データベースの初期化
 import os
@@ -59,6 +59,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    if is_token_in_blacklist(token):
+        raise credentials_exception
     try:
         payload = decode_access_token(token)
         username: str = payload.get("sub")
@@ -71,6 +73,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise credentials_exception
     return user
 
+@app.post("/logout")
+async def logout(token: str = Depends(oauth2_scheme)):
+    add_token_to_blacklist(token)
+    return {"message": "Successfully logged out"}
+
 @app.get("/users/me", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_user)):
+async def read_users_me(current_user: User = Depends(get_current_user),token: str = Depends(oauth2_scheme)):
     return current_user
