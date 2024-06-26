@@ -23,8 +23,15 @@ class EventDetail(EventDetailBase): # Event
 class EventCreate(EventDetailBase):
     pass
 
+class EventUpdate(EventDetailBase):
+    pass
 class EventCreateResponse(EventCreate):
     id: int = Field(..., title="ID")
 
+    class Config:
+        from_attributes = True
+
+class EventUpdateResponse(EventUpdate):
+    id: int = Field(..., title="ID")
     class Config:
         from_attributes = True
