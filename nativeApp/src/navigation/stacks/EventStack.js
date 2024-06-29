@@ -23,7 +23,11 @@ const EventScreenNavigator = () => {
           <Stack.Screen name="Camera" component={CameraScreen} />
           <Stack.Screen name="Submit" component={SubmitScreen} />
           <Stack.Screen name="Loading" component={LoadingScreen} />
-          <Stack.Screen name="Result" component={ResultScreen} />
+          <Stack.Screen
+            name="Result"
+            component={ResultScreen}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </LocationProvider>
     </CameraProvider>
