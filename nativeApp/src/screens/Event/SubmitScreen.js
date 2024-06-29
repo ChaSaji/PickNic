@@ -1,8 +1,8 @@
 import { Dimensions, Image, StyleSheet, View } from "react-native";
 import { useCamera } from "../../context/CameraContext";
-import ChangeMaterialButton from "../../components/ChangeMaterialButton";
 import { useLayoutEffect, useState } from "react";
 import LoadingScreen from "./LoadingScreen";
+import MyButton from "../../components/MyButton";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -37,7 +37,7 @@ const SubmitScreen = ({ navigation }) => {
       <Image source={{ uri: picture.uri }} style={styles.image} />
 
       <View style={styles.buttonContainer}>
-        <ChangeMaterialButton onPress={handleSubmitToAPI} />
+        <MyButton onPress={handleSubmitToAPI} label={"採点"} />
       </View>
     </View>
   );
