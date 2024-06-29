@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { Text, View, TouchableOpacity, SafeAreaView } from "react-native";
 import { useLocation } from "../../context/LocationContext";
@@ -34,6 +34,12 @@ const CameraScreen = ({ navigation }) => {
       });
     }
   };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "戻る",
+    });
+  }, []);
 
   useEffect(() => {
     (async () => {

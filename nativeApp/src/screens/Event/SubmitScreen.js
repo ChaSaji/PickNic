@@ -14,6 +14,7 @@ const SubmitScreen = ({ navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: !loading,
+      headerBackTitle: "撮り直す",
     });
   }, [loading, navigation]);
 
