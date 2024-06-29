@@ -1,12 +1,6 @@
 import { useLayoutEffect } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { getRandomPointInRadius } from "../../lib/getRandomPointInRadius";
 
 const DetailScreen = ({ route, navigation }) => {
   // TODO: eventIdからeventをfetch
@@ -33,37 +27,40 @@ const DetailScreen = ({ route, navigation }) => {
   }, []);
 
   const handleNavigation = () => {
+    const randomCenter = getRandomPointInRadius(
+      event.latitude,
+      event.longitude,
+      200
+    );
     navigation.navigate("Map", {
       eventName: event.event_name,
-      latitude: event.latitude,
-      longitude: event.longitude,
+      latitude: randomCenter.latitude,
+      longitude: randomCenter.longitude,
     });
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.section}>
-          <Text style={styles.title}>ターゲット</Text>
-          <Image
-            style={styles.image}
-            source={require("../../../assets/sample.jpg")}
-          />
-          <Text style={styles.organizer}>主催者: {event.organizer}</Text>
-          <Text style={styles.date}>
-            {event.start_date} ~ {event.end_date}
-          </Text>
-          <Text style={styles.overview}>{event.overview}</Text>
+      <View style={styles.section}>
+        <Text style={styles.title}>ターゲット</Text>
+        <Image
+          style={styles.image}
+          source={require("../../../assets/sample.jpg")}
+        />
+        <Text style={styles.organizer}>主催者: {event.organizer}</Text>
+        <Text style={styles.date}>
+          {event.start_date} ~ {event.end_date}
+        </Text>
+        <Text style={styles.overview}>{event.overview}</Text>
+      </View>
+      <TouchableOpacity
+        onPress={() => handleNavigation()}
+        style={styles.button.outerRadius}
+      >
+        <View style={styles.button.innerRadius}>
+          <Text style={styles.button.text}>探す</Text>
         </View>
-        <TouchableOpacity
-          onPress={() => handleNavigation()}
-          style={styles.button.outerRadius}
-        >
-          <View style={styles.button.innerRadius}>
-            <Text style={styles.button.text}>探す</Text>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -75,12 +72,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     backgroundColor: "#E6F6C7",
-  },
-  scrollViewContent: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    paddingVertical: 20,
   },
   section: {
     marginBottom: 20,

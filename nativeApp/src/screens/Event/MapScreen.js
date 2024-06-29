@@ -4,7 +4,6 @@ import { useLocation } from "../../context/LocationContext";
 import MapView, { Circle, Marker } from "react-native-maps";
 import CameraButton from "../../components/CameraButton";
 import { useCamera } from "../../context/CameraContext";
-import { getRandomPointInRadius } from "../../lib/getRandomPointInRadius";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -14,9 +13,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const MapScreen = ({ route, navigation }) => {
   const eventName = route.params.eventName;
-  const latitude = route.params.latitude;
-  const longitude = route.params.longitude;
-  const randomCenter = getRandomPointInRadius(latitude, longitude, 200);
+  const eventLatitude = route.params.latitude;
+  const eventLongitude = route.params.longitude;
 
   const { location, granted } = useLocation();
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
@@ -50,16 +48,16 @@ const MapScreen = ({ route, navigation }) => {
           <MapView
             style={styles.map}
             initialRegion={{
-              latitude: randomCenter.latitude,
-              longitude: randomCenter.longitude,
+              latitude: eventLatitude,
+              longitude: eventLongitude,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
           >
             <Circle
               center={{
-                latitude: randomCenter.latitude,
-                longitude: randomCenter.longitude,
+                latitude: eventLatitude,
+                longitude: eventLongitude,
               }}
               radius={500}
               strokeColor="#1BB8E8"
