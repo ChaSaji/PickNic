@@ -1,7 +1,6 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, Image, View, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
-const ChangeMaterialButton = (props) => {
+const MyButton = ({ fontSize = 45, ...props }) => {
   const styles = StyleSheet.create({
     outerRadius: {
       alignItems: "center",
@@ -22,7 +21,7 @@ const ChangeMaterialButton = (props) => {
     },
     text: {
       color: "white",
-      fontSize: 45,
+      fontSize: fontSize,
       fontWeight: "bold",
       lineHeight: 60,
       textAlign: "center",
@@ -35,10 +34,10 @@ const ChangeMaterialButton = (props) => {
       style={styles.outerRadius}
     >
       <View style={styles.innerRadius}>
-        <Text style={styles.text}>変換</Text>
+        <Text style={styles.text}>{props.label}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default ChangeMaterialButton;
+export default MyButton;

@@ -1,61 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Dimensions } from "react-native";
-import CameraButton from "../components/CameraButton";
-import MapView, { Marker } from "react-native-maps";
-import { useCamera } from "../context/CameraContext";
-import { useLocation } from "../context/LocationContext";
-import { fetchData } from "../lib/dataBaseHelper";
-import { Photo } from "../lib/databaseQueryText";
-import PictureMarker from "../components/PictureMarker";
-import { useDbUpdate } from "../context/DbUpdateContext";
-import InformationButton from "../components/InformationButton";
+import { useLayoutEffect } from "react";
+import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import { useLocation } from "../../context/LocationContext";
+import MapView, { Circle, Marker } from "react-native-maps";
+import CameraButton from "../../components/CameraButton";
+import { useCamera } from "../../context/CameraContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 const ASPECT_RATIO = windowWidth / windowHeight;
-const LATITUDE_DELTA = 0.01;
+const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const HomeScreen = ({ navigation }) => {
-  const [pictures, setPictures] = useState([]);
+const MapScreen = ({ route, navigation }) => {
+  const eventName = route.params.eventName;
+  const eventLatitude = route.params.latitude;
+  const eventLongitude = route.params.longitude;
 
   const { location, granted } = useLocation();
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
     useCamera();
-  const { photoUpdate } = useDbUpdate();
-
-  useEffect(() => {
-    fetchData(Photo.tablename)
-      .then((picture) => {
-        // console.log("return data SetAppAndHomeScreen =");
-        // console.log(picture);
-        setPictures(picture);
-      })
-      .catch((error) => {
-        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
-      });
-  }, [photoUpdate]);
-
-  const handleNavigatePictureClick = ({ picture }) => {
-    navigation.navigate("PictureView", {
-      id: picture.id,
-      uri: picture.pass2Photo,
-    });
-  };
-
-  const handleNavigateCameraClick = () => {
-    navigation.navigate("Camera");
-  };
-
-  const handleNavigateCopyrightClick = () => {
-    navigation.navigate("Copyright");
-  };
 
   const handleComplete = () => {
     console.log("set camera enable");
     setCameraKey((prevKey) => prevKey + 1);
     setIsCameraEnabled(true);
   };
+
+  const handleNavigateCameraClick = () => {
+    navigation.navigate("Camera");
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: eventName,
+      headerBackTitle: "戻る",
+    });
+  }, [route]);
 
   return (
     <View style={styles.container}>
@@ -68,12 +48,21 @@ const HomeScreen = ({ navigation }) => {
           <MapView
             style={styles.map}
             initialRegion={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
+              latitude: eventLatitude,
+              longitude: eventLongitude,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
           >
+            <Circle
+              center={{
+                latitude: eventLatitude,
+                longitude: eventLongitude,
+              }}
+              radius={500}
+              strokeColor="#1BB8E8"
+              fillColor="rgba(27, 184, 232, 0.3)"
+            />
             <Marker
               coordinate={{
                 latitude: location.coords.latitude,
@@ -84,29 +73,23 @@ const HomeScreen = ({ navigation }) => {
                 <View style={styles.innerRadius} />
               </View>
             </Marker>
-            {pictures.map((picture, index) => (
-              <PictureMarker
-                key={index}
-                uri={picture.pass2Photo}
-                latitude={picture.ratitude}
-                longitude={picture.longitude}
-                onPress={() => handleNavigatePictureClick({ picture: picture })}
-              />
-            ))}
           </MapView>
           <View
             style={{
               position: "absolute",
               justifyContent: "center",
               alignItems: "center",
-              width: 30,
-              height: 30,
+              width: 130,
+              height: 130,
               borderRadius: 200,
-              right: 30,
-              top: 30,
+              right: 20,
+              top: 20,
             }}
           >
-            <InformationButton onPress={handleNavigateCopyrightClick} />
+            <Image
+              style={styles.image}
+              source={require("../../../assets/sample.jpg")}
+            />
           </View>
           <View
             style={{
@@ -163,6 +146,11 @@ const styles = StyleSheet.create({
     borderColor: "white",
     backgroundColor: "#1BB8E8",
   },
+  image: {
+    width: 100,
+    height: 100,
+    margin: 5,
+  },
 });
 
-export default HomeScreen;
+export default MapScreen;
