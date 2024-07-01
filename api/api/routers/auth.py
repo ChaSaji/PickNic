@@ -1,21 +1,29 @@
 # main.py
 from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from datetime import timedelta
 
-from .database import SessionLocal, engine,Base,DATABASE_URL
-from .schemas import UserCreate, UserUpdate, User
-from .crud import get_user_by_username, get_user_by_email, create_user,update_user,delete_user
-from .auth_utils import verify_password
-from .token_utils import create_access_token, decode_access_token,add_token_to_blacklist,is_token_in_blacklist,ACCESS_TOKEN_EXPIRE_MINUTES
+from ..models.auth import SessionLocal, engine,Base
+from ..schemes.auth import UserCreate, UserUpdate, User
+from ..cruds.auth import get_user_by_username, get_user_by_email, create_user,update_user,delete_user
+from ..lib.auth.auth_utils import verify_password
+from ..lib.auth.token_utils import create_access_token, decode_access_token,add_token_to_blacklist,is_token_in_blacklist,ACCESS_TOKEN_EXPIRE_MINUTES
 # データベースの初期化
+from dotenv import load_dotenv
 import os
-if not os.path.exists(DATABASE_URL):
+# .envファイルを読み込む
+load_dotenv()
+# 環境変数の取得
+database_url = os.getenv('DATABASE_URL')
+print(database_url)
+if not os.path.exists(database_url):
     Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+#app = FastAPI()
+router = APIRouter()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -26,7 +34,7 @@ def get_db():
     finally:
         db.close()
 
-@app.post("/users/", response_model=User)
+@router.post("/users/", response_model=User)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
     print("print:",user)
     db_user = get_user_by_username(db, user.username)
@@ -36,24 +44,8 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     if db_email:
         raise HTTPException(status_code=400, detail="Email already registered")
     return create_user(db, user)
-"""
-@app.post("/token", response_model=dict)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = get_user_by_username(db, form_data.username)
-    if not user or not verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
-    #print("status,",status.HTTP_401_UNAUTHORIZED)
-    return {"access_token": access_token, "token_type": "bearer"}
-"""
-@app.post("/login", response_model=dict)
+
+@router.post("/login", response_model=dict)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = get_user_by_username(db, form_data.username)
     if not user or not verify_password(form_data.password, user.hashed_password):
@@ -99,17 +91,17 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise credentials_exception
     return user
 
-@app.post("/logout")
+@router.post("/logout")
 async def logout(token: str = Depends(oauth2_scheme)):
     add_token_to_blacklist(token)
     return {"message": "Successfully logged out"}
 
-@app.get("/users/me", response_model=User)
+@router.get("/users/me", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 # 更新エンドポイントの追加
-@app.put("/users_update/{user_id}", response_model=User)
+@router.put("/users_update/{user_id}", response_model=User)
 async def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_user = update_user(db, user_id, user)
     if not db_user:
@@ -117,13 +109,13 @@ async def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Dep
     return db_user
 
 # 削除エンドポイントの追加
-@app.delete("/users_delete/{user_id}", response_model=User)
+@router.delete("/users_delete/{user_id}", response_model=User)
 async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_user = delete_user(db, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@app.get("/current_token/", response_model=dict)
+@router.get("/current_token/", response_model=dict)
 async def login_for_access_token(token: str = Depends(oauth2_scheme)):
     return {"access_token": token}
