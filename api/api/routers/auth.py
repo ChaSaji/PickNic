@@ -25,7 +25,7 @@ if not os.path.exists(database_url):
 #app = FastAPI()
 router = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def get_db():
     db = SessionLocal()
@@ -34,7 +34,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/users/", response_model=User)
+@router.post("/auth/users/", response_model=User)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
     print("print:",user)
     db_user = get_user_by_username(db, user.username)
@@ -45,7 +45,7 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
     return create_user(db, user)
 
-@router.post("/login", response_model=dict)
+@router.post("/auth/login", response_model=dict)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = get_user_by_username(db, form_data.username)
     if not user or not verify_password(form_data.password, user.hashed_password):
@@ -91,17 +91,17 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise credentials_exception
     return user
 
-@router.post("/logout")
+@router.post("/auth/logout")
 async def logout(token: str = Depends(oauth2_scheme)):
     add_token_to_blacklist(token)
     return {"message": "Successfully logged out"}
 
-@router.get("/users/me", response_model=User)
+@router.get("/auth/users/me", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 # 更新エンドポイントの追加
-@router.put("/users_update/{user_id}", response_model=User)
+@router.put("/auth/users/update/{user_id}", response_model=User)
 async def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_user = update_user(db, user_id, user)
     if not db_user:
@@ -109,13 +109,13 @@ async def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Dep
     return db_user
 
 # 削除エンドポイントの追加
-@router.delete("/users_delete/{user_id}", response_model=User)
+@router.delete("/auth/users/delete/{user_id}", response_model=User)
 async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_user = delete_user(db, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@router.get("/current_token/", response_model=dict)
+@router.get("/auth/current_token/", response_model=dict)
 async def login_for_access_token(token: str = Depends(oauth2_scheme)):
     return {"access_token": token}
