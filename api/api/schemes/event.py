@@ -16,15 +16,30 @@ class EventDetailBase(EventBase): # EventBaseを継承する
     longitude: float = Field(..., title="経度")
 
 class Event(EventBase): # Event
+    # id: int = Field(..., title="ID")
+    # class config:
+    #     from_attributes = True
     id: int = None
 
-class EventDetail(EventDetailBase): # Event
-    id: int = None
+class EventDetail(EventDetailBase):
+    pass
 class EventCreate(EventDetailBase):
+    pass
+class EventUpdate(EventDetailBase):
     pass
 
 class EventCreateResponse(EventCreate):
     id: int = Field(..., title="ID")
 
+    class Config:
+        from_attributes = True
+
+class EventUpdateResponse(EventUpdate):
+    id: int = Field(..., title="ID")
+    class Config:
+        from_attributes = True
+
+class EventDeleteResponse(EventDetail):
+    id: int = Field(..., title="ID")
     class Config:
         from_attributes = True
