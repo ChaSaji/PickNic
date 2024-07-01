@@ -14,12 +14,20 @@ type EventData = {
   organizer: string;
   start_date: string;
   end_date: string;
+  id: string;
 };
+
 
 // columns 配列に型を適用
 const columns: Column<EventData>[] = [
-  { Header: "イベント名", accessor: "event_name" },
-  { Header: "主催団体名", accessor: "organizer" },
+  { Header: "イベント名", accessor: "event_name" ,
+    Cell:({ row }) => 
+      (
+      <a href={`/events/${row.values.id}`} style={{ textDecoration: "none", color: "blue"}}>
+        {row.values.event_name}
+      </a>
+    )
+  },
   { Header: "開始日", accessor: "start_date" },
   { Header: "終了日", accessor: "end_date" },
 ];
@@ -35,7 +43,6 @@ export default function EventListPage() {
   const handleClickPictures = () => {
     router.push(`/events/create`);
   };
-
 
   useEffect(() => {
     (async () => {
