@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from "react";
 import { StyleSheet, View, Image, Dimensions } from "react-native";
 import { useCamera } from "../context/CameraContext";
 import { useDbUpdate } from "../context/DbUpdateContext";
-import ChangeMaterialButton from "../components/ChangeMaterialButton";
+import MyButton from "../components/MyButton";
 import LoadingAnimationScreen from "./LoadingAnimationScreen";
 import { selectData, update_item } from "../lib/dataBaseHelper";
 import { Material, MaterialElement, RO } from "../lib/databaseQueryText";
@@ -95,7 +95,7 @@ const PictureScreen = ({ navigation }) => {
       <Image source={{ uri: picture.uri }} style={styles.image} />
 
       <View style={styles.buttonContainer}>
-        <ChangeMaterialButton onPress={handleSubmitToAPI} />
+        <MyButton onPress={handleSubmitToAPI} label={"変換"} />
       </View>
     </View>
   );
