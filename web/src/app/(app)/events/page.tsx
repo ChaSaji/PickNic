@@ -5,46 +5,48 @@ import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import Button from "@/components/Button/Button";
 import { useRouter } from "next/navigation";
 import { Column } from "react-table";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 // 型定義
 type EventData = {
-  eventname: string;
-  hostname: string;
-  period: string;
+  event_name: string;
+  organizer: string;
+  start_date: string;
+  end_date: string;
 };
 
 // columns 配列に型を適用
 const columns: Column<EventData>[] = [
-  { Header: "イベント名", accessor: "eventname" },
-  { Header: "主催団体名", accessor: "hostname" },
-  { Header: "期間", accessor: "period" },
-];
-
-// data 配列に型を適用
-const data: EventData[] = [
-  {
-    eventname: "桜祭り",
-    hostname: "浜松市役所",
-    period: "2024/04/01~2024/04/30",
-  },
-  {
-    eventname: "バナナ",
-    hostname: "100円",
-    period: "200",
-  },
+  { Header: "イベント名", accessor: "event_name" },
+  { Header: "主催団体名", accessor: "organizer" },
+  { Header: "開始日", accessor: "start_date" },
+  { Header: "終了日", accessor: "end_date" },
 ];
 
 export default function EventListPage() {
+  const [events, setEvents] = useState<EventData[]>([]);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
-      data,
+      data: events,
     });
-
   const router = useRouter();
   const handleClickPictures = () => {
     router.push(`/events/create`);
   };
+
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/events');
+        setEvents(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    })();
+  }, []);
 
   return (
     <PageTemplate titleLabel="イベント一覧">
