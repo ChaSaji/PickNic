@@ -25,13 +25,12 @@ const columns: Column<EventData>[] = [
 ];
 
 export default function EventListPage() {
-  const [data, setItems] = useState<EventData[]>([]);
+  const [events, setEvents] = useState<EventData[]>([]);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
-      data,
+      data: events,
     });
-  console.log(data)
   const router = useRouter();
   const handleClickPictures = () => {
     router.push(`/events/create`);
@@ -39,16 +38,14 @@ export default function EventListPage() {
 
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
         const response = await axios.get('http://localhost:8000/events');
-        setItems(response.data);
+        setEvents(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    };
-
-    fetchData();
+    })();
   }, []);
 
   return (

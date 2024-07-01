@@ -47,12 +47,12 @@ const EventDetailText = (props: PropsType) => {
 };
 
 const EventDetailPage = () => {
-  const [items, setItems] = useState<EventData | null>(null);
+  const [event, setItems] = useState<EventData | null>(null);
   const router = useRouter();
   const params = useParams();
   const eventId = params["eventId"];
 
-  console.log(items)
+
   const handleClickPictures = () => {
     router.push(`/events/${eventId}/pictures`);
   };
@@ -64,29 +64,16 @@ const EventDetailPage = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
         const response = await axios.get(`http://localhost:8000/events/${eventId}`);
         setItems(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    };
-
-    fetchData();
+    })();
   }, []);
 
-  const eventInfo =  {
-    id: "",
-    name: "浜松城バナナ合戦〜春の部〜",
-    overview: "春が始まる...戦じゃ！皆のもの、バナナを持てぃ！",
-    startDate: "2024/05/15",
-    endDate: "2024/04/30",
-    img: "",
-    photTarget: "浜松城",
-    latitude: 34,
-    longitude: 135,
-  };
   return (
     <PageTemplate titleLabel="イベント詳細">
       <div style={{ display: "flex", justifyContent: "end", gap: 10 }}>
@@ -101,19 +88,19 @@ const EventDetailPage = () => {
           padding: 20,
           gap: 10,
         }}
-      >{items && (
+      >{event && (
         <>
-        <EventDetailText label="イベント名" value={items.event_name} />
-        <EventDetailText label="概要" value={items.overview} />
+        <EventDetailText label="イベント名" value={event.event_name} />
+        <EventDetailText label="概要" value={event.overview} />
         <EventDetailText
           label="期間"
-          value={`${items.start_date} ~ ${items.end_date}`}
+          value={`${event.start_date} ~ ${event.end_date}`}
         />
-        <EventDetailText label="バッジ画像" value={items.badge_img} />
-        <EventDetailText label="撮影対象" value={items.target_img} />
+        <EventDetailText label="バッジ画像" value={event.badge_img} />
+        <EventDetailText label="撮影対象" value={event.target_img} />
         <EventDetailText
           label="座標"
-          value={`（緯度：${items.latitude}、経度：${items.longitude}）`}
+          value={`（緯度：${event.latitude}、経度：${event.longitude}）`}
         />
         </>
       )}
