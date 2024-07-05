@@ -15,3 +15,22 @@ export const getEvents = async () => {
 
   return eventData;
 };
+
+export const getEventDetail = async (eventId) => {
+  const data = await fetchAPI({ endpoint: `events/${eventId}` });
+  const eventData = {
+    id: data.id,
+    name: data.event_name,
+    organizer: data.organizer,
+    startDate: formatDate(data.start_date),
+    endDate: formatDate(data.end_date),
+    latitude: data.latitude,
+    longitude: data.longitude,
+    overview: data.overview,
+    badgeUrl: data.badge_img,
+    targetUrl: data.target_img,
+    targetName: data.target_name,
+  };
+
+  return eventData;
+};

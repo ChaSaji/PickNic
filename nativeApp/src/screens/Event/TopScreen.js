@@ -5,8 +5,8 @@ import { getEvents } from "../../lib/api/event";
 
 const TopScreen = ({ navigation }) => {
   const [events, setEvents] = useState([]);
-  const handleNavigation = (eventId) => {
-    navigation.navigate("Detail", { eventId });
+  const handleNavigation = (eventId, eventName) => {
+    navigation.navigate("Detail", { eventId, eventName });
   };
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const TopScreen = ({ navigation }) => {
         {events.map((event, index) => (
           <EventCard
             key={index}
-            onPress={() => handleNavigation(event.id)}
+            onPress={() => handleNavigation(event.id, event.name)}
             backgroundColor="#E6F6C7"
             {...event}
           />
