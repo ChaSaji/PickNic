@@ -6,16 +6,25 @@ import { LoginSchemaType, loginSchema } from "@/schemas/loginSchema";
 import Button from "@/components/Button/Button";
 import InputField from "@/components/InputField/InputField";
 import { postLoginForm } from "@/lib/api/auth";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const router = useRouter();
   const formMethods = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
   });
 
   const handleLogin = async (data: LoginSchemaType) => {
     const result = await postLoginForm(data);
-    console.log(result.message);
-    // formMethods.reset();
+
+    if (result.success) {
+      toast.success(result.message);
+      formMethods.reset();
+      router.push("/events");
+    } else {
+      toast.error(result.message);
+    }
   };
 
   return (
