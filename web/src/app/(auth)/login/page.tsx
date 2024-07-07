@@ -5,15 +5,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchemaType, loginSchema } from "@/schemas/loginSchema";
 import Button from "@/components/Button/Button";
 import InputField from "@/components/InputField/InputField";
+import { postLoginForm } from "@/lib/api/auth";
 
 const LoginPage = () => {
   const formMethods = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
   });
 
-  const handleLogin = (data: LoginSchemaType) => {
-    console.log(data);
-    formMethods.reset();
+  const handleLogin = async (data: LoginSchemaType) => {
+    const result = await postLoginForm(data);
+    console.log(result.message);
+    // formMethods.reset();
   };
 
   return (
