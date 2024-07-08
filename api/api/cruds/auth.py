@@ -8,13 +8,16 @@ def get_user_by_username(db: Session, username: str):
     print("get_user_by_username In crud.py",username)
     return db.query(User).filter(User.username == username).first()
 
-def get_user_by_email(db: Session, email: str):
-    return db.query(User).filter(User.email == email).first()
+"""
+def get_user_by_subusername(db: Session, subusername: str):
+    return db.query(User).filter(User.subusername == subusername).first()
+"""
 
 def create_user(db: Session, user: UserCreate):
     db_user = User(
         username=user.username,
-        email=user.email,
+        #subusername=user.subusername,
+        subusername = user.subusername,
         hashed_password=get_password_hash(user.password)
     )
     db.add(db_user)
@@ -27,8 +30,8 @@ def update_user(db: Session, user_id: int, user: UserUpdate):
     if db_user:
         if user.username is not None:
             db_user.username = user.username
-        if user.email is not None:
-            db_user.email = user.email
+        if user.subusername is not None:
+            db_user.subusername = user.subusername
         if user.password is not None:
             db_user.hashed_password = get_password_hash(user.password)
         db.commit()

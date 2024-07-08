@@ -8,7 +8,7 @@ from datetime import timedelta
 
 from ..models.auth import SessionLocal, engine,Base
 from ..schemes.auth import UserCreate, UserUpdate, User
-from ..cruds.auth import get_user_by_username, get_user_by_email, create_user,update_user,delete_user
+from ..cruds.auth import get_user_by_username, create_user,update_user,delete_user
 from ..lib.auth.auth_utils import verify_password
 from ..lib.auth.token_utils import create_access_token, decode_access_token,add_token_to_blacklist,is_token_in_blacklist,ACCESS_TOKEN_EXPIRE_MINUTES
 # データベースの初期化
@@ -40,9 +40,11 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = get_user_by_username(db, user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
+    """
     db_email = get_user_by_email(db, user.email)
     if db_email:
         raise HTTPException(status_code=400, detail="Email already registered")
+    """
     return create_user(db, user)
 
 @router.post("/auth/login", response_model=dict)
