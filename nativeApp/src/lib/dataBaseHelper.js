@@ -2,9 +2,9 @@ import * as SQLite from "expo-sqlite";
 import * as QueryConst from "./databaseQueryText";
 import * as InitDB from "./dataBaseInit";
 // データベースを作成またはオープン
-const db = SQLite.openDatabase("database.db");
+const db = SQLite.openDatabaseSync("database.db");
+//openDatabase
 //### start First Start Init DB
-
 export async function CreateAndInitTableIfNotExist() {
   try {
     const tablenum = await GetTableNum();
@@ -32,64 +32,48 @@ export async function CreateAndInitTableIfNotExist() {
     throw new Error("CreateAndInitTableIfNotExistでエラーが発生しました");
   }
 }
-function GetTableNum() {
+export async function getTables() {
   // アプリの起動時にデータベースの存在を確認
   if (QueryConst.debugDataBaseLevel >= 1) {
     console.log("CreateAndInitTableIfNotExist");
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT name FROM sqlite_master WHERE type="table";',
-        [],
-        (_, { rows }) => {
-          const tablenum = rows.length;
-          if (QueryConst.debugDataBaseLevel >= 1) {
-            console.log("table Length = " + tablenum);
-          }
-          // テーブルが存在しない場合はInitDatabaseTable()を呼び出す
-          resolve(tablenum);
-        },
-        (_, error) => {
-          // エラー時の処理
-          if (QueryConst.debugDataBaseLevel >= 2) {
-            console.log("No sqlite_master");
-          }
-          const tablenum = -1;
-          reject(tablenum);
-        }
-      );
-    });
-  });
+  //let object = await db.runAsync('SELECT name FROM sqlite_master WHERE type="table";');
+  //return object.length;
+  try {
+    let object = await db.getAllAsync(
+      'SELECT name FROM sqlite_master WHERE type="table";'
+    );
+    if (QueryConst.debugDataBaseLevel >= 1) {
+      console.log("cullent table");
+      console.log(object);
+    }
+    return object;
+  } catch (error) {
+    console.error("Error at GetTableNum" + error);
+  }
 }
 
-//### end First Start Init DB
-function CreateEachTable(QueryText) {
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log("Cleate Text");
+async function GetTableNum() {
+  // アプリの起動時にデータベースの存在を確認
+  if (QueryConst.debugDataBaseLevel >= 1) {
+    console.log("CreateAndInitTableIfNotExist");
   }
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryText);
+  //let object = await db.runAsync('SELECT name FROM sqlite_master WHERE type="table";');
+  //return object.length;
+  try {
+    let object = await db.getAllAsync(
+      'SELECT name FROM sqlite_master WHERE type="table";'
+    );
+    if (QueryConst.debugDataBaseLevel >= 1) {
+      console.log("cullent table");
+      console.log(object);
+    }
+    return object.length;
+  } catch (error) {
+    console.error("Error at GetTableNum" + error);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [],
-        () => {
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("テーブルが作成されました。");
-          }
-          resolve(); // テーブル作成が成功したらresolveを呼び出す
-        },
-        (_, error) => {
-          console.error("テーブルの作成に失敗しました:", error);
-          reject(error); // エラーが発生したらrejectを呼び出す
-        }
-      );
-    });
-  });
 }
+
 export async function CreateAllTable() {
   try {
     await CreateEachTable(QueryConst.createTableBadge);
@@ -113,6 +97,69 @@ export async function CreateAllTable() {
     console.log(QueryConst.createTablePhoto);
     console.log(QueryConst.createTableRecipe_Detail);
   }
+}
+
+async function CreateEachTable(QueryText) {
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log("Cleate Text");
+  }
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryText);
+  }
+  await db.execAsync(QueryText);
+}
+
+async function dropEachTable(QueryText) {
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log("drop Table");
+  }
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryText);
+  }
+  await db.execAsync(QueryText);
+}
+export async function dropAllTable() {
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";");
+    console.log(QueryConst.DropTableQuery + QueryConst.Meal.tablename + ";");
+    console.log(
+      QueryConst.DropTableQuery + QueryConst.MealStatus.tablename + ";"
+    );
+    console.log(
+      QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename + ";"
+    );
+    console.log(
+      QueryConst.DropTableQuery + QueryConst.Material.tablename + ";"
+    );
+    console.log(
+      QueryConst.DropTableQuery +
+        QueryConst.MaterialPhotoRelation.tablename +
+        ";"
+    );
+    console.log(QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";");
+  }
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.Meal.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.MealStatus.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.Material.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename + ";"
+  );
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";"
+  );
+  return;
 }
 //###start Read Excel data
 export async function InitDatabaseTable() {
@@ -156,7 +203,6 @@ export async function InitDatabaseTable() {
   return 1;
 }
 //###end Read Excel data
-
 //###start insert
 export async function insert_item(Table, InsertItemItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
@@ -295,50 +341,51 @@ export async function insert_item(Table, InsertItemItem) {
   }
 }
 
-function insert_badge(InsertItem) {
+async function insert_badge(InsertItem) {
   let items =
-    " (" +
+    " ( " +
     QueryConst.Badge.elementsKey.name +
-    "," +
+    ", " +
     QueryConst.Badge.elementsKey.isHave +
-    "," +
+    ", " +
     QueryConst.Badge.elementsKey.pass2Photo +
-    ")";
+    " )";
   let QueryText =
     QueryConst.InsertQuery +
     QueryConst.Badge.tablename +
     items +
     QueryConst.values +
-    "(?, ?, ?)";
-
+    "(?,?,?)";
+  console.log(
+    QueryText +
+      "," +
+      InsertItem.name +
+      "," +
+      InsertItem.isHave +
+      "," +
+      InsertItem.pass2Photo
+  );
+  //const statement = await db.prepareAsync(values);
   if (QueryText.debugDataBaseLevel > 0) {
     console.log(
       QueryText + InsertItem.name + InsertItem.isHave + InsertItem.pass2Photo
     );
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [InsertItem.name, InsertItem.isHave, InsertItem.pass2Photo],
-        (_, result) => {
-          // 成功時の処理
-          const lastInsertedId = result.insertId;
-          resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data Inserted badge id:" + lastInsertedId);
-          }
-        },
-        (_, error) => {
-          // エラー時の処理
-          console.error("Insert error", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.name,
+      InsertItem.isHave,
+      InsertItem.pass2Photo
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 
-function insert_meal(InsertItem) {
+async function insert_meal(InsertItem) {
   let items =
     "(" +
     QueryConst.Meal.elementsKey.badgeId +
@@ -358,33 +405,22 @@ function insert_meal(InsertItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [
-          InsertItem.badgeId,
-          InsertItem.mealStatusId,
-          InsertItem.pass2Photo,
-          InsertItem.name,
-        ],
-        (_, result) => {
-          // 成功時の処理
-          const lastInsertedId = result.insertId;
-          resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data Inserted meal id:" + lastInsertedId);
-          }
-        },
-        (_, error) => {
-          console.error("Insert meal error", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.badgeId,
+      InsertItem.mealStatusId,
+      InsertItem.pass2Photo,
+      InsertItem.name
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 
-function insert_meal_status(InsertItem) {
+async function insert_meal_status(InsertItem) {
   let items =
     "(" +
     QueryConst.MealStatus.elementsKey.locked +
@@ -400,28 +436,20 @@ function insert_meal_status(InsertItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [InsertItem.locked, InsertItem.cooked],
-        (_, result) => {
-          // 成功時の処理
-          const lastInsertedId = result.insertId;
-          resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data Inserted MealStatus id:" + lastInsertedId);
-          }
-        },
-        (_, error) => {
-          console.error("error", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.locked,
+      InsertItem.cooked
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 
-function insert_recipe_detail(InsertItem) {
+async function insert_recipe_detail(InsertItem) {
   let items =
     "(" +
     QueryConst.RecipeDetail.elementsKey.mealId +
@@ -439,28 +467,21 @@ function insert_recipe_detail(InsertItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [InsertItem.mealId, InsertItem.materialId, InsertItem.needNum],
-        (_, result) => {
-          // 成功時の処理
-          const lastInsertedId = result.insertId;
-          resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data Inserted RecipeDetail id:" + lastInsertedId);
-          }
-        },
-        (_, error) => {
-          console.error("error recipe insert", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.mealId,
+      InsertItem.materialId,
+      InsertItem.needNum
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 
-function insert_material(InsertItem) {
+async function insert_material(InsertItem) {
   let items =
     "(" +
     QueryConst.Material.elementsKey.name +
@@ -480,33 +501,22 @@ function insert_material(InsertItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [
-          InsertItem.name,
-          InsertItem.pass2Photo,
-          InsertItem.stock,
-          InsertItem.colorId,
-        ],
-        (_, result) => {
-          // 成功時の処理
-          const lastInsertedId = result.insertId;
-          resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data Inserted Material id:" + lastInsertedId);
-          }
-        },
-        (_, error) => {
-          console.error("error", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.name,
+      InsertItem.pass2Photo,
+      InsertItem.stock,
+      InsertItem.colorId
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 
-function insert_material_photo_relation(InsertItem) {
+async function insert_material_photo_relation(InsertItem) {
   let items =
     "(" +
     QueryConst.MaterialPhotoRelation.elementsKey.materialId +
@@ -522,71 +532,19 @@ function insert_material_photo_relation(InsertItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [InsertItem.materialId, InsertItem.photoId],
-        (_, result) => {
-          // 成功時の処理
-          const lastInsertedId = result.insertId;
-          resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log(
-              "Data Inserted MaterialPhotoRelation id:" + lastInsertedId
-            );
-          }
-        },
-        (_, error) => {
-          console.error("error", error);
-        }
-      );
-    });
-  });
-}
-function insert_place(InsertItem) {
-  let items =
-    "("+
-    QueryConst.Place.elementsKey.name+
-    ","+
-    QueryConst.Place.elementsKey.visited+    
-    ")";
-  let QueryText =
-    QueryConst.InsertQuery +
-    QueryConst.Place.tablename +
-    items +
-    QueryConst.values +
-    "(?,?)";
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryText,
-      InsertItem.name,
-      InsertItem.visited);
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.materialId,
+      InsertItem.photoId
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [
-          InsertItem.name,
-          InsertItem.visited
-        ],
-        (_, result) => {
-          // 成功時の処理
-          const lastInsertedId = result.insertId;
-          resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data Inserted meal id:" + lastInsertedId);
-          }
-        },
-        (_, error) => {
-          console.error("Insert meal error", error);
-        }
-      );
-    });
-  });
 }
-
-function insert_photo(InsertItem) {
+async function insert_photo(InsertItem) {
   console.log("insert_photo");
   let items =
     "(" +
@@ -609,33 +567,45 @@ function insert_photo(InsertItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.name,
+      InsertItem.ratitude,
+      InsertItem.longitude,
+      InsertItem.pass2Photo,
+      InsertItem.visited,
+      InsertItem.id
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
+}
+//###end insert
+
+/*
+export const getTables = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        QueryText,
-        [
-          InsertItem.name,
-          InsertItem.ratitude,
-          InsertItem.longitude,
-          InsertItem.pass2Photo,
-          InsertItem.visited,
-        ],
-        (_, result) => {
-          // 成功時の処理
-          const lastInsertedId = result.insertId;
-          resolve(lastInsertedId);
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("Data Inserted Photo id:" + lastInsertedId);
-          }
+        'SELECT name FROM sqlite_master WHERE type="table"',
+        [],
+        (_, { rows }) => {
+          const tables = rows._array.map((row) => row.name);
+          resolve(tables);
         },
-        (_, error) => {
-          console.error("error", error);
+        (error) => {
+          reject(error);
         }
       );
     });
   });
-}
-//###end insert
+};
+*/
+
+//### end First Start Init DB
 
 //###start Update
 export async function update_item(Table, updateItemItem) {
@@ -673,7 +643,7 @@ export async function update_item(Table, updateItemItem) {
   }
 }
 
-export function update_badge(updateItem) {
+export async function update_badge(updateItem) {
   //console.log("elements:"+QueryConst.Badge.elementsKey.name+":"+QueryConst.Badge.elementsKey.isHave+":"+QueryConst.Badge.elementsKey.pass2Photo);
   let items =
     QueryConst.Badge.elementsKey.name +
@@ -689,43 +659,24 @@ export function update_badge(updateItem) {
     items +
     QueryConst.WhereId;
   if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(
+    console.log(QueryText);
+  }
+  try {
+    const result = await db.runAsync(
       QueryText,
       updateItem.name,
       updateItem.isHave,
       updateItem.pass2Photo,
       updateItem.id
     );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [
-          updateItem.name,
-          updateItem.isHave,
-          updateItem.pass2Photo,
-          updateItem.id,
-        ],
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) {
-            if (QueryConst.debugDataBaseLevel > 1) {
-              console.log("Data updated Badge");
-            }
-          } else {
-            console.log("erro update Badge" + QueryText);
-          }
-        },
-        (_, error) => {
-          // エラー時の処理
-          console.error("update error Budge", error);
-        }
-      );
-    });
-  });
 }
 
-export function update_meal(updateItem) {
+export async function update_meal(updateItem) {
   let items =
     QueryConst.Meal.elementsKey.badgeId +
     " = ?," +
@@ -751,36 +702,23 @@ export function update_meal(updateItem) {
       updateItem.id
     );
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [
-          updateItem.recipeId,
-          updateItem.badgeId,
-          updateItem.mealStatusId,
-          updateItem.pass2Photo,
-          updateItem.id,
-        ],
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) {
-            if (QueryConst.debugDataBaseLevel > 1) {
-              console.log("Data updated Meal");
-            }
-          } else {
-            console.log("erro up meal" + QueryText);
-          }
-        },
-        (_, error) => {
-          // エラー時の処理
-          console.error("update error meal", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      updateItem.badgeId,
+      updateItem.mealStatusId,
+      updateItem.pass2Photo,
+      updateItem.name,
+      updateItem.id
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 
-export function update_meal_status(updateItem) {
+export async function update_meal_status(updateItem) {
   let items =
     QueryConst.MealStatus.elementsKey.locked +
     " = ?," +
@@ -795,30 +733,21 @@ export function update_meal_status(updateItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText, updateItem.locked, updateItem.cooked, updateItem.id);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [updateItem.locked, updateItem.cooked, updateItem.id],
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) {
-            if (QueryConst.debugDataBaseLevel > 1) {
-              console.log("Data updated MealStatus");
-            }
-          } else {
-            console.log("erro updated MealStatus" + QueryText);
-          }
-        },
-        (_, error) => {
-          // エラー時の処理
-          console.error("update error MealStatus", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      updateItem.locked,
+      updateItem.cooked,
+      updateItem.id
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 
-export function update_recipe_detail(updateItem) {
+export async function update_recipe_detail(updateItem) {
   let items =
     "(" +
     QueryConst.RecipeDetail.elementsKey.mealId +
@@ -841,30 +770,22 @@ export function update_recipe_detail(updateItem) {
       updateItem.id
     );
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [updateItem.materialId, updateItem.needNum, updateItem.id],
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) {
-            if (QueryConst.debugDataBaseLevel > 1) {
-              console.log("Data updateed RecipeDetail");
-            }
-          } else {
-            console.warn("erro updateed RecipeDetail" + QueryText);
-          }
-        },
-        (_, error) => {
-          // エラー時の処理
-          console.error("update error RecipeDetail", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      updateItem.materialId,
+      updateItem.needNum,
+      updateItem.needNum,
+      updateItem.id
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 
-export function update_material(updateItem) {
+export async function update_material(updateItem) {
   let items =
     QueryConst.Material.elementsKey.name +
     " = ?," +
@@ -890,37 +811,23 @@ export function update_material(updateItem) {
       updateItem.id
     );
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [
-          updateItem.name,
-          updateItem.pass2Photo,
-          updateItem.stock,
-          updateItem.colorId,
-          updateItem.id,
-        ],
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) {
-            if (QueryConst.debugDataBaseLevel > 1) {
-              console.log("Data updateed Material");
-            }
-          } else {
-            console.warn("erro updateed Material" + QueryText);
-          }
-        },
-        (_, error) => {
-          // エラー時の処理
-          //console.log(QueryText,updateItem.name,updateItem.pass2Photo,updateItem.stock,updateItem.id);
-          console.error("update erro material", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      updateItem.name,
+      updateItem.pass2Photo,
+      updateItem.stock,
+      updateItem.colorId,
+      updateItem.id
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 
-export function update_material_photo_relation(updateItem) {
+export async function update_material_photo_relation(updateItem) {
   let items =
     "(" +
     QueryConst.MaterialPhotoRelation.elementsKey.materialId +
@@ -936,73 +843,20 @@ export function update_material_photo_relation(updateItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText, updateItem.materialId, updateItem.photoId);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [updateItem.materialId, updateItem.photoId],
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) {
-            console.log("Data updateed MaterialPhotoRelation");
-          } else {
-            console.warn("erro updateed MaterialPhotoRelation" + QueryText);
-          }
-        },
-        (_, error) => {
-          // エラー時の処理
-          console.error("update error mealphotorelation", error);
-        }
-      );
-    });
-  });
-}
-
-export function update_place(updateItem) {
-  console.log("update_photo");
-  let items =
-    QueryConst.Place.elementsKey.name +
-    " = ?," +
-    QueryConst.Place.elementsKey.visited +
-    " = ?";
-  let QueryText =
-    QueryConst.UpdateQuery +
-    QueryConst.Place.tablename +
-    QueryConst.Set +
-    items +
-    QueryConst.WhereId;
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(
+  try {
+    const result = await db.runAsync(
       QueryText,
-      updateItem.name,
-      updateItem.visited,
-      updateItem.id
+      updateItem.materialId,
+      updateItem.photoId
     );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [
-          updateItem.name,
-          updateItem.visited,
-          updateItem.id
-        ],
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) {
-            console.log("Data Updated place");
-          } else {
-            console.warn("error Updated place" + QueryText);
-          }
-        },
-        (_, error) => {
-          console.error("update error place:", error);
-        }
-      );
-    });
-  });
 }
 
-export function update_photo(updateItem) {
+export async function update_photo(updateItem) {
   console.log("update_photo");
   let items =
     QueryConst.Photo.elementsKey.name +
@@ -1032,37 +886,27 @@ export function update_photo(updateItem) {
       updateItem.id
     );
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [
-          updateItem.name,
-          updateItem.ratitude,
-          updateItem.longitude,
-          updateItem.pass2Photo,
-          updateItem.visited,
-          updateItem.id,
-        ],
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) {
-            console.log("Data Updated Photo");
-          } else {
-            console.warn("error Updated Photo" + QueryText);
-          }
-        },
-        (_, error) => {
-          console.error("update error photo:", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      updateItem.name,
+      updateItem.ratitude,
+      updateItem.longitude,
+      updateItem.pass2Photo,
+      updateItem.visited,
+      updateItem.id
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 //###end Update
 
 //###start get recode;
 //実際にDBにアクセスする関数
-function fetchDataFromDb(Tablename, offset, limit, DecOrAsc, sortkey) {
+async function fetchDataFromDb(Tablename, offset, limit, DecOrAsc, sortkey) {
   let QueryText =
     QueryConst.getRecodeQuery +
     Tablename +
@@ -1075,22 +919,16 @@ function fetchDataFromDb(Tablename, offset, limit, DecOrAsc, sortkey) {
     offset +
     ";";
   if (QueryConst.debugDataBaseLevel > 0) {
+    console.log("fetchDataFromDb");
     console.log(QueryText);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [],
-        (_, { rows }) => {
-          resolve(rows._array);
-        },
-        (_, error) => {
-          reject(error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.getAllAsync(QueryText);
+    //console.log(result.lastInsertRowId, result.changes);
+    return result;
+  } catch (error) {
+    console.error("fetchData error" + error);
+  }
 }
 
 // データを取得して戻り値として返す関数
@@ -1155,30 +993,6 @@ function fetchDataAsJsonFromDb(Tablename, offset, limit, DecOrAsc, sortkey) {
     QueryConst.Offset +
     offset +
     ";";
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [],
-        (_, { rows }) => {
-          const data = rows._array.map((row) => {
-            const jsonData = {};
-            for (let key in row) {
-              // キー名が'length'や'__proto__'のような不要なものを除外
-              if (!["_array", "_raw"].includes(key)) {
-                jsonData[key] = row[key];
-              }
-            }
-            return jsonData;
-          });
-          resolve(data);
-        },
-        (_, error) => {
-          reject(error);
-        }
-      );
-    });
-  });
 }
 // データを取得して戻り値として返す関数(Json)
 //Need(Tablename:string),Option(offset:int default 0,limit:int default 100,isDec:boolean default true,sortkey:Decault PrimaryKey(id))
@@ -1231,34 +1045,18 @@ export async function fetchDataAsJson(Tablename, ...args) {
 
 //###Start Select
 //select の実行関数
-function selectDataFromDb(QueryText) {
+async function selectDataFromDb(QueryText) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [],
-        (_, { rows }) => {
-          const data = rows._array.map((row) => {
-            const jsonData = {};
-            for (let key in row) {
-              // キー名が'length'や'__proto__'のような不要なものを除外
-              if (!["_array", "_raw"].includes(key)) {
-                jsonData[key] = row[key];
-              }
-            }
-            return jsonData;
-          });
-          resolve(data);
-        },
-        (_, error) => {
-          reject(error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.getAllAsync(QueryText + " ");
+    //console.log(result.lastInsertRowId, result.changes);
+    return result;
+  } catch (error) {
+    console.error("Select:" + error);
+    console.error("Query : " + QueryText + ":");
+  }
 }
 //Idから検索
 export async function selectDataById(Tablename, ID) {
@@ -1407,29 +1205,22 @@ export async function selectDataAsc(Tablename, ...args) {
 
 //###Start Delete Item
 //削除の実行部分
-function deleteDataFromDb(QueryText) {
+async function deleteDataFromDb(QueryText) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
   // SQLクエリを実行してデータベースから要素を削除
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [],
-        (tx, results) => {
-          // 成功した場合の処理
-          if (QueryConst.debugDataBaseLevel > 0) {
-            console.log("要素が削除されました。");
-          }
-        },
-        (tx, error) => {
-          // エラーが発生した場合の処理
-          console.log("削除中にエラーが発生しました:", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(QueryText + " "); // fetchData関数の実行結果を待ち受ける
+    if (QueryConst.debugDataBaseLevel > 1) {
+      console.log("Data:", result);
+    } // 取得したデータを出力
+    return result; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error("delete data" + error); // エラーが発生した場合はエラーメッセージを出力
+    console.error(QueryText);
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  }
 }
 //Idから削除
 export async function delete_item_ById(Tablename, ID) {
@@ -1461,33 +1252,23 @@ export async function delete_item(Tablename, ...args) {
   let QueryText = QueryConst.DeleteQuery + Tablename + CONDITIONTEXT + ";";
   await deleteDataFromDb(QueryText);
 }
+
 //###end Delete Item;
 
 //### start exec arbitrary text
 //入力テキストを実行(戻り値無し)
-function ExecQueryText(QueryText) {
+async function ExecQueryText(QueryText) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log(QueryText);
   }
   // SQLクエリを実行
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [],
-        (tx, results) => {
-          // 成功した場合の処理
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("success");
-          }
-        },
-        (tx, error) => {
-          // エラーが発生した場合の処理
-          console.log("error", error);
-        }
-      );
-    });
-  });
+  try {
+    const result = await db.runAsync(QueryText);
+    //console.log(result.lastInsertRowId, result.changes);
+    return result;
+  } catch (error) {
+    console.error("Insert error" + error);
+  }
 }
 //外部とのやり取り用の関数
 export async function ExecuteQuery(QueryText) {
@@ -1495,94 +1276,3 @@ export async function ExecuteQuery(QueryText) {
 }
 
 //### end exec arbitrary text
-function dropEachTable(QueryText) {
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log("drop Table");
-  }
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryText);
-  }
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        QueryText,
-        [],
-        () => {
-          if (QueryConst.debugDataBaseLevel > 1) {
-            console.log("テーブルが削除されました。");
-          }
-          resolve(); // テーブル作成が成功したらresolveを呼び出す
-        },
-        (_, error) => {
-          console.error("テーブルの削除に失敗しました:", error);
-          reject(error); // エラーが発生したらrejectを呼び出す
-        }
-      );
-    });
-  });
-}
-export async function dropAllTable() {
-  if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";");
-    console.log(QueryConst.DropTableQuery + QueryConst.Meal.tablename + ";");
-    console.log(
-      QueryConst.DropTableQuery + QueryConst.MealStatus.tablename + ";"
-    );
-    console.log(
-      QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename + ";"
-    );
-    console.log(
-      QueryConst.DropTableQuery + QueryConst.Material.tablename + ";"
-    );
-    console.log(QueryConst.DropTableQuery + QueryConst.Place.tablename+ ";");
-    console.log(
-      QueryConst.DropTableQuery +
-        QueryConst.MaterialPhotoRelation.tablename +
-        ";"
-    );
-    console.log(QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";");
-  }
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.Meal.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.MealStatus.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.RecipeDetail.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.Material.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.MaterialPhotoRelation.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.Place.tablename + ";"
-  );
-  await dropEachTable(
-    QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";"
-  );
-  return;
-}
-
-export const getTables = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT name FROM sqlite_master WHERE type="table"',
-        [],
-        (_, { rows }) => {
-          const tables = rows._array.map((row) => row.name);
-          resolve(tables);
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-    });
-  });
-};

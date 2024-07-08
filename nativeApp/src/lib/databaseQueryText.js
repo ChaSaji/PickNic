@@ -1,5 +1,5 @@
 //SQL Funcs
-export const debugDataBaseLevel = 1; //0:No Debug,1:Easy Debug,2:Full Debug;
+export const debugDataBaseLevel = 0; //0:No Debug,1:Easy Debug,2:Full Debug;
 
 export const PassToExcelTemplate = "../../DBtemplate/";
 export const FileExtension = ".xlsx";
@@ -9,7 +9,7 @@ export const Blank = " ";
 export const InsertQuery = "INSERT INTO ";
 export const UpdateQuery = "UPDATE ";
 export const Set = " Set ";
-export const WhereId = " WHERE id = ?;";
+export const WhereId = " WHERE id = ?";
 export const Where = " WHERE ";
 export const values = " VALUES ";
 export const getRecodeQuery = "SELECT * FROM ";
