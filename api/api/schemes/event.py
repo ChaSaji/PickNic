@@ -1,26 +1,58 @@
 from pydantic import BaseModel, Field
-from typing import Tuple, Optional
-from datetime import date
+from datetime import datetime
 
 class EventBase(BaseModel):
-    id: Optional[int] = None  # DBで自動生成されるIDを入れるので, とりあえずNULLにしました
-    event_name: Optional[str] = Field(None, title="イベント名")
-    organizer: Optional[str] = Field(None, title="主催者")
-    term: Optional[date] = Field(None, title="期間")  # 日付型
+    event_name: str = Field(..., title="イベント名")
+    organization: str = Field(..., title="主催団体")
+    start_date: datetime = Field(..., title="開始日")
+    end_date: datetime = Field(..., title="終了日")
+
+class EventDetailBase(EventBase): # EventBaseを継承する
+    overview: str = Field(..., title="概要")
+    badge_img: str = Field(..., title="バッジ画像(Base64)")
+    badge_name: str = Field(..., title="バッジ名")
+    target_img: str = Field(..., title="撮影対象画像(Base64)")
+    target_name: str = Field(..., title="撮影対象名前")
+    latitude: float = Field(..., title="緯度")
+    longitude: float = Field(..., title="経度")
+
+class Event(EventBase): # Event
+    event_id: int = Field(..., title="イベント番号")
+    # organization_id: int = Field(..., title="団体番号")
+    # badge_id: int = Field(..., title="バッジ番号")
+    # photo_id: int = Field(..., title="写真番号")
 
     class Config:
         from_attributes = True
 
-class EventDetail(EventBase): # EventBaseを継承する
-    overview: Optional[str] = Field(None, title="概要")
-    badge_img: Optional[str] = Field(None, title="バッジ画像(Base64)")
-    target_img: Optional[str] = Field(None, title="撮影対象画像(Base64)")
-    target_name: Optional[str] = Field(None, title="撮影対象名前")
-    position: Optional[Tuple[float, float]] = Field(None, title="撮影場所")  # 座標型
-
-class EventCreate(EventDetail):  # EventDetailを継承する
+class EventDetail(EventDetailBase):
+    event_id: int = Field(..., title="イベント番号")
     pass
+class EventCreate(EventDetailBase):
+    pass
+class EventUpdate(EventDetailBase):
+    status: bool = Field(..., title="情報公開の有無")
 
-class EventCreateResponse(EventDetail):
+class EventCreateResponse(EventCreate):
+    event_id: int = Field(..., title="ID")
+    organization_id: int = Field(..., title="団体番号")
+    badge_id: int = Field(..., title="バッジ番号")
+    photo_id: int = Field(..., title="写真番号")
+    # class Config:
+    #     from_attributes = True
+
+class EventUpdateResponse(EventUpdate):
+    event_id: int = Field(..., title="ID")
+    organization_id: int = Field(..., title="団体番号")
+    badge_id: int = Field(..., title="バッジ番号")
+    photo_id: int = Field(..., title="写真番号")
+    class Config:
+        from_attributes = True
+
+class EventDeleteResponse(EventDetail):
+    event_id: int = Field(..., title="ID")
+    organization_id: int = Field(..., title="団体番号")
+    badge_id: int = Field(..., title="バッジ番号")
+    photo_id: int = Field(..., title="写真番号")
     class Config:
         from_attributes = True
