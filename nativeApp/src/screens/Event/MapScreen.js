@@ -27,7 +27,9 @@ const MapScreen = ({ route, navigation }) => {
   };
 
   const handleNavigateCameraClick = () => {
-    navigation.navigate("Camera");
+    navigation.navigate("Camera", {
+      eventId: route.params.eventId,
+    });
   };
 
   useLayoutEffect(() => {

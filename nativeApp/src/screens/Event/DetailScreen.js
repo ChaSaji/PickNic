@@ -29,6 +29,7 @@ const DetailScreen = ({ route, navigation }) => {
       200
     );
     navigation.navigate("Map", {
+      eventId: eventId,
       eventName: event.event_name,
       latitude: randomCenter.latitude,
       longitude: randomCenter.longitude,

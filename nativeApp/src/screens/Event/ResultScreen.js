@@ -1,16 +1,15 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import getRandomNum from "../../lib/getRandomNum";
 import { getScoreMessage } from "../../lib/getScoreMessage";
 
-const ResultScreen = ({ navigation }) => {
-  const randomScore = getRandomNum(100);
-  const message = getScoreMessage(randomScore);
+const ResultScreen = ({ navigation, route }) => {
+  const score = route.params.score;
+  const message = getScoreMessage(score);
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => navigation.navigate("Event")}
     >
-      <Text style={styles.title}>{randomScore}点!!</Text>
+      <Text style={styles.title}>{score}点!!</Text>
       <Text style={styles.message}>{message}</Text>
     </TouchableOpacity>
   );
