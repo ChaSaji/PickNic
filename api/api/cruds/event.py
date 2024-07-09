@@ -99,7 +99,7 @@ def create_photo(db: Session, photo_create: event_schema.EventCreate, event_id:i
     print("Start registering event photo...")
     db_photo = event_model.Photo(
         event_id=event_id,
-        pass_2_photo="イベントの正解写真の保存先URL",
+        pass_2_photo="画像保存先のURL，現在は固定値",
         latitude=photo_create.latitude,
         longitude=photo_create.longitude,
         create_date=dt_now,
@@ -148,16 +148,16 @@ def update_event(db: Session, event_id:int, event_update:event_schema.EventUpdat
         db.commit()
         db.refresh(event)
         print("Event information updated!")
-# リターンをどうするか
-        return
+
+        return event_id
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-def update_organization(db: Session, id:int, name:str):
+def update_organization(db: Session, organization_id:int, name:str):
     try:
-        print("Start updating organization information... id:", id)
-        result = db.execute(select(event_model.Organization).filter(event_model.Organization.id == id))
+        print("Start updating organization information... id:", organization_id)
+        result = db.execute(select(event_model.Organization).filter(event_model.Organization.id == organization_id))
         organization = result.scalars().first()
         if organization is None:
             raise HTTPException(status_code=404, detail="Organization not found")
@@ -169,16 +169,16 @@ def update_organization(db: Session, id:int, name:str):
         db.commit()
         db.refresh(organization)
         print("Organization updated!")
-# リターンをどうするか
-        return
+
+        return organization_id
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-def update_photo(db: Session, id:int, event_update:event_schema.EventUpdate):
+def update_photo(db: Session, event_id:int, event_update:event_schema.EventUpdate):
     try:
-        print("Start updating photo information... id:", id)
-        result = db.execute(select(event_model.Photo).filter(event_model.Photo.id == id))
+        print("Start updating photo information... event_id:", )
+        result = db.execute(select(event_model.Photo).filter(event_model.Photo.event_id == event_id))
         photo = result.scalars().first()
         if photo is None:
             raise HTTPException(status_code=404, detail="Photo not found")
@@ -196,17 +196,17 @@ def update_photo(db: Session, id:int, event_update:event_schema.EventUpdate):
         db.refresh(photo)
         print("Event photo updated!")
 
-# リターンをどうするか
-        return
+
+        return photo.id
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
-def update_badge(db: Session, id:int, event_update:event_schema.EventUpdate):
+def update_badge(db: Session, event_id:int, event_update:event_schema.EventUpdate):
     try:
-        print("Start updating badge information... id:", id)
-        result = db.execute(select(event_model.EventBadge).filter(event_model.EventBadge.id == id))
+        print("Start updating badge information... event_id:", event_id)
+        result = db.execute(select(event_model.EventBadge).filter(event_model.EventBadge.event_id == event_id))
         badge = result.scalars().first()
         if badge is None:
             raise HTTPException(status_code=404, detail="Badge not found")
@@ -221,7 +221,7 @@ def update_badge(db: Session, id:int, event_update:event_schema.EventUpdate):
         print("Event badge updated!")
 
 # リターンをどうするか
-        return
+        return badge.id
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -247,7 +247,7 @@ def delete_event(db:Session, event_id:int):
 
         # print(event.event_badge.id)
         delete_event = event_schema.EventDetail(
-        event_id=event.event_id,
+        event_id=event.id,
         event_name=event.event_name,
         organization=event.organization.name,
         start_date=event.start_date,
