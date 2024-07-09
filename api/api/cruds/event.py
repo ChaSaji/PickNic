@@ -36,13 +36,18 @@ def create_organization(db: Session, organization_name:str):
     return db_organization.id
 
 
-def get_event_detail(db: Session, event_id:int):
+def get_event_detail(db: Session, event_id:int, organization_id: int):
     try:
         print("Get event Detail. ID is ...", event_id)
         result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
         event = result.scalars().first()
         if event is None:
             raise HTTPException(status_code=404, detail="Event not found")
+
+        result = db.execute(select(event_model.Organization).filter(event_model.Organization.id == organization_id))
+        organization = result.scalars().first()
+        if organization is None:
+            raise HTTPException(status_code=404, detail="Organization not found")
 
         result = db.execute(select(event_model.Photo).filter(event_model.Photo.event_id == event_id))
         photo = result.scalars().first()
@@ -58,7 +63,7 @@ def get_event_detail(db: Session, event_id:int):
         event_detail = event_schema.EventDetail(
         event_id=event.id,
         event_name=event.event_name,
-        organization=event.organization.name,
+        organization=organization.name,
         start_date=event.start_date,
         end_date=event.end_date,
         overview=event.description,
@@ -137,8 +142,9 @@ def update_event(db: Session, event_id:int, event_update:event_schema.EventUpdat
         if event is None:
             raise HTTPException(status_code=404, detail="Event not found")
 
-        event.name=event_update.event_name
+        event.event_name=event_update.event_name
         event.start_date=event_update.start_date
+        event.target_name=event_update.target_name
         event.end_date=event_update.end_date
         event.description=event_update.overview
         event.update_date=dt_now
@@ -161,7 +167,7 @@ def update_organization(db: Session, organization_id:int, name:str):
         organization = result.scalars().first()
         if organization is None:
             raise HTTPException(status_code=404, detail="Organization not found")
-
+        print("organization_name", organization.name, name)
         organization.name=name
         organization.update_date=dt_now
 
@@ -183,7 +189,6 @@ def update_photo(db: Session, event_id:int, event_update:event_schema.EventUpdat
         if photo is None:
             raise HTTPException(status_code=404, detail="Photo not found")
 
-        print(event_update.target_img)
         photo.pass_2_photo=event_update.target_img
         photo.latitude=event_update.latitude
         photo.longitude=event_update.longitude
@@ -246,8 +251,11 @@ def delete_event(db:Session, event_id:int):
             raise HTTPException(status_code=404, detail="EventBadge not found")
 
         # print(event.event_badge.id)
-        delete_event = event_schema.EventDetail(
+        delete_event = event_schema.EventDeleteResponse(
         event_id=event.id,
+        organization_id = 11223344, #マジックナンバーにしてある
+        badge_id = badge.id,
+        photo_id = photo.id,
         event_name=event.event_name,
         organization=event.organization.name,
         start_date=event.start_date,

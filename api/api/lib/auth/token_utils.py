@@ -7,8 +7,6 @@ SECRET_KEY = "xxx"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 999999
 
-
-
 def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
     to_encode = data.copy()
     if expires_delta:
@@ -48,14 +46,14 @@ def add_token_to_blacklist(token: str):
     token_blacklist0.add(token)
     token_blacklist1.add(token)
     token_blacklist2.add(token)
-    
+
     if(days_since()%3==0):
         token_blacklist0.clear()
     if(days_since()%3==1):
         token_blacklist1.clear()
     if(days_since()%3==2):
         token_blacklist2.clear()
-    
+
 
 def is_token_in_blacklist(token: str):
     return token in token_blacklist0 or token in token_blacklist1 or token in token_blacklist2

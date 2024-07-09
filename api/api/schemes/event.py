@@ -57,8 +57,3 @@ class EventDeleteResponse(EventDetail):
     photo_id: int = Field(..., title="写真番号")
     class Config:
         from_attributes = True
-
-class EventDeleteResponse(EventDetail):
-    id: int = Field(..., title="ID")
-    class Config:
-        from_attributes = True

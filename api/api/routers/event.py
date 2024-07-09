@@ -29,8 +29,8 @@ def create_event(event_body: event_schema.EventCreate, db:Session = Depends(get_
     return event_schema.EventCreateResponse(**create_event_data)
 
 @router.get("/events/{event_id}", response_model=event_schema.EventDetail)
-def read_event(event_id: int, db: Session = Depends(get_db)):
-    return event_cruds.get_event_detail(db, event_id)
+def read_event(event_id: int, organization_id: int, db: Session = Depends(get_db)):
+    return event_cruds.get_event_detail(db, event_id, organization_id)
 
 # NOTE:organization_idをリクエストで受けとる必要がある．
 @router.put("/events/{event_id}/edit", response_model=event_schema.EventUpdateResponse)

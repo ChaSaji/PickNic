@@ -105,7 +105,7 @@ def convert(contents):
         color = 8
     elif 165<md<180:
         #red
-        color = 0    
+        color = 0
 
     print(color)
     return color
