@@ -1,6 +1,10 @@
 from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends
 from typing import List
 import api.schemes.event as event_schema
+from api.database import get_db
+import api.cruds.event as event_cruds
+from sqlalchemy.orm import Session
 from api.database import get_db
 import api.cruds.event as event_cruds
 from sqlalchemy.orm import Session
@@ -10,7 +14,26 @@ router = APIRouter()
 @router.get("/events", response_model=List[event_schema.Event])
 def list_events(db:Session=Depends(get_db)):
     return event_cruds.get_event_list(db)
+@router.get("/events", response_model=List[event_schema.Event])
+def list_events(db:Session=Depends(get_db)):
+    return event_cruds.get_event_list(db)
 
+@router.post("/events/create", response_model=event_schema.EventCreateResponse) #TODO: 同じ名前のイベントでも複数登録できてしまうので変える必要あります．
+def create_event(event_body: event_schema.EventCreate, db:Session = Depends(get_db)):
+    db_organization_id = event_cruds.create_organization(db, event_body.organization)
+
+    db_event_id = event_cruds.create_event(db, event_body, db_organization_id)
+
+    db_photo_id = event_cruds.create_photo(db, event_body, db_event_id)
+
+    db_event_badge = event_cruds.create_event_badge(db, event_body, db_event_id)
+
+    create_event_data = event_body.model_dump()
+    create_event_data["event_id"] = db_event_id
+    create_event_data["organization_id"] = db_organization_id
+    create_event_data["badge_id"] = db_event_badge
+    create_event_data["photo_id"] = db_photo_id
+    return event_schema.EventCreateResponse(**create_event_data)
 @router.post("/events/create", response_model=event_schema.EventCreateResponse) #TODO: 同じ名前のイベントでも複数登録できてしまうので変える必要あります．
 def create_event(event_body: event_schema.EventCreate, db:Session = Depends(get_db)):
     db_organization_id = event_cruds.create_organization(db, event_body.organization)
