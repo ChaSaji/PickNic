@@ -34,16 +34,16 @@ def read_event(event_id: int, db: Session = Depends(get_db)):
 
 # NOTE:organization_idをリクエストで受けとる必要がある．
 @router.put("/events/{event_id}/edit", response_model=event_schema.EventUpdateResponse)
-def update_event(event_id: int, organization_id: int, photo_id: int, badge_id:int, event_body: event_schema.EventUpdate, db: Session=Depends(get_db)):
+def update_event(event_id: int, organization_id: int, event_body: event_schema.EventUpdate, db: Session=Depends(get_db)):
 
-    event_cruds.update_organization(db, organization_id, event_body.organization)
-    event_cruds.update_event(db, event_id, event_body)
-    event_cruds.update_photo(db, photo_id, event_body)
-    event_cruds.update_badge(db, badge_id, event_body)
+    db_organization_id = event_cruds.update_organization(db, organization_id, event_body.organization)
+    db_event_id = event_cruds.update_event(db, event_id, event_body)
+    photo_id = event_cruds.update_photo(db, event_id, event_body)
+    badge_id = event_cruds.update_badge(db, event_id, event_body)
 
     update_info = event_schema.EventUpdateResponse(
-            event_id = event_id,
-            organization_id = organization_id,
+            event_id = db_event_id,
+            organization_id = db_organization_id,
             badge_id= badge_id,
             photo_id = photo_id,
             event_name=event_body.event_name,
@@ -59,7 +59,6 @@ def update_event(event_id: int, organization_id: int, photo_id: int, badge_id:in
             latitude= event_body.latitude,
             longitude=event_body.longitude,
             status = event_body.status
-
         )
 
     return update_info
