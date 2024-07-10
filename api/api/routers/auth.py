@@ -8,12 +8,32 @@ from datetime import timedelta
 
 from ..models.auth import SessionLocal, engine,Base
 from ..schemes.auth import UserCreate, UserUpdate, User
-from ..cruds.auth import get_user_by_username, create_user,update_user,delete_user
+from ..cruds.auth import get_user_by_username,get_user_by_email, create_user,update_user,delete_user
 from ..lib.auth.auth_utils import verify_password
 from ..lib.auth.token_utils import create_access_token, decode_access_token,add_token_to_blacklist,is_token_in_blacklist,ACCESS_TOKEN_EXPIRE_MINUTES
 # データベースの初期化
 from dotenv import load_dotenv
 import os
+
+from fastapi import Form
+
+class OAuth2EmailRequestForm:
+    def __init__(
+        self,
+        grant_type: str = Form(None, regex="password"),
+        username: str = Form("email"),  # ここを email に変更できます
+        password: str = Form(...),
+        scope: str = Form(""),
+        client_id: str = Form(None),
+        client_secret: str = Form(None),
+    ):
+        self.grant_type = grant_type
+        self.username = username  # ここがメールアドレスを受け取る部分です
+        self.password = password
+        self.scopes = scope.split()
+        self.client_id = client_id
+        self.client_secret = client_secret
+
 # .envファイルを読み込む
 load_dotenv()
 # 環境変数の取得
@@ -37,19 +57,20 @@ def get_db():
 @router.post("/auth/users/", response_model=User)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
     print("print:",user)
-    db_user = get_user_by_username(db, user.username)
+    db_user = get_user_by_username(db, user.user_name)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
-    """
+    
     db_email = get_user_by_email(db, user.email)
     if db_email:
         raise HTTPException(status_code=400, detail="Email already registered")
-    """
+    
     return create_user(db, user)
 
 @router.post("/auth/login", response_model=dict)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = get_user_by_username(db, form_data.username)
+    #user = get_user_by_username(db, form_data.username)
+    user = get_user_by_email(db,form_data.username)
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -58,7 +79,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.user_name}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
