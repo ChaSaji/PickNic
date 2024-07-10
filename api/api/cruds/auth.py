@@ -4,9 +4,9 @@ from ..models.auth import User
 from ..schemes.auth import UserCreate,UserUpdate
 from ..lib.auth.auth_utils import get_password_hash
 
-def get_user_by_username(db: Session, user_name: str):
-    print("get_user_by_username In crud.py",user_name)
-    return db.query(User).filter(User.user_name == user_name).first()
+def get_user_by_username(db: Session, username: str):
+    print("get_user_by_username In crud.py",username)
+    return db.query(User).filter(User.username == username).first()
 
 def get_user_by_email(db: Session, email: str):
     print("get_user_by_username In crud.py",email)
@@ -19,7 +19,7 @@ def get_user_by_email(db: Session, email: str):
 
 def create_user(db: Session, user: UserCreate):
     db_user = User(
-        user_name=user.user_name,
+        username=user.username,
         email=user.email,
         #email = user.email,
         hashed_password=get_password_hash(user.password)
@@ -32,8 +32,8 @@ def create_user(db: Session, user: UserCreate):
 def update_user(db: Session, user_id: int, user: UserUpdate):
     db_user = db.query(User).filter(User.id == user_id).first()
     if db_user:
-        if user.user_name is not None:
-            db_user.user_name = user.user_name
+        if user.username is not None:
+            db_user.username = user.username
         if user.email is not None:
             db_user.email = user.email
         if user.password is not None:
