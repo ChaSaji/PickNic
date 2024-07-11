@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 import os
 from dotenv import load_dotenv
-from api.models.database_models import Base
+from api.database import Base
 
 load_dotenv()
 
