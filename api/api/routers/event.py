@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from typing import List
+from datetime import datetime
 import api.schemes.event as event_schema
 from api.database import get_db
 import api.cruds.event as event_cruds

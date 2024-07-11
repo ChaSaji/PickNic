@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
+from datetime import datetime
 
 class EventBase(BaseModel):
     event_name: str = Field(..., title="イベント名")
@@ -54,5 +55,10 @@ class EventDeleteResponse(EventDetail):
     organization_id: int = Field(..., title="団体番号")
     badge_id: int = Field(..., title="バッジ番号")
     photo_id: int = Field(..., title="写真番号")
+    class Config:
+        from_attributes = True
+
+class EventDeleteResponse(EventDetail):
+    id: int = Field(..., title="ID")
     class Config:
         from_attributes = True

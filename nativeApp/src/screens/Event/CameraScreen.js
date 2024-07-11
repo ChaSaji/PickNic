@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { Text, View, TouchableOpacity, SafeAreaView } from "react-native";
-import { useCamera } from "../context/CameraContext";
-import { insert_item } from "../lib/dataBaseHelper";
-import { Photo, PhotoElement } from "../lib/databaseQueryText";
-import { useLocation } from "../context/LocationContext";
-import { useDbUpdate } from "../context/DbUpdateContext";
+import { useLocation } from "../../context/LocationContext";
+import { useCamera } from "../../context/CameraContext";
+import { Photo, PhotoElement } from "../../lib/databaseQueryText";
+import { insert_item } from "../../lib/dataBaseHelper";
+import { useDbUpdate } from "../../context/DbUpdateContext";
 
 const CameraScreen = ({ navigation }) => {
   const [status, requestPermission] = useCameraPermissions(null);
@@ -29,11 +29,17 @@ const CameraScreen = ({ navigation }) => {
             setInsertedPhotId(id)
           );
           setPhotoUpdate(Date.now);
-          navigation.navigate("Picture");
+          navigation.navigate("Submit");
         },
       });
     }
   };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "戻る",
+    });
+  }, []);
 
   useEffect(() => {
     (async () => {

@@ -76,32 +76,6 @@ const styles = StyleSheet.create({
     height: 50,
     margin: 5,
   },
-  // ChangeMaterialButtonと同じ、プルリク通り次第そっちから呼び出すように
-  button: {
-    outerRadius: {
-      alignItems: "center",
-      justifyContent: "center",
-      width: 200,
-      height: 80,
-      borderRadius: 100,
-      backgroundColor: "#4BBC96",
-    },
-    innerRadius: {
-      justifyContent: "center",
-      alignItems: "center",
-      width: 190,
-      height: 70,
-      borderRadius: 100,
-      borderWidth: 5,
-      borderColor: "white",
-    },
-    text: {
-      color: "white",
-      fontSize: 25,
-      fontWeight: "bold",
-      lineHeight: 35,
-    },
-  },
 });
 
 export default BadgeDetailScreen;
