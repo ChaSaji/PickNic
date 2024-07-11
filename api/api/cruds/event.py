@@ -35,14 +35,26 @@ def create_organization(db: Session, organization_name:str):
 
     return db_organization.id
 
+def get_organization_id(db:Session, event_id:int):
+    print("Get organization id...")
+    result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
+    event = result.scalars().first()
+    if event is None:
+            raise HTTPException(status_code=404, detail="Event not found")
 
-def get_event_detail(db: Session, event_id:int, organization_id: int):
+    organization_id = event.organization_id
+    return organization_id
+
+
+def get_event_detail(db: Session, event_id:int):
     try:
         print("Get event Detail. ID is ...", event_id)
         result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
         event = result.scalars().first()
         if event is None:
             raise HTTPException(status_code=404, detail="Event not found")
+        
+        organization_id = event.organization_id
 
         result = db.execute(select(event_model.Organization).filter(event_model.Organization.id == organization_id))
         organization = result.scalars().first()
