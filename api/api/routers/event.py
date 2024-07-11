@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from typing import List
-from datetime import datetime
 import api.schemes.event as event_schema
 from api.database import get_db
 import api.cruds.event as event_cruds
@@ -37,14 +36,13 @@ def read_event(event_id: int, db: Session = Depends(get_db)):
 @router.put("/events/{event_id}/edit", response_model=event_schema.EventUpdateResponse)
 def update_event(event_id: int, organization_id: int, event_body: event_schema.EventUpdate, db: Session=Depends(get_db)):
 
-    db_organization_id = event_cruds.update_organization(db, organization_id, event_body.organization)
     db_event_id = event_cruds.update_event(db, event_id, event_body)
     photo_id = event_cruds.update_photo(db, event_id, event_body)
     badge_id = event_cruds.update_badge(db, event_id, event_body)
 
     update_info = event_schema.EventUpdateResponse(
             event_id = db_event_id,
-            organization_id = db_organization_id,
+            organization_id = organization_id,
             badge_id= badge_id,
             photo_id = photo_id,
             event_name=event_body.event_name,

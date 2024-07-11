@@ -1,9 +1,12 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # データベースURL
-SQLALCHEMY_DATABASE_URL = "sqlite:///./api.db"
+SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL')
 
 # 非同期エンジンを作成
 async_engine = create_engine(SQLALCHEMY_DATABASE_URL)
