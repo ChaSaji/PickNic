@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import photoData from "./test.json";
 import Image from "next/image";
-import { getImage } from "./getImageFromR2";
 
 const EventPicturePage = () => {
   //ハンドルをここに
@@ -23,7 +22,7 @@ const EventPicturePage = () => {
     const response = photoData;
     console.log(photoData);
     try {
-      //const response = await fetch('https://api.example.com/photos'); // あなたのAPIエンドポイント
+      // const response = await fetch('https://api.example.com/photos'); // あなたのAPIエンドポイント
       const response = photoData;
       //const data = await response.json();
       const data = response;
@@ -42,20 +41,39 @@ const EventPicturePage = () => {
     fetchPhotos();
   }, []);
 
-  const key = "66448766.jpg"
+  const getKey = "66448766.jpg" //getする画像に応じて変更する必要有
+  const postKey = "hello-s3.txt" //postする画像名
+  const postBody = "Hello S3!" //postするファイルの中身
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
 
-  const handleClick = async() => {
-    const src = await getImage(key)
-    setImageSrc(src)
+  const handleClickGet = async() => {
+    const res = await fetch(`/api/r2?key=${getKey}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }); 
+    const data = await res.json()
+    setImageSrc(data)
+  }
+  const handleClickPost = async() => {
+    const res = await fetch(`/api/r2?key=${postKey}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({key: postKey, body: postBody}),
+    });
   }
 
   return (
     <PageTemplate titleLabel="投稿された写真">
       <div>
-        <button onClick={handleClick}>aiueo</button>
+        <button onClick={handleClickGet}>aiueo</button>
         {imageSrc && <img src={imageSrc} alt="Fetched from S3" />}
-
+      </div>
+      <div>
+        <button onClick={handleClickPost}>oeuia</button>
       </div>
       <div
         id="displayphoto"
