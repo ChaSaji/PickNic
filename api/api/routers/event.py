@@ -11,7 +11,7 @@ router = APIRouter()
 def list_events(db:Session=Depends(get_db)):
     return event_cruds.get_event_list(db)
 
-@router.post("/events/create", response_model=event_schema.EventCreateResponse) #TODO: 同じ名前のイベントでも複数登録できてしまうので変える必要あります．
+@router.post("/events/create", response_model=event_schema.EventCreateResponse) #TODO: 同じ名前のイベントでも複数登録できてしまうので変える必要あります.
 def create_event(event_body: event_schema.EventCreate, db:Session = Depends(get_db)):
     db_organization_id = event_cruds.create_organization(db, event_body.organization)
 
@@ -29,8 +29,8 @@ def create_event(event_body: event_schema.EventCreate, db:Session = Depends(get_
     return event_schema.EventCreateResponse(**create_event_data)
 
 @router.get("/events/{event_id}", response_model=event_schema.EventDetail)
-def read_event(event_id: int, db: Session = Depends(get_db)):
-    return event_cruds.get_event_detail(db, event_id)
+def read_event(event_id: int, organization_id: int, db: Session = Depends(get_db)):
+    return event_cruds.get_event_detail(db, event_id, organization_id)
 
 # NOTE:organization_idをリクエストで受けとる必要がある．
 @router.put("/events/{event_id}/edit", response_model=event_schema.EventUpdateResponse)
@@ -50,7 +50,6 @@ def update_event(event_id: int, organization_id: int, event_body: event_schema.E
             start_date=event_body.start_date,
             end_date=event_body.end_date,
             overview=event_body.overview,
-            # TODO: 以下がマジックナンバーなので直す必要あります
             badge_img=event_body.badge_img,
             badge_name=event_body.badge_name,
             target_img=event_body.target_img,
