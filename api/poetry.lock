@@ -1141,6 +1141,23 @@ pymysql = ["pymysql"]
 sqlcipher = ["sqlcipher3_binary"]
 
 [[package]]
+name = "sqlalchemyseed"
+version = "2.0.0"
+description = "SQLAlchemy Seeder"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "sqlalchemyseed-2.0.0-py3-none-any.whl", hash = "sha256:67cc2f43e02c1d187224e04eaf0be897160f8ab5138a901273b8d4cf93ef4068"},
+    {file = "sqlalchemyseed-2.0.0.tar.gz", hash = "sha256:3482c878480fe1bd2903ef9de07ab0ebdf2b92676b271161e4808b97880a7222"},
+]
+
+[package.dependencies]
+SQLAlchemy = ">=2.0"
+
+[package.extras]
+yaml = ["PyYAML (>=5.4)"]
+
+[[package]]
 name = "starlette"
 version = "0.37.2"
 description = "The little ASGI library that shines."
@@ -1567,4 +1584,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "42ddc70f90dbd6121033c09d02b1529a7d4467383d358ad6802ecbca1d1469d0"
+content-hash = "c238031ba4cb815929bb12800203c6f6662b04292990720d25da532722434459"
