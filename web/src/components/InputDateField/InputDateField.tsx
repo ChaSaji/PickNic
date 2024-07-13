@@ -20,7 +20,6 @@ const InputDateField = (props:PropsType) => {
     const Today:Date = new Date();
     const startDate:Date = watch(props.startDateTag) as Date
     const endDate:Date = watch(props.endDateTag) as Date
-    console.log(errors)
   return (
     <div style={{display: "flex", gap: 10}}>
         <div>

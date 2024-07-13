@@ -17,7 +17,6 @@ export default function App() {
     resolver: zodResolver(eventSchema),
   })
 
-  console.log(formMethods.formState.errors)
   const onSubmit: SubmitHandler<eventSchemaType> = (data) => {
     console.log(data)
   }
