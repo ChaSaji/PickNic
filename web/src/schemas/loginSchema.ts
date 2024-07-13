@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  email: z.string().email({ message: "メールアドレスの形式ではありません" }),
+  username: z.string(),
   password: z
     .string()
     .min(8, { message: "パスワードは８文字以上の必要があります" })

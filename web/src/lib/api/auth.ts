@@ -5,7 +5,7 @@ import { ApiResponse } from "@/types/utils";
 import { APIError } from "./ApiError";
 
 export const postLoginForm = async ({
-  email,
+  username,
   password,
 }: LoginSchemaType): Promise<ApiResponse<void>> => {
   try {
@@ -16,7 +16,7 @@ export const postLoginForm = async ({
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: {
-        username: email,
+        username: username,
         password: password,
       },
     });

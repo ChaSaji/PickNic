@@ -62,9 +62,9 @@ const LoginPage = () => {
           <InputField
             size="large"
             direction="row"
-            name={"email"}
-            label={"メールアドレス"}
-            placeholder={"chasaji@example.com"}
+            name={"username"}
+            label={"ユーザネーム"}
+            placeholder={"username"}
           />
 
           <InputField
