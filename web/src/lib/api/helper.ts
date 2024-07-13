@@ -1,3 +1,4 @@
+import { getToken } from "../auth/token";
 import { APIError } from "./ApiError";
 
 type optionType = {
@@ -5,6 +6,18 @@ type optionType = {
   method?: "GET" | "POST" | "PUT" | "DELETE";
   headers?: Record<string, string>;
   body?: Record<string, any> | null;
+};
+
+export const fetchAPIWithAuth = async ({
+  headers = {
+    "Content-Type": "application/json",
+  },
+  ...rest
+}: optionType) => {
+  return await fetchAPI({
+    headers: { ...headers, Authorization: "Bearer " + getToken() },
+    ...rest,
+  });
 };
 
 export const fetchAPI = async ({
