@@ -1,6 +1,7 @@
 # crud.py
 from sqlalchemy.orm import Session
-from ..models.mobile import MobileUser
+#from ..models.mobile import MobileUser
+from ..models.database_models import MobileUser
 from ..schemes.mobile import MobileCreate,MobileUpdate,MobileCommit,Mobile
 from ..lib.auth.auth_utils import get_password_hash
 from datetime import datetime
