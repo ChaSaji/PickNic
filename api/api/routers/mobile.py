@@ -92,7 +92,10 @@ class NumberData(BaseModel):
 @router.post("/mobile/testrelation")
 async def create_user(num: NumberData,db: Session = Depends(get_db)):
     print("xxxxxxx",num.number)
+    message=""
     if(num.number==0):
+        message="create"
+    
         print("number:0")
         newItem=Photo2UserCreate
         newItem.user_id="testUserId"
@@ -126,6 +129,8 @@ async def create_user(num: NumberData,db: Session = Depends(get_db)):
         for x in litResult:
             print("id",x.id,"userId,",x.user_id,"photoId",x.photo_id)
     elif(num.number==1):
+        message="read"
+    
         print("number:1")
         newItem=Photo2User
         newItem.id=1
@@ -145,6 +150,8 @@ async def create_user(num: NumberData,db: Session = Depends(get_db)):
             print("id=",newItem.id,"is",x)
         
     elif(num.number==2):
+        message="update"
+    
         print("number:2")
         newItem=Photo2UserUpdate
         newItem.id=1
@@ -152,6 +159,8 @@ async def create_user(num: NumberData,db: Session = Depends(get_db)):
         newItem.photo_id=987654321
         update_photo2Mobile_Relation_by_id(db,newItem)
     elif(num.number==3):
+        message="delete"
+    
         print("number:3")
         newItem=Photo2User
         newItem.id=1
@@ -172,5 +181,7 @@ async def create_user(num: NumberData,db: Session = Depends(get_db)):
             print("id=",x.id,",userId=",x.user_id,",photoId=",x.photo_id)
         else:
             print("id=",newItem.id,"is",x)
-        
-    return {"received_number": num.number}
+    else:
+        message="No Operation, (C,R,U,R)=(0,1,2,3)"
+        print(message)
+    return {"received_number": num.number,"message":message}
