@@ -7,6 +7,8 @@ import {
   insert_item,
   update_item,
   fetchData,
+  get_user,
+  get_user_id,
   selectDataById,
   selectDataByQueryText,
   selectData,
@@ -16,9 +18,12 @@ import {
   InitDatabaseTable,
   deleteDataById,
   deleteData,
+  clear_user,
 } from "../lib/dataBaseHelper";
 import {
   RO,
+  User,
+  UserElement,
   Badge,
   BadgeElement,
   Material,
@@ -480,6 +485,55 @@ const DbScreen = () => {
         console.error("テーブル一覧を取得できませんでした:", error);
       });
   };
+  const functionUserAdd = () => {
+    console.log("ユーザの追加を行う");
+    user = new UserElement();
+    user.id="XXXXfasdfhajhfalhf"
+    user.name = "1UserName";
+    user.isAccessed = 1;
+    insert_item(User.tablename, user)
+      .then((id) => {
+        /*ここにIDを用いた処理を記述*/
+        console.log("budge id = " + id);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+    });
+  };
+
+  const functionGetUser= () => {
+    console.log("ユーザの取得を行う");
+    get_user().then((data) => {
+      console.log("Received user:", data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch((error) => {
+      console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+    });
+
+    get_user_id().then((data) => {
+      console.log("Received user_id:", data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch((error) => {
+      console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+    });
+  };
+
+  const functionClearUser= () => {
+    console.log("ユーザの削除を行う");
+    clear_user().then((data) => {
+      console.log("Received data:", data); // getData関数の戻り値を受け取り、出力
+      
+    get_user().then((data) => {
+      console.log("Received user:", data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch((error) => {
+      console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+    });
+    })
+    .catch((error) => {
+      console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+    });
+  };
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -493,6 +547,11 @@ const DbScreen = () => {
       <Button title="DeleteItem" onPress={functionDelete} />
       <Button title="DropTable" onPress={functionD} />
       <Button title="CheckTable" onPress={functionE} />
+      <Button title="AddUser" onPress={functionUserAdd} />
+      <Button title="GetUser" onPress={functionGetUser} />
+      <Button title="ClearUser" onPress={functionClearUser} />
+      
+      
     </View>
   );
 };
