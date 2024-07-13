@@ -89,7 +89,7 @@ def create_user(mobileuser: MobileCreate, db: Session = Depends(get_db)):
 # Pydanticモデルを使用してリクエストボディを定義
 class NumberData(BaseModel):
     number: int
-@router.post("/mobile/testrelation2")
+@router.post("/mobile/testrelation")
 async def create_user(num: NumberData,db: Session = Depends(get_db)):
     print("xxxxxxx",num.number)
     if(num.number==0):
