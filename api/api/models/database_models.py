@@ -29,20 +29,9 @@ class Organization(Base):
     update_date = Column(DateTime)
 
     events = relationship("Event", back_populates="organization")
-    admin_users = relationship("AdminUser", back_populates="organization")
+    users = relationship("User", back_populates="organization")
 
-class AdminUser(Base):
-    __tablename__ = "admin_users"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    organizer_id = Column(Integer, ForeignKey("organizations.id"))
-    email = Column(String)
-    password = Column(String)
-    name = Column(String)
-    create_date = Column(DateTime)
-    update_date = Column(DateTime)
-
-    organization = relationship("Organization", back_populates="admin_users")
 
 class EventBadge(Base):
     __tablename__ = "event_badges"
@@ -73,6 +62,9 @@ class Photo(Base):
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
+    organization_id = Column(Integer, ForeignKey("organizations.id"), index=True)
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+
+    organization = relationship("Organization", back_populates="users")

@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 class UserCreate(BaseModel):
+    organization_id: Optional[int] = None
     username: str
     email: str
     password: str
@@ -13,6 +14,7 @@ class UserUpdate(BaseModel):
 
 class User(BaseModel):
     id: int
+    organization_id:int
     username: str
     email: str
 

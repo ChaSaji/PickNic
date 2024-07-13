@@ -8,6 +8,7 @@ from api.cruds.auth import get_user_by_username, get_user_by_email, create_user,
 from api.lib.auth.auth_utils import verify_password
 from api.lib.auth.token_utils import create_access_token, decode_access_token,add_token_to_blacklist,is_token_in_blacklist,ACCESS_TOKEN_EXPIRE_MINUTES
 from api.database import get_db
+from api.cruds.event import create_organization
 
 
 router = APIRouter()
@@ -17,6 +18,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 @router.post("/auth/users/", response_model=User)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
     print("print:",user)
+    if user.organization_id is None: #TODO:organization_idが存在しない場合にはnullを送るようにしてほしいと書く
+        organization_name = "No Name" #TODO 名前をどうやって入れ直すか考えておく, organizationIDをnullにしておいて，後で強制的に書かせるか？
+        new_organization = create_organization(db, organization_name)
+        user.organization_id = new_organization
+        print(user.organization_id)
     db_user = get_user_by_username(db, user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
@@ -66,6 +72,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         print(f"Error: {e}")
         raise credentials_exception
     user = get_user_by_username(db, username)
+    print(user.organization_id)
     if user is None:
         print(f"User not found: {username}")
         raise credentials_exception
@@ -77,7 +84,7 @@ async def logout(token: str = Depends(oauth2_scheme)):
     return {"message": "Successfully logged out"}
 
 @router.get("/auth/users/me", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_user)):
+async def read_users_me(current_user: UserCreate = Depends(get_current_user)):
     return current_user
 
 # 更新エンドポイントの追加

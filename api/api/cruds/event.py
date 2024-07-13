@@ -4,13 +4,14 @@ from datetime import datetime
 from sqlalchemy import select
 from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
+from api.database import get_db
 
 dt_now = datetime.now() # 登録時の時間を取得したい
 
 
-def get_event_list(db:Session):
+def get_event_list(db:Session, organization_id: int):
     print("Get event List...")
-    result = db.execute(select(event_model.Event))
+    result = db.execute(select(event_model.Event).filter(event_model.Event.organization_id == organization_id))
     events = result.scalars().all()
 
     event_list = [event_schema.Event(
@@ -35,25 +36,25 @@ def create_organization(db: Session, organization_name:str):
 
     return db_organization.id
 
-def get_organization_id(db:Session, event_id:int):
-    print("Get organization id...")
-    result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
-    event = result.scalars().first()
-    if event is None:
-            raise HTTPException(status_code=404, detail="Event not found")
+def get_organization_id(db:Session, organization_id:int):
+    print("get organization id...")
+    result = db.execute(select(event_model.Organization).filter(event_model.Organization.id == organization_id))
+    organization = result.scalars().first()
+    if organization is None:
+            raise HTTPException(status_code=404, detail="Organization not found")
 
-    organization_id = event.organization_id
-    return organization_id
+    id = organization.id
+    return id
 
 
-def get_event_detail(db: Session, event_id:int):
+def get_event_detail(event_id:int, db:Session):
     try:
         print("Get event Detail. ID is ...", event_id)
         result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
         event = result.scalars().first()
         if event is None:
             raise HTTPException(status_code=404, detail="Event not found")
-        
+
         organization_id = event.organization_id
 
         result = db.execute(select(event_model.Organization).filter(event_model.Organization.id == organization_id))
@@ -243,7 +244,7 @@ def update_badge(db: Session, event_id:int, event_update:event_schema.EventUpdat
         raise HTTPException(status_code=500, detail=str(e))
 
 
-def delete_event(db:Session, event_id:int):
+def delete_event(db:Session, event_id:int, organization_id:int):
     try:
         print("Get event Detail. ID is ...", event_id)
         result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
@@ -261,10 +262,9 @@ def delete_event(db:Session, event_id:int):
         if badge is None:
             raise HTTPException(status_code=404, detail="EventBadge not found")
 
-        # print(event.event_badge.id)
         delete_event = event_schema.EventDeleteResponse(
         event_id=event.id,
-        organization_id = 11223344, #マジックナンバーにしてある
+        organization_id = organization_id,
         badge_id = badge.id,
         photo_id = photo.id,
         event_name=event.event_name,
@@ -283,6 +283,14 @@ def delete_event(db:Session, event_id:int):
         db.delete(event)
         db.commit()
         print("Event deleted successfully.")
+
+        db.delete(photo)
+        db.commit()
+        print("Photo deleted successfully.")
+
+        db.delete(badge)
+        db.commit()
+        print("Badge deleted successfully.")
 
         return delete_event
 

@@ -4,16 +4,18 @@ import api.schemes.event as event_schema
 from api.database import get_db
 import api.cruds.event as event_cruds
 from sqlalchemy.orm import Session
+from api.routers.auth import get_current_user
+from api.models.database_models import User
 
 router = APIRouter()
 
 @router.get("/events", response_model=List[event_schema.Event])
-def list_events(db:Session=Depends(get_db)):
-    return event_cruds.get_event_list(db)
+def list_events(db:Session=Depends(get_db), current_user: User = Depends(get_current_user)):
+    return event_cruds.get_event_list(db, current_user.organization_id)
 
 @router.post("/events/create", response_model=event_schema.EventCreateResponse) #TODO: 同じ名前のイベントでも複数登録できてしまうので変える必要あります.
-def create_event(event_body: event_schema.EventCreate, db:Session = Depends(get_db)):
-    db_organization_id = event_cruds.create_organization(db, event_body.organization)
+def create_event(event_body: event_schema.EventCreate, current_user: User = Depends(get_current_user), db:Session=Depends(get_db)):
+    db_organization_id = current_user.id
 
     db_event_id = event_cruds.create_event(db, event_body, db_organization_id)
 
@@ -30,13 +32,13 @@ def create_event(event_body: event_schema.EventCreate, db:Session = Depends(get_
 
 @router.get("/events/{event_id}", response_model=event_schema.EventDetail)
 def read_event(event_id: int, db: Session = Depends(get_db)):
-    return event_cruds.get_event_detail(db, event_id)
+    return event_cruds.get_event_detail(event_id, db)
 
 # NOTE:organization_idをリクエストで受けとる必要がある．
 @router.put("/events/{event_id}/edit", response_model=event_schema.EventUpdateResponse)
-def update_event(event_id: int, event_body: event_schema.EventUpdate, db: Session=Depends(get_db)):
+def update_event(event_id: int, event_body: event_schema.EventUpdate, current_user: User = Depends(get_current_user), db: Session=Depends(get_db)):
 
-    db_organization_id = event_cruds.get_organization_id(db, event_id)
+    db_organization_id = current_user.organization_id
     db_event_id = event_cruds.update_event(db, event_id, event_body)
     db_photo_id = event_cruds.update_photo(db, event_id, event_body)
     db_badge_id = event_cruds.update_badge(db, event_id, event_body)
@@ -63,8 +65,8 @@ def update_event(event_id: int, event_body: event_schema.EventUpdate, db: Sessio
     return update_info
 
 @router.delete("/events/{event_id}/delete", response_model=None)
-def delete_event(event_id: int, db: Session=Depends(get_db)):
-    return event_cruds.delete_event(db, event_id)
+def delete_event(event_id: int, current_user: User = Depends(get_current_user), db: Session=Depends(get_db)):
+    return event_cruds.delete_event(db, event_id, current_user.organization_id)
 
 
 
