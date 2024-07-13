@@ -1,4 +1,4 @@
-import { inputSchemaType } from "@/schemas/inputSchema"
+import { eventSchemaType } from "@/schemas/eventSchema"
 import { useFormContext } from "react-hook-form"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -6,8 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 type PropsType = {
     startDateTitle: string
     endDateTitle: string
-    startDateTag: keyof inputSchemaType
-    endDateTag: keyof inputSchemaType
+    startDateTag: keyof eventSchemaType
+    endDateTag: keyof eventSchemaType
 }
 
 const InputDateField = (props:PropsType) => {
@@ -53,8 +53,6 @@ const InputDateField = (props:PropsType) => {
             dateFormat="yyyy/MM/dd"
             placeholderText='yyyy/mm/dd'
             minDate={Today} />
-            {/* minDate={Today && startDate} /> */}
-            {/* minDate={{Today > startDate ? Today : startDate}} */}
             {errors[props.endDateTag] && (
                 <div style={{ color: "red" }}>
                     {`${errors[props.endDateTag]?.message}`}

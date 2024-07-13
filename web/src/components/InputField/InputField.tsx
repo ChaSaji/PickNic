@@ -6,6 +6,7 @@ interface PropsType {
   name: string;
   size?: "small" | "medium" | "large";
   type?: string;
+  step?: number;
   placeholder?: string;
   defaultValue?: string | number;
   disabled?: boolean;
