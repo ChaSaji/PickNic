@@ -1,8 +1,8 @@
 # crud.py
 from sqlalchemy.orm import Session
-from ..models.auth import User
-from ..schemes.auth import UserCreate,UserUpdate
-from ..lib.auth.auth_utils import get_password_hash
+from api.models.database_models import User
+from api.schemes.auth import UserCreate,UserUpdate
+from api.lib.auth.auth_utils import get_password_hash
 
 def get_user_by_username(db: Session, username: str):
     print("get_user_by_username In crud.py",username)
