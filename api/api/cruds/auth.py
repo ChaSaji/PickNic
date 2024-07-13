@@ -1,4 +1,3 @@
-# crud.py
 from sqlalchemy.orm import Session
 from api.models.database_models import User
 from api.schemes.auth import UserCreate,UserUpdate
