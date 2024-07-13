@@ -10,6 +10,9 @@ def akaze(contents,original):
     nparr = np.frombuffer(original, np.uint8)
     img2 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
+    img1=cv2.resize(img1, (700, 1000))
+    img2=cv2.resize(img2, (700, 1000))
+
     gray1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
 
