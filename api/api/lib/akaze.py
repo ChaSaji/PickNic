@@ -30,10 +30,12 @@ def akaze(contents,original):
     matches = bf.match(des1, des2)
     dist = [m.distance for m in matches]
     ret = sum(dist) / len(dist)
-    #0が同じ、100が違うなので逆にする
-    match_per=100.0-ret
-    round(match_per,5)
-    #print(match_per)
+    
+    # コサイン類似度を計算
+    cos_sim = cosine_similarity(des1, des2)
+    # 最大類似度を表示
+    max_similarity = np.max(cos_sim)
+    #print("最大コサイン類似度:", max_similarity)
 
     # matchesをdescriptorsの似ている順にソートする 
     #matches = sorted(matches, key = lambda x:x.distance)
@@ -44,4 +46,4 @@ def akaze(contents,original):
     #検出結果を描画した画像を出力する
     #cv2.imwrite("result.jpg",img3)
  
-    return match_per
+    return max_similarity
