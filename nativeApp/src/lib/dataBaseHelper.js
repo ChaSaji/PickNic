@@ -1018,7 +1018,7 @@ export async function get_user(){
     const result = await fetchDataFromDb(
       QueryConst.User.tablename,
       QueryConst.OffsetDefault,
-      1,
+      100,
       QueryConst.Descending_order,
       QueryConst.PrimaryKey
     ); // fetchData関数の実行結果を待ち受ける
@@ -1051,6 +1051,27 @@ export async function get_user_id(){
       return null
     }
     return result[0].id; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error("Error:", error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  }
+}
+export async function get_isAccessed(){
+  try {
+    const result = await fetchDataFromDb(
+      QueryConst.User.tablename,
+      QueryConst.OffsetDefault,
+      1,
+      QueryConst.Descending_order,
+      QueryConst.PrimaryKey
+    ); // fetchData関数の実行結果を待ち受ける
+    if (QueryConst.debugDataBaseLevel > 1) {
+      console.log("Data: get_user_id", result);
+    } // 取得したデータを出力
+    if (result.length<=0){
+      return null
+    }
+    return result[0].isAccessed; // 非同期処理の結果を戻り値として返す
   } catch (error) {
     console.error("Error:", error); // エラーが発生した場合はエラーメッセージを出力
     throw error; // エラーを再度スローする（上位のコードでキャッチされる）

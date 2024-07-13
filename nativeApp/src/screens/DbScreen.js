@@ -19,6 +19,7 @@ import {
   deleteDataById,
   deleteData,
   clear_user,
+  get_isAccessed,
 } from "../lib/dataBaseHelper";
 import {
   RO,
@@ -488,7 +489,8 @@ const DbScreen = () => {
   const functionUserAdd = () => {
     console.log("ユーザの追加を行う");
     user = new UserElement();
-    user.id="XXXXfasdfhajhfalhf"
+    //user.id="XXXXfasdfhajhfalhf"
+    user.id="New"
     user.name = "1UserName";
     user.isAccessed = 1;
     insert_item(User.tablename, user)
@@ -499,6 +501,19 @@ const DbScreen = () => {
       .catch((error) => {
         console.error("Error:", error);
     });
+    /*
+    user = new UserElement();
+    user.id="New"
+    user.name = "2UserName";
+    user.isAccessed = 1;
+    insert_item(User.tablename, user)
+      .then((id) => {
+        
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+    });
+    */
   };
 
   const functionGetUser= () => {
@@ -515,6 +530,29 @@ const DbScreen = () => {
     })
     .catch((error) => {
       console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+    });
+
+    get_isAccessed().then((data) => {
+      console.log("Received isAccessed:", data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch((error) => {
+      console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+    });
+  };
+
+  const functionUpdateUser= () => {
+    console.log("ユーザの更新を行う");
+    user = new UserElement();
+    user.id="New"
+    user.name = "update";
+    user.isAccessed = 1;
+    update_item(User.tablename, user)
+      .then((id) => {
+        /*ここにIDを用いた処理を記述*/
+        console.log("budge id = " + id);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
     });
   };
 
@@ -549,6 +587,7 @@ const DbScreen = () => {
       <Button title="CheckTable" onPress={functionE} />
       <Button title="AddUser" onPress={functionUserAdd} />
       <Button title="GetUser" onPress={functionGetUser} />
+      <Button title="UpdateUser" onPress={functionUpdateUser} />
       <Button title="ClearUser" onPress={functionClearUser} />
       
       
