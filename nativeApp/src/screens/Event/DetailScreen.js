@@ -1,29 +1,25 @@
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { getRandomPointInRadius } from "../../lib/getRandomPointInRadius";
 import MyButton from "../../components/MyButton";
+import { getEventDetail } from "../../lib/api/event";
 
 const DetailScreen = ({ route, navigation }) => {
-  // TODO: eventIdからeventをfetch
+  const [event, setEvent] = useState(null);
   const eventId = route.params.eventId;
+  const eventName = route.params.eventName;
 
-  const event = {
-    event_name: "浜松まつり",
-    organizer: "浜松市観光協会",
-    start_date: "2023-05-03",
-    end_date: "2023-05-05",
-    overview:
-      "浜松まつりは、静岡県浜松市で毎年5月に開催される伝統的なお祭りです。凧揚げや夜の御殿屋台引き回しが見どころです。",
-    badge_img: "https://example.com/images/hamamatsu_badge.jpg",
-    target_img: "https://example.com/images/hamamatsu.jpg",
-    target_name: "浜松城",
-    latitude: 34.7108,
-    longitude: 137.7266,
-  };
+  useEffect(() => {
+    (async () => {
+      if (!eventId) return;
+      const eventData = await getEventDetail(eventId);
+      setEvent(eventData);
+    })();
+  }, [route]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: event.event_name,
+      title: eventName,
     });
   }, []);
 
@@ -34,11 +30,14 @@ const DetailScreen = ({ route, navigation }) => {
       200
     );
     navigation.navigate("Map", {
+      eventId: eventId,
       eventName: event.event_name,
       latitude: randomCenter.latitude,
       longitude: randomCenter.longitude,
     });
   };
+
+  if (!event) return;
 
   return (
     <View style={styles.container}>
@@ -50,7 +49,7 @@ const DetailScreen = ({ route, navigation }) => {
         />
         <Text style={styles.organizer}>主催者: {event.organizer}</Text>
         <Text style={styles.date}>
-          {event.start_date} ~ {event.end_date}
+          {event.startDate} ~ {event.endDate}
         </Text>
         <Text style={styles.overview}>{event.overview}</Text>
       </View>

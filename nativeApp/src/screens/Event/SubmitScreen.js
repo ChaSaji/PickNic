@@ -3,13 +3,16 @@ import { useCamera } from "../../context/CameraContext";
 import { useLayoutEffect, useState } from "react";
 import LoadingScreen from "./LoadingScreen";
 import MyButton from "../../components/MyButton";
+import sendImage from "../../lib/sendPicture";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const SubmitScreen = ({ navigation }) => {
+const SubmitScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const { picture } = useCamera();
+
+  const eventId = route.params.eventId;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -20,14 +23,17 @@ const SubmitScreen = ({ navigation }) => {
 
   const handleSubmitToAPI = async () => {
     setLoading(true);
-    // ローディングの時間を指定可能
-    const minLoadingTime = 1000;
     try {
-      await new Promise((resolve) => setTimeout(resolve, minLoadingTime));
+      const score = await sendImage({
+        uri: picture.uri,
+        endpoint: `events/${eventId}/uploadfile`,
+      });
 
       setLoading(false);
 
-      navigation.navigate("Result");
+      navigation.navigate("Result", {
+        score: Math.round(parseFloat(score.return)),
+      });
     } catch (error) {}
   };
 
