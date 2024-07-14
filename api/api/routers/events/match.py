@@ -11,7 +11,7 @@ router=APIRouter()
 async def upload_files(file: UploadFile = File(...)):
     contents = await file.read()
     # Path to the static file2 in the directory
-    file2_path = Path("./kuma.jpg")
+    file2_path = Path("./banana.jpg")
     
     # Read the content of file2 from the directory
     async with aiofiles.open(file2_path, 'rb') as file2:
