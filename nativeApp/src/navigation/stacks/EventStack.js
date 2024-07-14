@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useContext } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import TopScreen from "../../screens/Event/TopScreen";
 import DetailScreen from "../../screens/Event/DetailScreen";
@@ -9,11 +9,15 @@ import CameraScreen from "../../screens/Event/CameraScreen";
 import LoadingScreen from "../../screens/Event/LoadingScreen";
 import SubmitScreen from "../../screens/Event/SubmitScreen";
 import ResultScreen from "../../screens/Event/ResultScreen";
+import { WebInitContext } from "../../context/WebInitContext";
+import WebInitRemindScreen from "../../screens/Event/WebInitRemindScreen";
 
 const Stack = createStackNavigator();
 
 const EventScreenNavigator = () => {
-  return (
+  const { isWebInit } = useContext(WebInitContext);
+
+  return isWebInit ? (
     <CameraProvider>
       <LocationProvider>
         <Stack.Navigator>
@@ -31,6 +35,8 @@ const EventScreenNavigator = () => {
         </Stack.Navigator>
       </LocationProvider>
     </CameraProvider>
+  ) : (
+    <WebInitRemindScreen />
   );
 };
 
