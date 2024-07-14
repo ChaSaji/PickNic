@@ -4,8 +4,6 @@ from ..models.auth import User
 from ..schemes.auth import UserCreate,UserUpdate
 from ..lib.auth.auth_utils import get_password_hash
 
-
-
 def get_user_by_username(db: Session, username: str):
     print("get_user_by_username In crud.py",username)
     return db.query(User).filter(User.username == username).first()

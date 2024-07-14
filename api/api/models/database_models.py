@@ -73,8 +73,8 @@ class MobileUser(Base):
     __tablename__ = "mobile_users"
     id = Column(String, primary_key=True, index=True)
     name = Column(String, index=True)
-    createdDate = Column(DateTime, default=func.now())
-    Updateddate = Column(DateTime, default=func.now(), onupdate=func.now())
+    created_date = Column(DateTime, default=func.now())
+    updated_date = Column(DateTime, default=func.now(), onupdate=func.now())
 
 class Photo2MobileUser(Base):
     __tablename__ = "photo2mobileuser"

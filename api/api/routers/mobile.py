@@ -12,17 +12,12 @@ from api.schemes.mobile import MobileCreate, MobileUpdate, Mobile,MobileIdAsk
 from api.schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
 from api.cruds.mobile import get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name
 from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id
-from api.database import engine,session_local
+from api.database import engine, get_db
 from pydantic import BaseModel
-router = APIRouter()
-def get_db():
-    db = session_local()
-    try:
-        yield db
-    finally:
-        db.close()   
-
 from typing import List
+
+router = APIRouter()
+
 inspector = inspect(engine)
 
 # テーブルの存在確認
