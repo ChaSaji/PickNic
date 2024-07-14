@@ -1,18 +1,4 @@
 //reset
-export const MaterialPhotoRelation =[
-    {
-        "materialId": 123,
-        "photoId": 555
-    },
-    {
-        "materialId": 456,
-        "photoId": 789
-    },
-    {
-        "materialId": 6,
-        "photoId": 3
-    }
-];
 export const MealStatus =[
     {
         "locked": 0,
@@ -79,71 +65,10 @@ export const MealStatus =[
         "cooked": null
     }
 ];
-export const Badge =[
+export const User =[
     {
-        "name": "\u7d66\u98df",
-        "pass2Photo": "kyushokub",
-        "isHave": 1
-    },
-    {
-        "name": "\u671d\u3054\u306f\u3093",
-        "pass2Photo": "morningb",
-        "isHave": 1
-    },
-    {
-        "name": "\u30a4\u30bf\u30ea\u30a2\u30f3",
-        "pass2Photo": "italyb",
-        "isHave": 1
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 1
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
+        "name": null,
+        "isAccessed": 0
     }
 ];
 export const RecipeDetail =[
@@ -326,6 +251,88 @@ export const Material =[
         "colorId": 7
     }
 ];
+export const MaterialPhotoRelation =[
+    {
+        "materialId": 123,
+        "photoId": 555
+    },
+    {
+        "materialId": 456,
+        "photoId": 789
+    },
+    {
+        "materialId": 6,
+        "photoId": 3
+    }
+];
+export const Photo =[];
+export const Badge =[
+    {
+        "name": "\u7d66\u98df",
+        "pass2Photo": "kyushokub",
+        "isHave": 1
+    },
+    {
+        "name": "\u671d\u3054\u306f\u3093",
+        "pass2Photo": "morningb",
+        "isHave": 1
+    },
+    {
+        "name": "\u30a4\u30bf\u30ea\u30a2\u30f3",
+        "pass2Photo": "italyb",
+        "isHave": 1
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 1
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    }
+];
 export const Meal =[
     {
         "badgeId": 1,
@@ -424,4 +431,3 @@ export const Meal =[
         "name": null
     }
 ];
-export const Photo =[];
