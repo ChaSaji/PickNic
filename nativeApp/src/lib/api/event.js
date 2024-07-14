@@ -5,9 +5,9 @@ export const getEvents = async () => {
   const data = await fetchAPI({ endpoint: "events" });
   const eventData = data.map((event) => {
     return {
-      id: event.id,
+      id: event.event_id,
       name: event.event_name,
-      organizer: event.organizer,
+      organizer: event.organization,
       startDate: formatDate(event.start_date),
       endDate: formatDate(event.end_date),
     };
@@ -21,7 +21,7 @@ export const getEventDetail = async (eventId) => {
   const eventData = {
     id: data.id,
     name: data.event_name,
-    organizer: data.organizer,
+    organizer: data.organization,
     startDate: formatDate(data.start_date),
     endDate: formatDate(data.end_date),
     latitude: data.latitude,

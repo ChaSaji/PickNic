@@ -11,10 +11,11 @@ const DetailScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     (async () => {
+      if (!eventId) return;
       const eventData = await getEventDetail(eventId);
       setEvent(eventData);
     })();
-  }, []);
+  }, [route]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
