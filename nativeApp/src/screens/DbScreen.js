@@ -20,6 +20,7 @@ import {
   deleteData,
   clear_user,
   get_isAccessed,
+  get_user_Wedid,
 } from "../lib/dataBaseHelper";
 import {
   RO,
@@ -490,7 +491,8 @@ const DbScreen = () => {
     console.log("ユーザの追加を行う");
     user = new UserElement();
     //user.id="XXXXfasdfhajhfalhf"
-    user.id="New"
+    user.id=""
+    user.webId="New"
     user.name = "1UserName";
     user.isAccessed = 1;
     insert_item(User.tablename, user)
@@ -532,6 +534,13 @@ const DbScreen = () => {
       console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
     });
 
+    get_user_Wedid().then((data) => {
+      console.log("Received webId:", data); // getData関数の戻り値を受け取り、出力
+    })
+    .catch((error) => {
+      console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+    });
+
     get_isAccessed().then((data) => {
       console.log("Received isAccessed:", data); // getData関数の戻り値を受け取り、出力
     })
@@ -542,18 +551,27 @@ const DbScreen = () => {
 
   const functionUpdateUser= () => {
     console.log("ユーザの更新を行う");
-    user = new UserElement();
-    user.id="New"
-    user.name = "update";
-    user.isAccessed = 1;
-    update_item(User.tablename, user)
-      .then((id) => {
-        /*ここにIDを用いた処理を記述*/
-        console.log("budge id = " + id);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    
+    get_user_id().then((data) => {
+      console.log("Received user_id:", data); // getData関数の戻り値を受け取り、出力
+      user = new UserElement();
+      user.id=data;
+      user.webId="updated_Web"
+      user.name = "updated_name";
+      user.isAccessed = 1;
+      update_item(User.tablename, user)
+        .then((id_) => {
+          /*ここにIDを用いた処理を記述*/
+          console.log("UserUpdated id = " + id_);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+      });
+    })
+    .catch((error) => {
+      console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
     });
+    
   };
 
   const functionClearUser= () => {

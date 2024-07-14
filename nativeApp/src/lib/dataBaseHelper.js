@@ -365,9 +365,9 @@ export async function insert_item(Table, InsertItemItem) {
 async function insert_user(InsertItem) {
   let items =
     " ( " +
-    QueryConst.User.elementsKey.id +
-    ", " +
     QueryConst.User.elementsKey.name +
+    ", " +
+    QueryConst.User.elementsKey.webId +
     ", " +
     QueryConst.User.elementsKey.isAccessed +
     " )";
@@ -380,23 +380,23 @@ async function insert_user(InsertItem) {
   console.log(
     QueryText +
       "," +
-      InsertItem.id +
-      "," +
       InsertItem.name +
+      "," +
+      InsertItem.webId +
       "," +
       InsertItem.isAccessed
   );
   //const statement = await db.prepareAsync(values);
   if (QueryText.debugDataBaseLevel > 0) {
     console.log(
-      QueryText + InsertItem.id + InsertItem.name + InsertItem.isAccessed
+      QueryText +  InsertItem.name + InsertItem.webIdid + InsertItem.isAccessed
     );
   }
   try {
     const result = await db.runAsync(
       QueryText,
-      InsertItem.id,
       InsertItem.name,
+      InsertItem.webId,
       InsertItem.isAccessed
     );
     console.log(result.lastInsertRowId, result.changes);
@@ -656,7 +656,7 @@ export async function update_item(Table, updateItemItem) {
     console.log("update_item:name:" + Table);
   }
   switch (Table) {
-    case QueryConst.User.tablename: //1
+    case QueryConst.User.tablename: //0
       await update_user(updateItemItem);
       break;
     case QueryConst.Badge.tablename: //1
@@ -692,9 +692,9 @@ export async function update_item(Table, updateItemItem) {
 export async function update_user(updateItem) {
   //console.log("elements:"+QueryConst.Badge.elementsKey.name+":"+QueryConst.Badge.elementsKey.isHave+":"+QueryConst.Badge.elementsKey.pass2Photo);
   let items =
-    QueryConst.User.elementsKey.id +
-    " = ?," +
     QueryConst.User.elementsKey.name +
+    " = ?," +
+    QueryConst.User.elementsKey.webId +
     " = ?," +
     QueryConst.User.elementsKey.isAccessed +
     " = ?";
@@ -705,13 +705,16 @@ export async function update_user(updateItem) {
     items +
     QueryConst.WhereId;
   if (QueryConst.debugDataBaseLevel > 0) {
-    console.log(QueryText);
+    console.log(QueryText,updateItem.name,
+      updateItem.webId,
+      updateItem.isAccessed,
+      updateItem.id);
   }
   try {
     const result = await db.runAsync(
       QueryText,
-      updateItem.id,
       updateItem.name,
+      updateItem.webId,
       updateItem.isAccessed,
       updateItem.id
     );
@@ -1019,7 +1022,7 @@ export async function get_user(){
       QueryConst.User.tablename,
       QueryConst.OffsetDefault,
       100,
-      QueryConst.Descending_order,
+      QueryConst.Ascending_order,
       QueryConst.PrimaryKey
     ); // fetchData関数の実行結果を待ち受ける
     if (QueryConst.debugDataBaseLevel > 1) {
@@ -1034,8 +1037,30 @@ export async function get_user(){
     throw error; // エラーを再度スローする（上位のコードでキャッチされる）
   }
 }
-//ユーザIDを取得する関数
+//ユーザを取得する関数
 export async function get_user_id(){
+  try {
+    const result = await fetchDataFromDb(
+      QueryConst.User.tablename,
+      QueryConst.OffsetDefault,
+      1,
+      QueryConst.Descending_order,
+      QueryConst.PrimaryKey
+    ); // fetchData関数の実行結果を待ち受ける
+    if (QueryConst.debugDataBaseLevel > 1) {
+      console.log("Data: get_user", result);
+    } // 取得したデータを出力
+    if (result.length<=0){
+      return null
+    }
+    return result[0].id; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error("Error:", error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  }
+}
+//ユーザIDを取得する関数
+export async function get_user_Wedid(){
   try {
     const result = await fetchDataFromDb(
       QueryConst.User.tablename,
@@ -1050,7 +1075,7 @@ export async function get_user_id(){
     if (result.length<=0){
       return null
     }
-    return result[0].id; // 非同期処理の結果を戻り値として返す
+    return result[0].webId; // 非同期処理の結果を戻り値として返す
   } catch (error) {
     console.error("Error:", error); // エラーが発生した場合はエラーメッセージを出力
     throw error; // エラーを再度スローする（上位のコードでキャッチされる）
