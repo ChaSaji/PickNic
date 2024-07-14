@@ -1,10 +1,10 @@
 # crud.py
 from sqlalchemy.orm import Session
-#from ..models.mobile import MobileUser
-from ..models.database_models import Photo,Photo2MobileUser,MobileUser
-from ..schemes.mobile import MobileCreate,MobileUpdate,Mobile
-from ..schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
-from ..lib.auth.auth_utils import get_password_hash
+#from api.models.mobile import MobileUser
+from api.models.database_models import Photo,Photo2MobileUser,MobileUser
+from api.schemes.mobile import MobileCreate,MobileUpdate,Mobile
+from api.schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
+from api.lib.auth.auth_utils import get_password_hash
 from datetime import datetime
 
 

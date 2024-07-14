@@ -7,34 +7,22 @@ from sqlalchemy import inspect
 from jose import JWTError, jwt
 from datetime import timedelta
 
-from ..models.mobile import SessionLocal, engine
-from ..models.database_models import Base
-from ..schemes.mobile import MobileCreate, MobileUpdate, Mobile,MobileIdAsk
-from ..schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
-from ..cruds.mobile import get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name
-from ..cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id
-
-# データベースの初期化
-from dotenv import load_dotenv
-import os
-from typing import List
+from api.models.database_models import Base
+from api.schemes.mobile import MobileCreate, MobileUpdate, Mobile,MobileIdAsk
+from api.schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
+from api.cruds.mobile import get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name
+from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id
+from api.database import engine,session_local
 from pydantic import BaseModel
-# .envファイルを読み込む
-load_dotenv()
-# 環境変数の取得
-database_url = os.getenv('DATABASE_URL')
-print(database_url)
-if not os.path.exists(database_url):
-    Base.metadata.create_all(bind=engine)
-#app = FastAPI()
 router = APIRouter()
 def get_db():
-    db = SessionLocal()
+    db = session_local()
     try:
         yield db
     finally:
-        db.close()        
-# インスペクターの作成
+        db.close()   
+
+from typing import List
 inspector = inspect(engine)
 
 # テーブルの存在確認
@@ -89,6 +77,7 @@ def create_user(mobileuser: MobileCreate, db: Session = Depends(get_db)):
 # Pydanticモデルを使用してリクエストボディを定義
 class NumberData(BaseModel):
     number: int
+    
 @router.post("/mobile/testrelation")
 async def create_user(num: NumberData,db: Session = Depends(get_db)):
     print("xxxxxxx",num.number)

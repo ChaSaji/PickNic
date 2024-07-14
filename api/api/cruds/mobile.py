@@ -1,9 +1,9 @@
 # crud.py
 from sqlalchemy.orm import Session
-#from ..models.mobile import MobileUser
-from ..models.database_models import MobileUser
-from ..schemes.mobile import MobileCreate,MobileUpdate,MobileCommit,Mobile
-from ..lib.auth.auth_utils import get_password_hash
+#from api.models.mobile import MobileUser
+from api.models.database_models import MobileUser
+from api.schemes.mobile import MobileCreate,MobileUpdate,MobileCommit,Mobile
+from api.lib.auth.auth_utils import get_password_hash
 from datetime import datetime
 
 def get_mobile_user_all(db: Session):
