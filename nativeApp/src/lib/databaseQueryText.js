@@ -44,11 +44,13 @@ export class RO {
 class UserElementKey {
   static id = PrimaryKey;
   static name = "name";
+  static webId = "webId";
   static isAccessed = "isAccessed";
 }
 export class UserElement {
   id;
   name;
+  webId;
   isAccessed;
 }
 export class User {
@@ -207,7 +209,9 @@ export const createTableUser =
   User.tablename +
   " (" +
   User.elementsKey.id +
-  " TEXT," +
+  " INTEGER PRIMARY KEY AUTOINCREMENT," +
+  User.elementsKey.webId +
+  " INTEGER," +
   User.elementsKey.isAccessed +
   " INTEGER," +
   User.elementsKey.name +
