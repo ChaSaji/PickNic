@@ -11,7 +11,24 @@ const WebInitRemindScreen = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { setIsWebInit } = useContext(WebInitContext);
 
+  const validateName = () => {
+    if (name.trim() === "") {
+      setErrorMessage("名前を入力してください");
+      return false;
+    }
+    if (name.length < 2) {
+      setErrorMessage("名前は2文字以上である必要があります");
+      return false;
+    }
+    if (name.length > 10) {
+      setErrorMessage("名前は10文字以下である必要があります");
+      return false;
+    }
+    return true;
+  };
+
   const handleWebInit = async () => {
+    if (!validateName()) return;
     try {
       const res = await postUser(name);
       const updatedUser = new User();
