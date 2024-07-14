@@ -165,6 +165,11 @@ export async function dropAllTable() {
 export async function InitDatabaseTable() {
   await dropAllTable();
   await CreateAllTable();
+  //0User
+  for (i = 0; i < InitDB.Badge.length; i++) {
+    InsertItem = InitDB.Badge[i];
+    await insert_item(QueryConst.Badge.tablename, InsertItem);
+  }
   //1Badge
   for (i = 0; i < InitDB.Badge.length; i++) {
     InsertItem = InitDB.Badge[i];

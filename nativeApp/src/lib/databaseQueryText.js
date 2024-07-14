@@ -41,6 +41,23 @@ export class RO {
   static Bet = " BETWEEN "; //上級者向け
 }
 
+class UserElementKey {
+  static id = PrimaryKey;
+  static name = "name";
+  static webId = "webId"
+  static isAccessed = "isAccessed";
+}
+export class UserElement {
+  id;
+  name;
+  webId;
+  isAccessed;
+}
+export class User {
+  static tablename = "User";
+  static elementsKey = UserElementKey;
+}
+
 class MealementKey {
   static id = PrimaryKey;
   static badgeId = "badgeId";
@@ -187,6 +204,18 @@ export class Photo {
 
 // IF NOT EXISTS
 // テーブルを作成するクエリ
+export const createTableUser =
+  "CREATE TABLE IF NOT EXISTS " +
+  User.tablename +
+  " (" +
+  User.elementsKey.id +
+  " TEXT," +
+  User.elementsKey.isAccessed +
+  " INTEGER," +
+  User.elementsKey.name +
+  " TEXT" +
+  ");";
+
 export const createTableBadge =
   "CREATE TABLE IF NOT EXISTS " +
   Badge.tablename +
