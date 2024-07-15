@@ -36,6 +36,9 @@ def create_organization(db: Session, organization_name:str):
 
     return db_organization.id
 
+def get_organization(db:Session, organization_id:int):
+    return db.query(event_model.Organization).filter(event_model.Organization.id == organization_id).first()
+
 # def get_organization_id(db:Session, event_id:int):
 #     print("get organization id...")
 #     result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
@@ -45,8 +48,6 @@ def create_organization(db: Session, organization_name:str):
 
 #     id = event.organization_id
 #     return id
-
-
 
 def get_event_detail(event_id:int, db:Session):
     try:

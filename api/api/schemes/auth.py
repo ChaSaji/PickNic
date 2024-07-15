@@ -1,22 +1,38 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class UserCreate(BaseModel):
-    organization_id: Optional[int] = None
+class UserBase(BaseModel):
     username: str
     email: str
+
+class UserCreate(UserBase):
     password: str
 
-class UserUpdate(BaseModel):
-    username: Optional[str] = None
-    email: Optional[str] = None
+class UserUpdate(UserBase):
     password: Optional[str] = None
 
-class User(BaseModel):
+class User(UserBase):
     id: int
     organization_id:int
-    username: str
-    email: str
+
+    class Config:
+        from_attributes = True
+
+class UserResponse(User):
+    organization_name: str
+
+    class Config:
+        from_attributes = True
+
+class BelongedOrganization(User):
+    organization_name: str
+
+    class Config:
+        from_attributes = True
+
+class LoginResponse(UserResponse):
+    access_token: str
+    token_type: str = "bearer"
 
     class Config:
         from_attributes = True

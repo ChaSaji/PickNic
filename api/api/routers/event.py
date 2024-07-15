@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from api.routers.auth import get_current_user
 from api.models.database_models import User, Event
 from sqlalchemy import select
+from api.dependencies.auth import get_owned_event
 
 router = APIRouter()
 
@@ -33,33 +34,33 @@ def create_event(event_body: event_schema.EventCreate, current_user: User = Depe
 
 
 
-async def get_event(event_id:int, db:Session = Depends(get_db), current_user: User = Depends(get_current_user)): # <- ここもdependsで持ってきたい
-    # print(event_id)
-    try:
-        print("get organization id...")
-        result = db.execute(select(Event).filter(Event.id == event_id))
-        event = result.scalars().first()
-        event_detail = event_cruds.get_event_detail(event_id, db)
-        if event_detail.organization_id == current_user.organization_id:
-            return event
+# async def get_event(event_id:int, db:Session = Depends(get_db), current_user: User = Depends(get_current_user)): # <- ここもdependsで持ってきたい
+#     # print(event_id)
+#     try:
+#         print("get organization id...")
+#         result = db.execute(select(Event).filter(Event.id == event_id))
+#         event = result.scalars().first()
+#         event_detail = event_cruds.get_event_detail(event_id, db)
+#         if event_detail.organization_id == current_user.organization_id:
+#             return event
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/events/{event_id}", response_model=event_schema.EventDetail)
-def read_event(event_id: int, db: Session = Depends(get_db), current_event:Event = Depends(get_event)):
-    return event_cruds.get_event_detail(event_id, db)
+def read_event(owned_event: Event = Depends(get_owned_event)):
+    return owned_event
 
 
 # event_idでイベント情報を受け取る処理を作って，それのorganization_idとUser.organization_idが一致するかチェックする処理を書けばOK
 @router.put("/events/{event_id}/edit", response_model=event_schema.EventUpdateResponse)
-def update_event(event_id: int, event_body: event_schema.EventUpdate, current_event: Event = Depends(get_event), db: Session=Depends(get_db)):
+def update_event(event_body: event_schema.EventUpdate, db: Session=Depends(get_db), owned_event: Event = Depends(get_owned_event)):
 
 
-    # db_organization_id = current_user.organization_id
-    db_event_id = event_cruds.update_event(db, event_id, event_body)
-    db_photo_id = event_cruds.update_photo(db, event_id, event_body)
-    db_badge_id = event_cruds.update_badge(db, event_id, event_body)
+    db_organization_id = owned_event.organization_id
+    db_event_id = event_cruds.update_event(db, owned_event.event_id, event_body)
+    db_photo_id = event_cruds.update_photo(db, owned_event.event_id, event_body)
+    db_badge_id = event_cruds.update_badge(db, owned_event.event_id, event_body)
 
     update_info = event_schema.EventUpdateResponse(
             event_id = db_event_id,
@@ -83,8 +84,8 @@ def update_event(event_id: int, event_body: event_schema.EventUpdate, current_ev
     return update_info
 
 @router.delete("/events/{event_id}/delete", response_model=None)
-def delete_event(event_id: int, current_user: User = Depends(get_current_user), db: Session=Depends(get_db)):
-    return event_cruds.delete_event(db, event_id, current_user.organization_id)
+def delete_event(db: Session=Depends(get_db), owned_event: Event = Depends(get_owned_event)):
+    return event_cruds.delete_event(db, owned_event.event_id, owned_event.organization_id)
 
 
 
