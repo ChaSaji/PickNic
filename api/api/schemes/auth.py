@@ -1,21 +1,38 @@
-# schemas.py
 from pydantic import BaseModel
 from typing import Optional
 
-class UserCreate(BaseModel):
+class UserBase(BaseModel):
     username: str
     email: str
+
+class UserCreate(UserBase):
     password: str
 
-class UserUpdate(BaseModel):
-    username: Optional[str] = None
-    email: Optional[str] = None
+class UserUpdate(UserBase):
     password: Optional[str] = None
 
-class User(BaseModel):
+class User(UserBase):
     id: int
-    username: str
-    email: str
+    organization_id:int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class UserResponse(User):
+    organization_name: str
+
+    class Config:
+        from_attributes = True
+
+class BelongedOrganization(User):
+    organization_name: str
+
+    class Config:
+        from_attributes = True
+
+class LoginResponse(UserResponse):
+    access_token: str
+    token_type: str = "bearer"
+
+    class Config:
+        from_attributes = True

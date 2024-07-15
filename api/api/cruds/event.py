@@ -4,13 +4,14 @@ from datetime import datetime
 from sqlalchemy import select
 from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
+from api.database import get_db
 
 dt_now = datetime.now() # 登録時の時間を取得したい
 
 
-def get_event_list(db:Session):
+def get_event_list(db:Session, organization_id: int):
     print("Get event List...")
-    result = db.execute(select(event_model.Event))
+    result = db.execute(select(event_model.Event).filter(event_model.Event.organization_id == organization_id))
     events = result.scalars().all()
 
     event_list = [event_schema.Event(
@@ -35,25 +36,27 @@ def create_organization(db: Session, organization_name:str):
 
     return db_organization.id
 
-def get_organization_id(db:Session, event_id:int):
-    print("Get organization id...")
-    result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
-    event = result.scalars().first()
-    if event is None:
-            raise HTTPException(status_code=404, detail="Event not found")
+def get_organization(db:Session, organization_id:int):
+    return db.query(event_model.Organization).filter(event_model.Organization.id == organization_id).first()
 
-    organization_id = event.organization_id
-    return organization_id
+# def get_organization_id(db:Session, event_id:int):
+#     print("get organization id...")
+#     result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
+#     event = result.scalars().first()
+#     if event is None:
+#             raise HTTPException(status_code=404, detail="event not found")
 
+#     id = event.organization_id
+#     return id
 
-def get_event_detail(db: Session, event_id:int):
+def get_event_detail(event_id:int, db:Session):
     try:
         print("Get event Detail. ID is ...", event_id)
         result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
         event = result.scalars().first()
         if event is None:
             raise HTTPException(status_code=404, detail="Event not found")
-        
+
         organization_id = event.organization_id
 
         result = db.execute(select(event_model.Organization).filter(event_model.Organization.id == organization_id))
@@ -74,6 +77,7 @@ def get_event_detail(db: Session, event_id:int):
         # print(event.event_badge.id)
         event_detail = event_schema.EventDetail(
         event_id=event.id,
+        organization_id=event.organization_id,
         event_name=event.event_name,
         organization=organization.name,
         start_date=event.start_date,
@@ -93,60 +97,73 @@ def get_event_detail(db: Session, event_id:int):
 def create_event(
     db: Session, event_create: event_schema.EventCreate, organization_id: int
 ):
-    print("Start registering event...")
-    db_event = event_model.Event(
-        organization_id=organization_id,
-        event_name=event_create.event_name,
-        target_name=event_create.target_name,
-        start_date=event_create.start_date,
-        end_date=event_create.end_date,
-        description=event_create.overview,
-        create_date=dt_now,
-        update_date=dt_now,
-        status=True
-    )
-    db.add(db_event)
-    db.commit()
-    db.refresh(db_event)
-    print("Event registered!")
+    try:
+        print("Start registering event...")
+        db_event = event_model.Event(
+            organization_id=organization_id,
+            event_name=event_create.event_name,
+            target_name=event_create.target_name,
+            start_date=event_create.start_date,
+            end_date=event_create.end_date,
+            description=event_create.overview,
+            create_date=dt_now,
+            update_date=dt_now,
+            status=True
+        )
+        db.add(db_event)
+        db.commit()
+        db.refresh(db_event)
+        print("Event registered!")
+        return db_event.id
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    return db_event.id
-
+    
 def create_photo(db: Session, photo_create: event_schema.EventCreate, event_id:int):
-    print("Start registering event photo...")
-    db_photo = event_model.Photo(
-        event_id=event_id,
-        pass_2_photo="画像保存先のURL，現在は固定値",
-        latitude=photo_create.latitude,
-        longitude=photo_create.longitude,
-        create_date=dt_now,
-        update_date=dt_now
-    )
-    db.add(db_photo)
-    db.commit()
-    db.refresh(db_photo)
-    print(db_photo.latitude, db_photo.longitude)
-    print("Event photo registered!")
+    try:
 
-    return db_photo.id
+        print("Start registering event photo...")
+        db_photo = event_model.Photo(
+            event_id=event_id,
+            pass_2_photo="画像保存先のURL，現在は固定値",
+            latitude=photo_create.latitude,
+            longitude=photo_create.longitude,
+            create_date=dt_now,
+            update_date=dt_now
+        )
+        db.add(db_photo)
+        db.commit()
+        db.refresh(db_photo)
+        print(db_photo.latitude, db_photo.longitude)
+        print("Event photo registered!")
+        return db_photo.id
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 def create_event_badge(db: Session, event_badge_create: event_schema.EventCreate, event_id:int):
-    print("Start registering event badge...")
-    db_event_badge = event_model.EventBadge(
-        event_id=event_id,
-        name=event_badge_create.badge_name,
-        pass_2_photo=event_badge_create.badge_name,
-        create_date=dt_now,
-        update_date=dt_now
-    )
-    db.add(db_event_badge)
-    db.commit()
-    db.refresh(db_event_badge)
-    print("Event badge registered!")
+    try:
 
-    return db_event_badge.id
+        print("Start registering event badge...")
+        db_event_badge = event_model.EventBadge(
+            event_id=event_id,
+            name=event_badge_create.badge_name,
+            pass_2_photo="バッジ画像保存先のURL，現在は固定値",
+            create_date=dt_now,
+            update_date=dt_now
+        )
+        db.add(db_event_badge)
+        db.commit()
+        db.refresh(db_event_badge)
+        print("Event badge registered!")
+        return db_event_badge.id
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 def update_event(db: Session, event_id:int, event_update:event_schema.EventUpdate):
+
     try:
         print("Start updating event information... id:", event_id)
         result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
@@ -243,7 +260,7 @@ def update_badge(db: Session, event_id:int, event_update:event_schema.EventUpdat
         raise HTTPException(status_code=500, detail=str(e))
 
 
-def delete_event(db:Session, event_id:int):
+def delete_event(db:Session, event_id:int, organization_id:int):
     try:
         print("Get event Detail. ID is ...", event_id)
         result = db.execute(select(event_model.Event).filter(event_model.Event.id == event_id))
@@ -261,10 +278,9 @@ def delete_event(db:Session, event_id:int):
         if badge is None:
             raise HTTPException(status_code=404, detail="EventBadge not found")
 
-        # print(event.event_badge.id)
         delete_event = event_schema.EventDeleteResponse(
         event_id=event.id,
-        organization_id = 11223344, #マジックナンバーにしてある
+        organization_id = organization_id,
         badge_id = badge.id,
         photo_id = photo.id,
         event_name=event.event_name,
@@ -283,6 +299,14 @@ def delete_event(db:Session, event_id:int):
         db.delete(event)
         db.commit()
         print("Event deleted successfully.")
+
+        db.delete(photo)
+        db.commit()
+        print("Photo deleted successfully.")
+
+        db.delete(badge)
+        db.commit()
+        print("Badge deleted successfully.")
 
         return delete_event
 
