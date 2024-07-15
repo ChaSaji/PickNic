@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.routers import picture2item, event, auth
+from api.routers import picture2item, event, auth, mobile
 from api.routers.events import match
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -26,3 +26,4 @@ app.include_router(picture2item.router)
 app.include_router(match.router)
 app.include_router(event.router)
 app.include_router(auth.router)
+app.include_router(mobile.router)
