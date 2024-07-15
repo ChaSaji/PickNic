@@ -76,6 +76,7 @@ async function GetTableNum() {
 
 export async function CreateAllTable() {
   try {
+    await CreateEachTable(QueryConst.createTableUser);
     await CreateEachTable(QueryConst.createTableBadge);
     await CreateEachTable(QueryConst.createTableMaterial);
     await CreateEachTable(QueryConst.createTableMaterialPhotoRelation);
@@ -88,6 +89,7 @@ export async function CreateAllTable() {
     console.error("テーブル作成時にエラーが発生しました:", error);
   }
   if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryConst.createTableUser);
     console.log(QueryConst.createTableBadge);
     console.log(QueryConst.createTableMaterial);
     console.log(QueryConst.createTableMaterialPhotoRelation);
@@ -120,6 +122,7 @@ async function dropEachTable(QueryText) {
 }
 export async function dropAllTable() {
   if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryConst.DropTableQuery + QueryConst.User.tablename + ";");
     console.log(QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";");
     console.log(QueryConst.DropTableQuery + QueryConst.Meal.tablename + ";");
     console.log(
@@ -138,6 +141,9 @@ export async function dropAllTable() {
     );
     console.log(QueryConst.DropTableQuery + QueryConst.Photo.tablename + ";");
   }
+  await dropEachTable(
+    QueryConst.DropTableQuery + QueryConst.User.tablename + ";"
+  );
   await dropEachTable(
     QueryConst.DropTableQuery + QueryConst.Badge.tablename + ";"
   );
@@ -200,15 +206,35 @@ export async function InitDatabaseTable() {
     InsertItem = InitDB.Photo[i];
     await insert_item(QueryConst.Photo.tablename, InsertItem);
   }
+  //8
+  for (i = 0; i < InitDB.User.length; i++) {
+    InsertItem = InitDB.User[i];
+    await insert_item(QueryConst.User.tablename, InsertItem);
+  }
   return 1;
 }
 //###end Read Excel data
+
 //###start insert
 export async function insert_item(Table, InsertItemItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log("insert_item:name:" + Table);
   }
   switch (Table) {
+    case QueryConst.User.tablename: //0
+      try {
+        const lastInsertedId = await insert_user(InsertItemItem);
+        if (QueryConst.debugDataBaseLevel > 0) {
+          console.log("Last inserted ID:", lastInsertedId);
+        }
+        return lastInsertedId;
+        // ここでlastInsertedIdを使用する
+      } catch (error) {
+        console.error("Error inserting and getting ID:", error);
+        return -1;
+      }
+      break;
+
     case QueryConst.Badge.tablename: //1
       try {
         const lastInsertedId = await insert_badge(InsertItemItem);
@@ -304,7 +330,7 @@ export async function insert_item(Table, InsertItemItem) {
         return -1;
       }
       break;
-      case QueryConst.Place.tablename: //7
+    case QueryConst.Place.tablename: //7
       if (QueryConst.debugDataBaseLevel > 0) {
         console.log("insert " + QueryConst.Place.tablename);
       }
@@ -338,6 +364,50 @@ export async function insert_item(Table, InsertItemItem) {
       break;
     default:
       console.warn("table name error:" + tablename);
+  }
+}
+
+async function insert_user(InsertItem) {
+  let items =
+    " ( " +
+    QueryConst.User.elementsKey.name +
+    ", " +
+    QueryConst.User.elementsKey.webId +
+    ", " +
+    QueryConst.User.elementsKey.isAccessed +
+    " )";
+  let QueryText =
+    QueryConst.InsertQuery +
+    QueryConst.User.tablename +
+    items +
+    QueryConst.values +
+    "(?,?,?)";
+  console.log(
+    QueryText +
+      "," +
+      InsertItem.name +
+      "," +
+      InsertItem.webId +
+      "," +
+      InsertItem.isAccessed
+  );
+  //const statement = await db.prepareAsync(values);
+  if (QueryText.debugDataBaseLevel > 0) {
+    console.log(
+      QueryText + InsertItem.name + InsertItem.webIdid + InsertItem.isAccessed
+    );
+  }
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      InsertItem.name,
+      InsertItem.webId,
+      InsertItem.isAccessed
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
   }
 }
 
@@ -585,34 +655,15 @@ async function insert_photo(InsertItem) {
 }
 //###end insert
 
-/*
-export const getTables = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT name FROM sqlite_master WHERE type="table"',
-        [],
-        (_, { rows }) => {
-          const tables = rows._array.map((row) => row.name);
-          resolve(tables);
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-    });
-  });
-};
-*/
-
-//### end First Start Init DB
-
 //###start Update
 export async function update_item(Table, updateItemItem) {
   if (QueryConst.debugDataBaseLevel > 0) {
     console.log("update_item:name:" + Table);
   }
   switch (Table) {
+    case QueryConst.User.tablename: //0
+      await update_user(updateItemItem);
+      break;
     case QueryConst.Badge.tablename: //1
       await update_badge(updateItemItem);
       break;
@@ -640,6 +691,45 @@ export async function update_item(Table, updateItemItem) {
       break;
     default:
       console.warn("table name error:" + tablename);
+  }
+}
+
+export async function update_user(updateItem) {
+  //console.log("elements:"+QueryConst.Badge.elementsKey.name+":"+QueryConst.Badge.elementsKey.isHave+":"+QueryConst.Badge.elementsKey.pass2Photo);
+  let items =
+    QueryConst.User.elementsKey.name +
+    " = ?," +
+    QueryConst.User.elementsKey.webId +
+    " = ?," +
+    QueryConst.User.elementsKey.isAccessed +
+    " = ?";
+  let QueryText =
+    QueryConst.UpdateQuery +
+    QueryConst.User.tablename +
+    QueryConst.Set +
+    items +
+    QueryConst.WhereId;
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(
+      QueryText,
+      updateItem.name,
+      updateItem.webId,
+      updateItem.isAccessed,
+      updateItem.id
+    );
+  }
+  try {
+    const result = await db.runAsync(
+      QueryText,
+      updateItem.name,
+      updateItem.webId,
+      updateItem.isAccessed,
+      updateItem.id
+    );
+    console.log(result.lastInsertRowId, result.changes);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error("Insert error" + error);
   }
 }
 
@@ -905,6 +995,7 @@ export async function update_photo(updateItem) {
 //###end Update
 
 //###start get recode;
+
 //実際にDBにアクセスする関数
 async function fetchDataFromDb(Tablename, offset, limit, DecOrAsc, sortkey) {
   let QueryText =
@@ -930,7 +1021,93 @@ async function fetchDataFromDb(Tablename, offset, limit, DecOrAsc, sortkey) {
     console.error("fetchData error" + error);
   }
 }
-
+//ユーザを取得する関数
+export async function get_user() {
+  try {
+    const result = await fetchDataFromDb(
+      QueryConst.User.tablename,
+      QueryConst.OffsetDefault,
+      100,
+      QueryConst.Ascending_order,
+      QueryConst.PrimaryKey
+    ); // fetchData関数の実行結果を待ち受ける
+    if (QueryConst.debugDataBaseLevel > 1) {
+      console.log("Data: get_user", result);
+    } // 取得したデータを出力
+    if (result.length <= 0) {
+      return null;
+    }
+    return result[0]; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error("Error:", error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  }
+}
+//ユーザを取得する関数
+export async function get_user_id() {
+  try {
+    const result = await fetchDataFromDb(
+      QueryConst.User.tablename,
+      QueryConst.OffsetDefault,
+      1,
+      QueryConst.Descending_order,
+      QueryConst.PrimaryKey
+    ); // fetchData関数の実行結果を待ち受ける
+    if (QueryConst.debugDataBaseLevel > 1) {
+      console.log("Data: get_user", result);
+    } // 取得したデータを出力
+    if (result.length <= 0) {
+      return null;
+    }
+    return result[0].id; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error("Error:", error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  }
+}
+//ユーザIDを取得する関数
+export async function get_user_Wedid() {
+  try {
+    const result = await fetchDataFromDb(
+      QueryConst.User.tablename,
+      QueryConst.OffsetDefault,
+      1,
+      QueryConst.Descending_order,
+      QueryConst.PrimaryKey
+    ); // fetchData関数の実行結果を待ち受ける
+    if (QueryConst.debugDataBaseLevel > 1) {
+      console.log("Data: get_user_id", result);
+    } // 取得したデータを出力
+    if (result.length <= 0) {
+      return null;
+    }
+    return result[0].webId; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error("Error:", error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  }
+}
+export async function get_isAccessed() {
+  try {
+    const result = await fetchDataFromDb(
+      QueryConst.User.tablename,
+      QueryConst.OffsetDefault,
+      1,
+      QueryConst.Descending_order,
+      QueryConst.PrimaryKey
+    ); // fetchData関数の実行結果を待ち受ける
+    if (QueryConst.debugDataBaseLevel > 1) {
+      console.log("Data: get_user_id", result);
+    } // 取得したデータを出力
+    if (result.length <= 0) {
+      return null;
+    }
+    return result[0].isAccessed; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error("Error:", error); // エラーが発生した場合はエラーメッセージを出力
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  }
+}
 // データを取得して戻り値として返す関数
 //Need(Tablename:string),Option(offset:int default 0,limit:int default 100,isDec:boolean default true,sortkey:Decault PrimaryKey(id))
 export async function fetchData(Tablename, ...args) {
@@ -1204,6 +1381,26 @@ export async function selectDataAsc(Tablename, ...args) {
 //###end get recode;
 
 //###Start Delete Item
+//ユーザの削除
+export async function clear_user() {
+  QueryText = QueryConst.DeleteQuery + QueryConst.User.tablename + ";";
+  if (QueryConst.debugDataBaseLevel > 0) {
+    console.log(QueryText);
+  }
+  // SQLクエリを実行してデータベースから要素を削除
+  try {
+    const result = await db.runAsync(QueryText); // fetchData関数の実行結果を待ち受ける
+    if (QueryConst.debugDataBaseLevel > 1) {
+      console.log("Data:", result);
+    } // 取得したデータを出力
+    return result; // 非同期処理の結果を戻り値として返す
+  } catch (error) {
+    console.error("delete data" + error); // エラーが発生した場合はエラーメッセージを出力
+    console.error(QueryText);
+    throw error; // エラーを再度スローする（上位のコードでキャッチされる）
+  }
+}
+
 //削除の実行部分
 async function deleteDataFromDb(QueryText) {
   if (QueryConst.debugDataBaseLevel > 0) {

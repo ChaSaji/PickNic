@@ -1,5 +1,5 @@
 //SQL Funcs
-export const debugDataBaseLevel = 0; //0:No Debug,1:Easy Debug,2:Full Debug;
+export const debugDataBaseLevel = 2; //0:No Debug,1:Easy Debug,2:Full Debug;
 
 export const PassToExcelTemplate = "../../DBtemplate/";
 export const FileExtension = ".xlsx";
@@ -39,6 +39,23 @@ export class RO {
   static LIKE = " LIKE ";
   static IsNull = " IS NULL";
   static Bet = " BETWEEN "; //上級者向け
+}
+
+class UserElementKey {
+  static id = PrimaryKey;
+  static name = "name";
+  static webId = "webId";
+  static isAccessed = "isAccessed";
+}
+export class UserElement {
+  id;
+  name;
+  webId;
+  isAccessed;
+}
+export class User {
+  static tablename = "User";
+  static elementsKey = UserElementKey;
 }
 
 class MealementKey {
@@ -187,6 +204,20 @@ export class Photo {
 
 // IF NOT EXISTS
 // テーブルを作成するクエリ
+export const createTableUser =
+  "CREATE TABLE IF NOT EXISTS " +
+  User.tablename +
+  " (" +
+  User.elementsKey.id +
+  " INTEGER PRIMARY KEY AUTOINCREMENT," +
+  User.elementsKey.webId +
+  " INTEGER," +
+  User.elementsKey.isAccessed +
+  " INTEGER," +
+  User.elementsKey.name +
+  " TEXT" +
+  ");";
+
 export const createTableBadge =
   "CREATE TABLE IF NOT EXISTS " +
   Badge.tablename +

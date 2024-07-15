@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer, DateTime, Boolean, ForeignKey, Column, Float
+from sqlalchemy import String, Integer, DateTime, Boolean, ForeignKey, Column, Float,func
 from sqlalchemy.orm import relationship
 from api.database import Base
 
@@ -57,6 +57,23 @@ class Photo(Base):
     update_date = Column(DateTime)
 
     event = relationship("Event", back_populates="photo")
+
+class MobileUser(Base):
+    __tablename__ = "mobile_users"
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, index=True)
+    created_date = Column(DateTime, default=func.now())
+    updated_date = Column(DateTime, default=func.now(), onupdate=func.now())
+
+class Photo2MobileUser(Base):
+    __tablename__ = "photo2mobileuser"
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    photo_id = Column(Integer, ForeignKey('photos.id'), index=True)
+    user_id = Column(String, ForeignKey('mobile_users.id'), index=True)
+    created_date = Column(DateTime, default=func.now())
+    # リレーションシップの定義（オプション）
+    
 
 # authとの結合時に使うところ
 class User(Base):

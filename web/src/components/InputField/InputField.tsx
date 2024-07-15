@@ -4,8 +4,9 @@ interface PropsType {
   className?: string;
   label: string;
   name: string;
-  size?: "medium" | "large";
+  size?: "small" | "medium" | "large";
   type?: string;
+  step?: number;
   placeholder?: string;
   defaultValue?: string | number;
   disabled?: boolean;
@@ -23,13 +24,21 @@ const InputField = ({
   } = useFormContext();
 
   const labelStyleMap = {
+    small: { fontSize: 15, fontWeight: 500 },
     medium: { fontSize: 15, fontWeight: 500 },
     large: { fontSize: 25, fontWeight: 600 },
   };
 
   const inputStyleMap = {
+    small: {
+      width: 100,
+      height: 20,
+      paddingLeft: 6,
+      paddingRight: 6,
+      fontSize: 15,
+    },
     medium: {
-      width: 200,
+      width: 300,
       height: 20,
       paddingLeft: 6,
       paddingRight: 6,
@@ -47,6 +56,9 @@ const InputField = ({
   const displayStyleMap = {
     row: { alignItems: "center" },
     column: { alignItems: "start" },
+    small: {gap:2},
+    medium: {gap: 2},
+    large: {gap: 10}
   };
 
   return (
@@ -56,7 +68,7 @@ const InputField = ({
         flexDirection: direction,
         alignItems: displayStyleMap[direction].alignItems,
         justifyContent: "space-between",
-        gap: 10,
+        gap: displayStyleMap[size].gap,
       }}
     >
       <div

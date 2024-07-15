@@ -7,7 +7,7 @@ import { Photo, PhotoElement } from "../../lib/databaseQueryText";
 import { insert_item } from "../../lib/dataBaseHelper";
 import { useDbUpdate } from "../../context/DbUpdateContext";
 
-const CameraScreen = ({ navigation }) => {
+const CameraScreen = ({ navigation, route }) => {
   const [status, requestPermission] = useCameraPermissions(null);
   const cameraRef = useRef();
   const { setPicture, setInsertedPhotId } = useCamera();
@@ -29,7 +29,9 @@ const CameraScreen = ({ navigation }) => {
             setInsertedPhotId(id)
           );
           setPhotoUpdate(Date.now);
-          navigation.navigate("Submit");
+          navigation.navigate("Submit", {
+            eventId: route.params.eventId,
+          });
         },
       });
     }

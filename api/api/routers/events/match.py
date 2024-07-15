@@ -7,9 +7,9 @@ import aiofiles
 router=APIRouter()
 
 #テンプレートどうやってもってくる？ランキングは？
-@router.post("/events/{event_id}/uploadfile/")
-async def upload_files(file1: UploadFile = File(...)):
-    contents = await file1.read()
+@router.post("/events/{event_id}/uploadfile")
+async def upload_files(file: UploadFile = File(...)):
+    contents = await file.read()
     # Path to the static file2 in the directory
     file2_path = Path("./banana.jpg")
     
