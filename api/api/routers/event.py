@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 import api.schemes.event as event_schema
 from api.database import get_db
 import api.cruds.event as event_cruds
 from sqlalchemy.orm import Session
 from api.routers.auth import get_current_user
-from api.models.database_models import User
+from api.models.database_models import User, Event
+from sqlalchemy import select
 
 router = APIRouter()
 
@@ -30,15 +31,32 @@ def create_event(event_body: event_schema.EventCreate, current_user: User = Depe
     create_event_data["photo_id"] = db_photo_id
     return event_schema.EventCreateResponse(**create_event_data)
 
+
+
+async def get_event(event_id:int, db:Session = Depends(get_db), current_user: User = Depends(get_current_user)): # <- ここもdependsで持ってきたい
+    # print(event_id)
+    try:
+        print("get organization id...")
+        result = db.execute(select(Event).filter(Event.id == event_id))
+        event = result.scalars().first()
+        event_detail = event_cruds.get_event_detail(event_id, db)
+        if event_detail.organization_id == current_user.organization_id:
+            return event
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/events/{event_id}", response_model=event_schema.EventDetail)
-def read_event(event_id: int, db: Session = Depends(get_db)):
+def read_event(event_id: int, db: Session = Depends(get_db), current_event:Event = Depends(get_event)):
     return event_cruds.get_event_detail(event_id, db)
 
-# NOTE:organization_idをリクエストで受けとる必要がある．
-@router.put("/events/{event_id}/edit", response_model=event_schema.EventUpdateResponse)
-def update_event(event_id: int, event_body: event_schema.EventUpdate, current_user: User = Depends(get_current_user), db: Session=Depends(get_db)):
 
-    db_organization_id = current_user.organization_id
+# event_idでイベント情報を受け取る処理を作って，それのorganization_idとUser.organization_idが一致するかチェックする処理を書けばOK
+@router.put("/events/{event_id}/edit", response_model=event_schema.EventUpdateResponse)
+def update_event(event_id: int, event_body: event_schema.EventUpdate, current_event: Event = Depends(get_event), db: Session=Depends(get_db)):
+
+
+    # db_organization_id = current_user.organization_id
     db_event_id = event_cruds.update_event(db, event_id, event_body)
     db_photo_id = event_cruds.update_photo(db, event_id, event_body)
     db_badge_id = event_cruds.update_badge(db, event_id, event_body)

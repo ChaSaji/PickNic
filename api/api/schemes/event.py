@@ -41,7 +41,10 @@ class Event(EventBase): # Event
 
 class EventDetail(EventDetailBase):
     event_id: int = Field(..., title="イベント番号")
-    pass
+    organization_id: int = Field(..., title="団体番号")
+    class Config:
+        from_attributes = True
+
 class EventCreate(EventDetailBase):
     pass
 class EventUpdate(EventDetailBase):
