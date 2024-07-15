@@ -35,7 +35,7 @@ const WebInitRemindScreen = () => {
       updatedUser.id = 1;
       updatedUser.name = name;
       updatedUser.isAccessed = 1;
-      updatedUser.webId = res.webId;
+      updatedUser.webId = res.id;
       await update_item(User.tablename, updatedUser);
       setIsWebInit(true);
     } catch (error) {
