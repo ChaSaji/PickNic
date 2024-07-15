@@ -16,7 +16,7 @@ def list_events(db:Session=Depends(get_db), current_user: User = Depends(get_cur
 
 @router.post("/events/create", response_model=event_schema.EventCreateResponse) #TODO: 同じ名前のイベントでも複数登録できてしまうので変える必要あります.
 def create_event(event_body: event_schema.EventCreate, current_user: User = Depends(get_current_user), db:Session=Depends(get_db)):
-    db_organization_id = current_user.id
+    db_organization_id = current_user.organization_id
 
     db_event_id = event_cruds.create_event(db, event_body, db_organization_id)
 
