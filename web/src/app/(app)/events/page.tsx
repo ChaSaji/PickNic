@@ -5,8 +5,10 @@ import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import Button from "@/components/Button/Button";
 import { useRouter } from "next/navigation";
 import { Column } from "react-table";
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { fetchAPIWithAuth } from "@/lib/api/helper";
+import { getToken, removeToken } from "@/lib/auth/token";
 
 // 型定義
 type EventData = {
@@ -17,16 +19,19 @@ type EventData = {
   id: string;
 };
 
-
 // columns 配列に型を適用
 const columns: Column<EventData>[] = [
-  { Header: "イベント名", accessor: "event_name" ,
-    Cell:({ row }) => 
-      (
-      <a href={`/events/${row.values.id}`} style={{ textDecoration: "none", color: "blue"}}>
+  {
+    Header: "イベント名",
+    accessor: "event_name",
+    Cell: ({ row }) => (
+      <a
+        href={`/events/${row.values.id}`}
+        style={{ textDecoration: "none", color: "blue" }}
+      >
         {row.values.event_name}
       </a>
-    )
+    ),
   },
   { Header: "開始日", accessor: "start_date" },
   { Header: "終了日", accessor: "end_date" },
@@ -44,13 +49,32 @@ export default function EventListPage() {
     router.push(`/events/create`);
   };
 
+  const handleLogout = async () => {
+    const response = await fetchAPIWithAuth({
+      endpoint: "auth/logout",
+      method: "POST",
+    });
+    removeToken();
+    console.log(response);
+    console.log("token: " + getToken());
+  };
+
+  const handleFetchMe = async () => {
+    const response = await fetchAPIWithAuth({
+      endpoint: "auth/users/me",
+      method: "GET",
+    });
+    console.log(response);
+    console.log("token: " + getToken());
+  };
+
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get('http://localhost:8000/events');
+        const response = await axios.get("http://localhost:8000/events");
         setEvents(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     })();
   }, []);
@@ -127,6 +151,9 @@ export default function EventListPage() {
           })}
         </tbody>
       </table>
+      <Button onClick={handleFetchMe} label="ログイン確認用" />
+      <Button onClick={() => router.push("/login")} label="ログイン用" />
+      <Button onClick={handleLogout} label="ログアウト用" />
     </PageTemplate>
   );
 }
