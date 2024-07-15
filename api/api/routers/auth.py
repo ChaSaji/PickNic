@@ -22,9 +22,9 @@ def register_user(user: UserCreate, db: Session = Depends(get_db), belonged_orga
     db_email = get_user_by_email(db, user.email)
     if db_email:
         raise HTTPException(status_code=400, detail="Email already registered")
-    user = create_user(db, user, belonged_organization.id)
+    user = create_user(db, user, belonged_organization.organization_id)
     return UserResponse(
-        organization_name=belonged_organization.name,
+        organization_name=belonged_organization.organization_name,
         **user.__dict__
     )
 
