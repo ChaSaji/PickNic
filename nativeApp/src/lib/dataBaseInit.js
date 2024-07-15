@@ -1,233 +1,5 @@
 //reset
-export const MaterialPhotoRelation =[
-    {
-        "materialId": 123,
-        "photoId": 555
-    },
-    {
-        "materialId": 456,
-        "photoId": 789
-    },
-    {
-        "materialId": 6,
-        "photoId": 3
-    }
-];
-export const MealStatus =[
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": 0,
-        "cooked": 0
-    },
-    {
-        "locked": null,
-        "cooked": null
-    },
-    {
-        "locked": null,
-        "cooked": null
-    },
-    {
-        "locked": null,
-        "cooked": null
-    }
-];
-export const Badge =[
-    {
-        "name": "\u7d66\u98df",
-        "pass2Photo": "kyushokub",
-        "isHave": 1
-    },
-    {
-        "name": "\u671d\u3054\u306f\u3093",
-        "pass2Photo": "morningb",
-        "isHave": 1
-    },
-    {
-        "name": "\u30a4\u30bf\u30ea\u30a2\u30f3",
-        "pass2Photo": "italyb",
-        "isHave": 1
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 1
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    },
-    {
-        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
-        "pass2Photo": "shizuokab",
-        "isHave": 0
-    }
-];
-export const RecipeDetail =[
-    {
-        "mealId": 1,
-        "materialId": 1,
-        "needNum": 1
-    },
-    {
-        "mealId": 1,
-        "materialId": 3,
-        "needNum": 1
-    },
-    {
-        "mealId": 1,
-        "materialId": 9,
-        "needNum": 2
-    },
-    {
-        "mealId": 1,
-        "materialId": 11,
-        "needNum": 2
-    },
-    {
-        "mealId": 4,
-        "materialId": 11,
-        "needNum": 3
-    },
-    {
-        "mealId": 4,
-        "materialId": 3,
-        "needNum": 1
-    },
-    {
-        "mealId": 4,
-        "materialId": 2,
-        "needNum": 1
-    },
-    {
-        "mealId": 9,
-        "materialId": 4,
-        "needNum": 1
-    },
-    {
-        "mealId": 9,
-        "materialId": 6,
-        "needNum": 3
-    },
-    {
-        "mealId": 9,
-        "materialId": 10,
-        "needNum": 2
-    },
-    {
-        "mealId": 9,
-        "materialId": 13,
-        "needNum": 6
-    },
-    {
-        "mealId": 10,
-        "materialId": 2,
-        "needNum": 2
-    },
-    {
-        "mealId": 10,
-        "materialId": 5,
-        "needNum": 1
-    },
-    {
-        "mealId": 10,
-        "materialId": 7,
-        "needNum": 1
-    },
-    {
-        "mealId": 10,
-        "materialId": 8,
-        "needNum": 3
-    },
-    {
-        "mealId": 10,
-        "materialId": 13,
-        "needNum": 1
-    }
-];
+export const Photo =[];
 export const Material =[
     {
         "name": "\u725b\u8089",
@@ -324,6 +96,154 @@ export const Material =[
         "pass2Photo": "satsumaimo",
         "stock": 2,
         "colorId": 7
+    }
+];
+export const RecipeDetail =[
+    {
+        "mealId": 1,
+        "materialId": 1,
+        "needNum": 1
+    },
+    {
+        "mealId": 1,
+        "materialId": 3,
+        "needNum": 1
+    },
+    {
+        "mealId": 1,
+        "materialId": 9,
+        "needNum": 2
+    },
+    {
+        "mealId": 1,
+        "materialId": 11,
+        "needNum": 2
+    },
+    {
+        "mealId": 4,
+        "materialId": 11,
+        "needNum": 3
+    },
+    {
+        "mealId": 4,
+        "materialId": 3,
+        "needNum": 1
+    },
+    {
+        "mealId": 4,
+        "materialId": 2,
+        "needNum": 1
+    },
+    {
+        "mealId": 9,
+        "materialId": 4,
+        "needNum": 1
+    },
+    {
+        "mealId": 9,
+        "materialId": 6,
+        "needNum": 3
+    },
+    {
+        "mealId": 9,
+        "materialId": 10,
+        "needNum": 2
+    },
+    {
+        "mealId": 9,
+        "materialId": 13,
+        "needNum": 6
+    },
+    {
+        "mealId": 10,
+        "materialId": 2,
+        "needNum": 2
+    },
+    {
+        "mealId": 10,
+        "materialId": 5,
+        "needNum": 1
+    },
+    {
+        "mealId": 10,
+        "materialId": 7,
+        "needNum": 1
+    },
+    {
+        "mealId": 10,
+        "materialId": 8,
+        "needNum": 3
+    },
+    {
+        "mealId": 10,
+        "materialId": 13,
+        "needNum": 1
+    }
+];
+export const MealStatus =[
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": 0,
+        "cooked": 0
+    },
+    {
+        "locked": null,
+        "cooked": null
+    },
+    {
+        "locked": null,
+        "cooked": null
+    },
+    {
+        "locked": null,
+        "cooked": null
     }
 ];
 export const Meal =[
@@ -424,4 +344,91 @@ export const Meal =[
         "name": null
     }
 ];
-export const Photo =[];
+export const User =[
+    {
+        "name": null,
+        "isAccessed": 0,
+        "webId": null
+    }
+];
+export const MaterialPhotoRelation =[
+    {
+        "materialId": 123,
+        "photoId": 555
+    },
+    {
+        "materialId": 456,
+        "photoId": 789
+    },
+    {
+        "materialId": 6,
+        "photoId": 3
+    }
+];
+export const Badge =[
+    {
+        "name": "\u7d66\u98df",
+        "pass2Photo": "kyushokub",
+        "isHave": 1
+    },
+    {
+        "name": "\u671d\u3054\u306f\u3093",
+        "pass2Photo": "morningb",
+        "isHave": 1
+    },
+    {
+        "name": "\u30a4\u30bf\u30ea\u30a2\u30f3",
+        "pass2Photo": "italyb",
+        "isHave": 1
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 1
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    },
+    {
+        "name": "\u9759\u5ca1\u30b0\u30eb\u30e1",
+        "pass2Photo": "shizuokab",
+        "isHave": 0
+    }
+];
