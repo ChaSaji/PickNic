@@ -8,7 +8,6 @@ from api.schemes.auth import User, BelongedOrganization
 from api.cruds.auth import get_user_by_username
 from api.lib.auth.token_utils import decode_access_token, is_token_in_blacklist
 
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):

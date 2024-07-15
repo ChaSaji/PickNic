@@ -6,7 +6,6 @@ import api.cruds.event as event_cruds
 from sqlalchemy.orm import Session
 from api.routers.auth import get_current_user
 from api.models.database_models import User, Event
-from sqlalchemy import select
 from api.dependencies.auth import get_owned_event
 
 router = APIRouter()
@@ -31,21 +30,6 @@ def create_event(event_body: event_schema.EventCreate, current_user: User = Depe
     create_event_data["badge_id"] = db_event_badge
     create_event_data["photo_id"] = db_photo_id
     return event_schema.EventCreateResponse(**create_event_data)
-
-
-
-# async def get_event(event_id:int, db:Session = Depends(get_db), current_user: User = Depends(get_current_user)): # <- ここもdependsで持ってきたい
-#     # print(event_id)
-#     try:
-#         print("get organization id...")
-#         result = db.execute(select(Event).filter(Event.id == event_id))
-#         event = result.scalars().first()
-#         event_detail = event_cruds.get_event_detail(event_id, db)
-#         if event_detail.organization_id == current_user.organization_id:
-#             return event
-
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/events/{event_id}", response_model=event_schema.EventDetail)
 def read_event(owned_event: Event = Depends(get_owned_event)):
