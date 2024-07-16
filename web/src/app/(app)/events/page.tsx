@@ -7,8 +7,7 @@ import { useRouter } from "next/navigation";
 import { Column } from "react-table";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { fetchAPIWithAuth } from "@/lib/api/helper";
-import { getToken, removeToken } from "@/lib/auth/token";
+import { useAuth } from "@/context/AuthContext";
 
 // 型定義
 type EventData = {
@@ -38,6 +37,7 @@ const columns: Column<EventData>[] = [
 ];
 
 export default function EventListPage() {
+  const { logout } = useAuth();
   const [events, setEvents] = useState<EventData[]>([]);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
@@ -49,24 +49,7 @@ export default function EventListPage() {
     router.push(`/events/create`);
   };
 
-  const handleLogout = async () => {
-    const response = await fetchAPIWithAuth({
-      endpoint: "auth/logout",
-      method: "POST",
-    });
-    removeToken();
-    console.log(response);
-    console.log("token: " + getToken());
-  };
-
-  const handleFetchMe = async () => {
-    const response = await fetchAPIWithAuth({
-      endpoint: "auth/users/me",
-      method: "GET",
-    });
-    console.log(response);
-    console.log("token: " + getToken());
-  };
+  const handleLogout = async () => await logout();
 
   useEffect(() => {
     (async () => {
@@ -151,7 +134,6 @@ export default function EventListPage() {
           })}
         </tbody>
       </table>
-      <Button onClick={handleFetchMe} label="ログイン確認用" />
       <Button onClick={() => router.push("/login")} label="ログイン用" />
       <Button onClick={handleLogout} label="ログアウト用" />
     </PageTemplate>

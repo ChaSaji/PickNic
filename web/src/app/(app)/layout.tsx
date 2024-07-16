@@ -1,3 +1,4 @@
+import AuthGuard from "@/components/AuthGuard/AuthGuard";
 import Header from "@/components/Header/Header";
 
 export default function AppLayout({
@@ -6,24 +7,26 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div
-      style={{
-        marginTop: 20,
-        marginRight: 30,
-        marginLeft: 30,
-      }}
-    >
-      <Header />
+    <AuthGuard>
       <div
         style={{
-          display: "flex",
-          paddingTop: 20,
-          paddingRight: 40,
-          paddingLeft: 40,
+          marginTop: 20,
+          marginRight: 30,
+          marginLeft: 30,
         }}
       >
-        {children}
+        <Header />
+        <div
+          style={{
+            display: "flex",
+            paddingTop: 20,
+            paddingRight: 40,
+            paddingLeft: 40,
+          }}
+        >
+          {children}
+        </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }

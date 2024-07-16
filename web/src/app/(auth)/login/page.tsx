@@ -5,27 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchemaType, loginSchema } from "@/schemas/loginSchema";
 import Button from "@/components/Button/Button";
 import InputField from "@/components/InputField/InputField";
-import { postLoginForm } from "@/lib/api/auth";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginPage = () => {
-  const router = useRouter();
+  const { login } = useAuth();
   const formMethods = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
   });
 
-  const handleLogin = async (data: LoginSchemaType) => {
-    const result = await postLoginForm(data);
-
-    if (result.success) {
-      toast.success(result.message);
-      formMethods.reset();
-      router.push("/events");
-    } else {
-      toast.error(result.message);
-    }
-  };
+  const handleLogin = async (data: LoginSchemaType) => await login(data);
 
   return (
     <div
