@@ -1,5 +1,9 @@
+"use client";
+
+import { useAuth } from "@/context/AuthContext";
+
 const Header = () => {
-  const userName = "ユーザー名";
+  const { user } = useAuth();
   return (
     <div
       style={{
@@ -26,7 +30,7 @@ const Header = () => {
           fontWeight: 500,
         }}
       >
-        {userName}
+        {user?.user.name}
       </div>
     </div>
   );
