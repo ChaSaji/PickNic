@@ -7,7 +7,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -22,6 +22,7 @@ const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
       if (!ignore) {
         if (result.success) {
           setIsAuthenticated(true);
+          !user && result.data && setUser(result.data);
         } else {
           setUser(null);
           toast.error(result.message);

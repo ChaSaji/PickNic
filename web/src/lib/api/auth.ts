@@ -65,14 +65,22 @@ export const postLogout = async (): Promise<
   }
 };
 
-export const getMe = async (): Promise<ApiResponse<null>> => {
+export const getMe = async (): Promise<ApiResponse<AuthUser | null>> => {
   try {
     const response = await fetchAPIWithAuth({
       endpoint: "auth/users/me",
       method: "GET",
     });
 
-    return { success: true, message: "セッションが有効です。", data: response };
+    const data = {
+      user: { id: response.id, name: response.username, email: response.email },
+      organization: {
+        id: response.organization_id,
+        name: response.organization_id,
+      },
+    };
+
+    return { success: true, message: "セッションが有効です。", data };
   } catch (error) {
     let userMessage = "エラーが発生しました。";
     if (error instanceof APIError && error.status === 401) {
