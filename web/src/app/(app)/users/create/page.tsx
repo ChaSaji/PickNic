@@ -10,6 +10,7 @@ import { postUserForm } from "@/lib/api/user";
 import { useApiSubmit } from "@/hooks/useApiSubmit";
 import AuthUser from "@/types/user";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function UserCreatePage() {
   const { onApiSubmit, apiResponse } = useApiSubmit<
@@ -19,9 +20,13 @@ export default function UserCreatePage() {
   const formMethods = useForm<userSchemaType>({
     resolver: zodResolver(userSchema),
   });
+  const router = useRouter();
 
   useEffect(() => {
-    if (apiResponse?.success) formMethods.reset();
+    if (apiResponse?.success) {
+      formMethods.reset();
+      router.push("/users");
+    }
   }, [apiResponse]);
 
   return (
@@ -69,6 +74,12 @@ export default function UserCreatePage() {
             />
 
             <Button size="fit" label="登録" />
+            <Button
+              type="button"
+              size="fit"
+              label="キャンセル"
+              onClick={() => router.push("/users")}
+            />
           </form>
         </FormProvider>
       </div>

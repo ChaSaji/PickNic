@@ -1,6 +1,7 @@
 import React from "react";
 
 type PropsType = {
+  type?: "submit" | "button" | "reset";
   label: string;
   onClick?: () => void;
   size?: "medium" | "fit";
