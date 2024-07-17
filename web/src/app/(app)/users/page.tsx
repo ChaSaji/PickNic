@@ -10,7 +10,18 @@ import { getUserList } from "@/lib/api/user";
 import { User } from "@/types/user";
 
 const columns: Column<User>[] = [
-  { Header: "ユーザ名", accessor: "name" },
+  {
+    Header: "ユーザ名",
+    accessor: "name",
+    Cell: ({ row }) => (
+      <a
+        href={`/users/${row.original.id}`}
+        style={{ textDecoration: "none", color: "blue" }}
+      >
+        {row.values.name}
+      </a>
+    ),
+  },
   { Header: "メールアドレス", accessor: "email" },
 ];
 
