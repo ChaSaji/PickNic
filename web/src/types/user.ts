@@ -1,6 +1,7 @@
 export default interface AuthUser {
   user: User;
   organization: Organization;
+  accessToken?: string;
 }
 
 interface User {

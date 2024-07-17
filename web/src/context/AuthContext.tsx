@@ -1,6 +1,7 @@
 "use client";
 
 import { postLoginForm, postLogout } from "@/lib/api/auth";
+import { removeToken, saveToken } from "@/lib/auth/token";
 import { LoginSchemaType } from "@/schemas/loginSchema";
 import AuthUser from "@/types/user";
 import { useRouter } from "next/navigation";
@@ -24,6 +25,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = async (data: LoginSchemaType) => {
     const result = await postLoginForm(data);
+    result.data &&
+      result.data.accessToken &&
+      saveToken(result.data.accessToken);
 
     if (result.success && result.data) {
       toast.success(result.message);
@@ -36,6 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const logout = async () => {
     const result = await postLogout();
+    removeToken();
 
     if (result.success && result.data) {
       toast.success(result.message);

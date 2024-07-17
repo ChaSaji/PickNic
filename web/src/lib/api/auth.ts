@@ -1,5 +1,4 @@
 import { LoginSchemaType } from "@/schemas/loginSchema";
-import { removeToken, saveToken } from "../auth/token";
 import { fetchAPI, fetchAPIWithAuth } from "./helper";
 import { ApiResponse } from "@/types/utils";
 import { APIError } from "./ApiError";
@@ -28,9 +27,9 @@ export const postLoginForm = async ({
         id: response.organization_id,
         name: response.organization_id,
       },
+      accessToken: response.access_token,
     };
 
-    saveToken(response.access_token);
     return { success: true, message: "ログインに成功しました。", data };
   } catch (error) {
     let userMessage = "エラーが発生しました。";
@@ -50,7 +49,6 @@ export const postLogout = async (): Promise<
       method: "POST",
     });
 
-    removeToken();
     return {
       success: true,
       message: "ログアウトに成功しました。",
