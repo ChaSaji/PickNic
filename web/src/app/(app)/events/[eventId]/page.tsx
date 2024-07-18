@@ -9,30 +9,7 @@ import { EventDetail } from "@/types/event";
 import { deleteEvent, getEvent } from "@/lib/api/event";
 import { toast } from "react-toastify";
 import { useApiSubmit } from "@/hooks/useApiSubmit";
-
-type PropsType = {
-  label: string;
-  value: string;
-};
-
-const EventDetailText = (props: PropsType) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        borderBottom: "dashed",
-        marginTop: 10,
-        paddingBottom: 10,
-      }}
-    >
-      <div style={{ display: "flex", fontSize: 20, fontWeight: 600 }}>
-        {props.label}
-      </div>
-      <div style={{ display: "flex", paddingLeft: 20 }}>{props.value}</div>
-    </div>
-  );
-};
+import DetailText from "@/components/DetailText/DetailText";
 
 const EventDetailPage = () => {
   const [event, setEvent] = useState<EventDetail | null>(null);
@@ -93,15 +70,15 @@ const EventDetailPage = () => {
       >
         {event && (
           <>
-            <EventDetailText label="イベント名" value={event.name} />
-            <EventDetailText label="概要" value={event.overview} />
-            <EventDetailText
+            <DetailText label="イベント名" value={event.name} />
+            <DetailText label="概要" value={event.overview} />
+            <DetailText
               label="期間"
               value={`${event.startDate} ~ ${event.endDate}`}
             />
-            <EventDetailText label="バッジ画像" value={event.badgeImg} />
-            <EventDetailText label="撮影対象" value={event.targetImg} />
-            <EventDetailText
+            <DetailText label="バッジ画像" value={event.badgeImg} />
+            <DetailText label="撮影対象" value={event.targetImg} />
+            <DetailText
               label="座標"
               value={`（緯度：${event.latitude}、経度：${event.longitude}）`}
             />

@@ -7,30 +7,7 @@ import { useParams } from "next/navigation";
 import { deleteUser } from "@/lib/api/user";
 import { useApiSubmit } from "@/hooks/useApiSubmit";
 import { useAuth } from "@/context/AuthContext";
-
-type PropsType = {
-  label: string;
-  value: string;
-};
-
-const UserDetailText = (props: PropsType) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        borderBottom: "dashed",
-        marginTop: 10,
-        paddingBottom: 10,
-      }}
-    >
-      <div style={{ display: "flex", fontSize: 20, fontWeight: 600 }}>
-        {props.label}
-      </div>
-      <div style={{ display: "flex", paddingLeft: 20 }}>{props.value}</div>
-    </div>
-  );
-};
+import DetailText from "@/components/DetailText/DetailText";
 
 const MyPage = () => {
   const { user } = useAuth();
@@ -66,9 +43,9 @@ const MyPage = () => {
       >
         {user && (
           <>
-            <UserDetailText label="ユーザID" value={user.user.id} />
-            <UserDetailText label="ユーザ名" value={user.user.name} />
-            <UserDetailText label="メールアドレス" value={user.user.email} />
+            <DetailText label="ユーザID" value={user.user.id} />
+            <DetailText label="ユーザ名" value={user.user.name} />
+            <DetailText label="メールアドレス" value={user.user.email} />
           </>
         )}
       </div>
