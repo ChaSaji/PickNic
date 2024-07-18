@@ -167,3 +167,41 @@ export const putEventForm = async ({
     return { success: false, message: userMessage };
   }
 };
+
+export const deleteEvent = async ({
+  id,
+}: {
+  id: string;
+}): Promise<ApiResponse<Event>> => {
+  try {
+    const response = await fetchAPIWithAuth({
+      endpoint: `events/${id}/delete`,
+      method: "DELETE",
+      headers: {
+        accept: "application/json",
+      },
+    });
+
+    const data = {
+      id: response.event_id,
+      name: response.event_name,
+      startDate: response.start_date,
+      endDate: response.end_date,
+      badgeImg: response.badge_img,
+      badgeName: response.bade_name,
+      overview: response.overview,
+      targetImg: response.target_img,
+      targetName: response.target_name,
+      latitude: response.latitude,
+      longitude: response.longitude,
+    };
+
+    return { success: true, message: "イベント削除に成功しました。", data };
+  } catch (error) {
+    let userMessage = "エラーが発生しました。";
+    if (error instanceof ApiError) {
+      userMessage = error.detail;
+    }
+    return { success: false, message: userMessage };
+  }
+};

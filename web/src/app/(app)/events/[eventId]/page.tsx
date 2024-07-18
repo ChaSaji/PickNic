@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { EventDetail } from "@/types/event";
-import { getEvent } from "@/lib/api/event";
+import { deleteEvent, getEvent } from "@/lib/api/event";
 import { toast } from "react-toastify";
+import { useApiSubmit } from "@/hooks/useApiSubmit";
 
 type PropsType = {
   label: string;
@@ -38,6 +39,7 @@ const EventDetailPage = () => {
   const router = useRouter();
   const params = useParams();
   const eventId = params["eventId"] as string;
+  const { onApiSubmit } = useApiSubmit(deleteEvent);
 
   const handleClickBack = () => {
     router.push(`/events`);
@@ -48,8 +50,11 @@ const EventDetailPage = () => {
   const handleClickEdit = () => {
     router.push(`/events/${eventId}/edit`);
   };
-  const handleClickPublick = () => {
-    console.log("公開する");
+  const handleClickDelete = async () => {
+    const result = await onApiSubmit({ id: eventId });
+    if (result.success) {
+      router.push("/events");
+    }
   };
 
   useEffect(() => {
@@ -73,9 +78,9 @@ const EventDetailPage = () => {
           <Button onClick={handleClickBack} label="戻る" />
         </div>
         <div style={{ display: "flex", gap: 10 }}>
-          <Button onClick={handleClickPictures} label="写真一覧" />
+          <Button onClick={handleClickDelete} label="削除" />
           <Button onClick={handleClickEdit} label="編集" />
-          <Button onClick={handleClickPublick} label="公開する" />
+          <Button onClick={handleClickPictures} label="写真一覧" />
         </div>
       </div>
       <div
