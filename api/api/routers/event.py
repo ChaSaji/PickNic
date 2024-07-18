@@ -52,7 +52,6 @@ def update_event(event_body: event_schema.EventUpdate, db: Session=Depends(get_d
             badge_id= db_badge_id,
             photo_id = db_photo_id,
             event_name=event_body.event_name,
-            organization=event_body.organization,
             start_date=event_body.start_date,
             end_date=event_body.end_date,
             overview=event_body.overview,
