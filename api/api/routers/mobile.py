@@ -17,7 +17,7 @@ from pydantic import BaseModel
 from typing import List
 import api.schemes.event as event_schema
 from fastapi import UploadFile, File
-from api.lib import akaze
+from api.lib.akaze import akaze
 from pathlib import Path
 import aiofiles
 
