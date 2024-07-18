@@ -80,7 +80,7 @@ const Header = () => {
         <MenuItem
           style={{ fontWeight: 600 }}
           onClick={() => {
-            router.push(`/users/${user?.user.id}`);
+            router.push(`/users/me`);
             setAnchorEl(null);
           }}
         >
