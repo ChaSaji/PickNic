@@ -75,7 +75,7 @@ export const postUserForm = async ({
       user: { id: response.id, name: response.username, email: response.email },
       organization: {
         id: response.organization_id,
-        name: response.organization_id,
+        name: response.organization_name,
       },
       accessToken: response.access_token,
     };
