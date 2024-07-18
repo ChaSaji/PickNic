@@ -63,7 +63,10 @@ export default function EventEditPage() {
   return (
     <PageTemplate titleLabel="イベント更新">
       <div style={{ marginBottom: 10 }}>
-        <Button label="戻る" onClick={() => router.push("/events")} />
+        <Button
+          label="戻る"
+          onClick={() => router.push(`/events/${eventId}`)}
+        />
       </div>
       {event && (
         <div
