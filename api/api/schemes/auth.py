@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 class UserBase(BaseModel):
     username: str
@@ -23,6 +23,12 @@ class UserResponse(User):
 
     class Config:
         from_attributes = True
+
+class UsersResponse(BaseModel):
+    users: List[User]
+
+    class Config:
+        orm_mode = True
 
 class BelongedOrganization(User):
     organization_name: str

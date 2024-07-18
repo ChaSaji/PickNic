@@ -1,5 +1,5 @@
 import { getToken } from "../auth/token";
-import { APIError } from "./ApiError";
+import { ApiError } from "./ApiError";
 
 type optionType = {
   endpoint: string;
@@ -45,10 +45,11 @@ export const fetchAPI = async ({
       options
     );
     if (!response.ok) {
-      const errorText = await response.text();
-      const error = new APIError(
-        `HTTP error! status: ${response.status}, response: ${errorText}`,
-        response.status
+      const errorRes = await response.json();
+      const error = new ApiError(
+        `HTTP error! status: ${response.status}`,
+        response.status,
+        errorRes.detail
       );
       throw error;
     }

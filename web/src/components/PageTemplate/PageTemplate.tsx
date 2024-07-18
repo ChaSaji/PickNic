@@ -1,16 +1,25 @@
-import { ReactNode } from "react";
+import { ReactNode, CSSProperties } from "react";
 import Title from "../Title/Title";
 
 type PropsType = {
   children: ReactNode;
   titleLabel: string;
+  style?: CSSProperties;
 };
 
 const PageTemplate = (props: PropsType) => {
   return (
-    <div style={{ width: "100%" }}>
+    <div
+      style={{
+        flex: 1,
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        ...props.style,
+      }}
+    >
       <Title label={props.titleLabel} />
-      {props.children}
+      <div style={{ flex: 1, width: "100%" }}>{props.children}</div>
     </div>
   );
 };
