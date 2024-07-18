@@ -17,7 +17,10 @@ from pydantic import BaseModel
 from typing import List
 import api.schemes.event as event_schema
 from fastapi import UploadFile, File
-from api.lib.convert_colors import convert
+from api.lib import akaze
+from pathlib import Path
+import aiofiles
+
 
 router = APIRouter()
 
@@ -177,5 +180,12 @@ def read_events(event_id:int, db:Session=Depends(get_db)):
 @router.post("/mobile/events/{event_id}/uploadfile")
 async def upload_files(file: UploadFile = File(...)):
     contents = await file.read()
-    ret = convert(contents)
+    # Path to the static file2 in the directory
+    file2_path = Path("./banana.jpg")
+
+    # Read the content of file2 from the directory
+    async with aiofiles.open(file2_path, 'rb') as file2:
+        original = await file2.read()
+
+    ret = akaze(contents,original)
     return {"return":str(ret)}
