@@ -26,7 +26,7 @@ const SubmitScreen = ({ navigation, route }) => {
     try {
       const score = await sendImage({
         uri: picture.uri,
-        endpoint: `events/${eventId}/uploadfile`,
+        endpoint: `mobile/events/${eventId}/uploadfile`,
       });
 
       setLoading(false);
