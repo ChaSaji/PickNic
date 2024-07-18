@@ -1,12 +1,22 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import { Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
 
 const Header = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div
       style={{
@@ -43,7 +53,7 @@ const Header = () => {
         </div>
       </div>
       <div
-        onClick={() => router.push("/users")}
+        onClick={handleClick}
         style={{
           display: "flex",
           fontSize: 24,
@@ -52,11 +62,59 @@ const Header = () => {
           cursor: "pointer",
           alignItems: "center",
           gap: 5,
+          paddingRight: 20,
         }}
       >
         {user?.user.name}
         <FaCaretDown />
       </div>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem
+          style={{ fontWeight: 600 }}
+          onClick={() => {
+            router.push(`/users/${user?.user.id}`);
+            setAnchorEl(null);
+          }}
+        >
+          アカウント
+        </MenuItem>
+        <MenuItem
+          style={{ fontWeight: 600 }}
+          onClick={() => {
+            router.push(`/users`);
+            setAnchorEl(null);
+          }}
+        >
+          組織
+        </MenuItem>
+        <MenuItem
+          style={{ fontWeight: 600 }}
+          onClick={() => {
+            router.push(`/events`);
+
+            setAnchorEl(null);
+          }}
+        >
+          イベント
+        </MenuItem>
+        <MenuItem
+          style={{ fontWeight: 600 }}
+          onClick={() => {
+            logout();
+            setAnchorEl(null);
+          }}
+        >
+          ログアウト
+        </MenuItem>
+      </Menu>
     </div>
   );
 };
