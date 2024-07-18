@@ -10,11 +10,17 @@ from datetime import timedelta
 from api.models.database_models import Base
 from api.schemes.mobile import MobileCreate, MobileUpdate, Mobile,MobileIdAsk
 from api.schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
-from api.cruds.mobile import get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name
+from api.cruds.mobile import get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name, get_event_list_for_mobile, get_event_detail_for_mobile
 from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id
 from api.database import engine, get_db
 from pydantic import BaseModel
 from typing import List
+import api.schemes.event as event_schema
+from fastapi import UploadFile, File
+from api.lib.akaze import akaze
+from pathlib import Path
+import aiofiles
+
 
 router = APIRouter()
 
@@ -40,13 +46,6 @@ def register_user(db: Session = Depends(get_db)):
     userlist=get_mobile_user_all(db)
     return userlist
 
-
-@router.post("/mobile/user/", response_model=Mobile)
-def create_user(mobileuser: MobileIdAsk, db: Session = Depends(get_db)):
-    mobile_user = get_mobile_user_by_Id(db,mobileuser.id)
-    if mobile_user is None:
-         raise HTTPException(status_code=404, detail="User not found")
-    return mobile_user 
 
 @router.post("/mobile/user/", response_model=Mobile)
 def create_user(mobileuser: MobileIdAsk, db: Session = Depends(get_db)):
@@ -169,3 +168,24 @@ async def create_user(num: NumberData,db: Session = Depends(get_db)):
         message="No Operation, (C,R,U,R)=(0,1,2,3)"
         print(message)
     return {"received_number": num.number,"message":message}
+
+@router.get("/mobile/events", response_model=List[event_schema.Event])
+def list_events(db:Session=Depends(get_db)):
+    return get_event_list_for_mobile(db)
+
+@router.get("/mobile/events/{event_id}", response_model=event_schema.EventDetail)
+def read_events(event_id:int, db:Session=Depends(get_db)):
+    return get_event_detail_for_mobile(db, event_id)
+
+@router.post("/mobile/events/{event_id}/uploadfile")
+async def upload_files(file: UploadFile = File(...)):
+    contents = await file.read()
+    # Path to the static file2 in the directory
+    file2_path = Path("./banana.jpg")
+
+    # Read the content of file2 from the directory
+    async with aiofiles.open(file2_path, 'rb') as file2:
+        original = await file2.read()
+
+    ret = akaze(contents,original)
+    return {"return":str(ret)}

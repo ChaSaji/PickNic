@@ -4,7 +4,11 @@ from sqlalchemy.orm import Session
 from api.models.database_models import MobileUser
 from api.schemes.mobile import MobileCreate,MobileUpdate,MobileCommit,Mobile
 from api.lib.auth.auth_utils import get_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
+import api.models.database_models as event_model
+import api.schemes.event as event_schema
+import api.cruds.event as event_cruds
+from fastapi import HTTPException
 
 def get_mobile_user_all(db: Session):
     return db.query(MobileUser).all()
@@ -59,3 +63,28 @@ def delete_mobile_user_by_name(db: Session, user_name: str):
         db.delete(user)
     db.commit()
     return db_users
+
+def get_event_list_for_mobile(db: Session):
+
+    print("Get event List...")
+    current_time = datetime.now()
+    end_time = current_time + timedelta(days=10)
+    result = db.query(event_model.Event).filter(event_model.Event.end_date <= end_time)
+    events = result.all()
+
+    event_list = [event_schema.Event(
+        event_id=event.id,
+        event_name=event.event_name,
+        organization=event.organization.name,
+        start_date=event.start_date,
+        end_date=event.end_date
+    ) for event in events]
+
+    return event_list
+
+def get_event_detail_for_mobile(db: Session, event_id:int):
+    event_detail = event_cruds.get_event_detail(event_id, db)
+    if event_detail is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return event_detail
+
