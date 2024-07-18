@@ -32,8 +32,9 @@ export const eventSchema = z
     }),
   })
   .refine((data) => data.startDate <= data.endDate, {
-    path: ["startTerm"],
+    path: ["startDate"],
     message: "開始日は終了日より前である必要があります",
   });
 
 export type eventSchemaType = z.infer<typeof eventSchema>;
+export type eventPutSchemaType = { id: string; body: eventSchemaType };
