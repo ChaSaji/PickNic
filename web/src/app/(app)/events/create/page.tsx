@@ -14,6 +14,7 @@ import { Event } from "@/types/event";
 import { postEventForm } from "@/lib/api/event";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Button from "@/components/Button/Button";
 
 export default function App() {
   const { onApiSubmit, apiResponse } = useApiSubmit<eventSchemaType, Event>(
@@ -34,45 +35,59 @@ export default function App() {
 
   return (
     <PageTemplate titleLabel="イベント登録">
-      <FormProvider {...formMethods}>
-        <form onSubmit={formMethods.handleSubmit(onApiSubmit)}>
-          <InputField
-            size="medium"
-            direction="column"
-            name={"name"}
-            label={"イベント名"}
-            placeholder={"ぴくにく祭"}
-          />
+      <div style={{ marginBottom: 10 }}>
+        <Button label="戻る" onClick={() => router.push("/events")} />
+      </div>
 
-          <InputDescriptionField descriptionTag="overview" />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <FormProvider {...formMethods}>
+          <form
+            style={{ width: 400 }}
+            onSubmit={formMethods.handleSubmit(onApiSubmit)}
+          >
+            <InputField
+              size="medium"
+              direction="column"
+              name={"name"}
+              label={"イベント名"}
+              placeholder={"ぴくにく祭"}
+            />
 
-          <InputDateField
-            startDateTitle="開始日"
-            startDateTag="startDate"
-            endDateTitle="終了日"
-            endDateTag="endDate"
-          />
+            <InputDescriptionField descriptionTag="overview" />
 
-          <InputCoordinateField
-            latitudeTag="latitude"
-            longitudeTag="longitude"
-          />
+            <InputDateField
+              startDateTitle="開始日"
+              startDateTag="startDate"
+              endDateTitle="終了日"
+              endDateTag="endDate"
+            />
 
-          <InputFileField
-            title="バッジ画像"
-            imageTag="badgeImg"
-            nameTag="badgeName"
-          />
+            <InputCoordinateField
+              latitudeTag="latitude"
+              longitudeTag="longitude"
+            />
 
-          <InputFileField
-            title="撮影対象画像"
-            imageTag="targetImg"
-            nameTag="targetName"
-          />
+            <InputFileField
+              title="バッジ画像"
+              imageTag="badgeImg"
+              nameTag="badgeName"
+            />
 
-          <input type="submit" value="登録" />
-        </form>
-      </FormProvider>
+            <InputFileField
+              title="撮影対象画像"
+              imageTag="targetImg"
+              nameTag="targetName"
+            />
+
+            <input type="submit" value="登録" />
+          </form>
+        </FormProvider>
+      </div>
     </PageTemplate>
   );
 }
