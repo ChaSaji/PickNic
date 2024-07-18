@@ -4,27 +4,14 @@ import Button from "@/components/Button/Button";
 import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { EventDetail } from "@/types/event";
+import { getEvent } from "@/lib/api/event";
+import { toast } from "react-toastify";
 
 type PropsType = {
   label: string;
   value: string;
-};
-
-// 型定義
-type EventData = {
-  event_name: string;
-  organizer: string;
-  start_date: string;
-  end_date: string;
-  overview: string;
-  badge_img: string;
-  target_img: string;
-  target_name: string;
-  latitude: number;
-  longitude: number;
-  id: number;
 };
 
 const EventDetailText = (props: PropsType) => {
@@ -47,12 +34,14 @@ const EventDetailText = (props: PropsType) => {
 };
 
 const EventDetailPage = () => {
-  const [event, setItems] = useState<EventData | null>(null);
+  const [event, setEvent] = useState<EventDetail | null>(null);
   const router = useRouter();
   const params = useParams();
-  const eventId = params["eventId"];
+  const eventId = params["eventId"] as string;
 
-
+  const handleClickBack = () => {
+    router.push(`/events`);
+  };
   const handleClickPictures = () => {
     router.push(`/events/${eventId}/pictures`);
   };
@@ -66,20 +55,28 @@ const EventDetailPage = () => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/events/${eventId}`);
-        setItems(response.data);
+        const result = await getEvent({ eventId: eventId });
+        result.data && setEvent(result.data);
+        if (!result.success) {
+          toast.error(result.message);
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        toast.error("Error fetching data:");
       }
     })();
   }, []);
 
   return (
     <PageTemplate titleLabel="イベント詳細">
-      <div style={{ display: "flex", justifyContent: "end", gap: 10 }}>
-        <Button onClick={handleClickPictures} label="写真一覧" />
-        <Button onClick={handleClickEdit} label="編集" />
-        <Button onClick={handleClickPublick} label="公開する" />
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div>
+          <Button onClick={handleClickBack} label="戻る" />
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          <Button onClick={handleClickPictures} label="写真一覧" />
+          <Button onClick={handleClickEdit} label="編集" />
+          <Button onClick={handleClickPublick} label="公開する" />
+        </div>
       </div>
       <div
         style={{
@@ -88,22 +85,23 @@ const EventDetailPage = () => {
           padding: 20,
           gap: 10,
         }}
-      >{event && (
-        <>
-        <EventDetailText label="イベント名" value={event.event_name} />
-        <EventDetailText label="概要" value={event.overview} />
-        <EventDetailText
-          label="期間"
-          value={`${event.start_date} ~ ${event.end_date}`}
-        />
-        <EventDetailText label="バッジ画像" value={event.badge_img} />
-        <EventDetailText label="撮影対象" value={event.target_img} />
-        <EventDetailText
-          label="座標"
-          value={`（緯度：${event.latitude}、経度：${event.longitude}）`}
-        />
-        </>
-      )}
+      >
+        {event && (
+          <>
+            <EventDetailText label="イベント名" value={event.name} />
+            <EventDetailText label="概要" value={event.overview} />
+            <EventDetailText
+              label="期間"
+              value={`${event.startDate} ~ ${event.endDate}`}
+            />
+            <EventDetailText label="バッジ画像" value={event.badgeImg} />
+            <EventDetailText label="撮影対象" value={event.targetImg} />
+            <EventDetailText
+              label="座標"
+              value={`（緯度：${event.latitude}、経度：${event.longitude}）`}
+            />
+          </>
+        )}
       </div>
     </PageTemplate>
   );
