@@ -24,7 +24,8 @@ def create_photo2Mobile(db: Session, newItem: Photo2UserCreate):
     #print("create:",new_id,user)
     db_user = Photo2MobileUser(
         photo_id=newItem.photo_id,
-        user_id=newItem.user_id
+        user_id=newItem.user_id,
+        score=newItem.score
     )
     #print("add")
     db.add(db_user)
@@ -40,6 +41,7 @@ def update_photo2Mobile_Relation_by_id(db: Session, UpdateItem:Photo2UserUpdate)
     if db_user:
         db_user.user_id = UpdateItem.user_id
         db_user.photo_id = UpdateItem.photo_id
+        db_user.score = UpdateItem.score
             
         db.commit()
         db.refresh(db_user)
@@ -69,3 +71,11 @@ def delete_photo2mobile_by_photo_id(db: Session, photo_id: int):
         db.delete(user)
     db.commit()
     return db_users
+
+
+def get_potho_ranking(db: Session, event_id:int):
+    print(event_id)
+    print(db.query(Photo.id,Photo2MobileUser.user_id,Photo2MobileUser.score).filter(Photo.event_id == event_id).all())
+    rankings=db.query(Photo.id,Photo2MobileUser.user_id,Photo2MobileUser.score).filter(Photo.event_id == event_id).join(Photo2MobileUser,Photo.id == Photo2MobileUser.photo_id).order_by(Photo2MobileUser.score.desc()).limit(10).all()
+    #print("db####")
+    return rankings

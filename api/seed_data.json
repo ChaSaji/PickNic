@@ -103,6 +103,61 @@
         "longitude": 212.12,
         "create_date": "2023-01-01T02:00:00",
         "update_date": "2023-01-01T02:00:00"
+      },
+      {
+        "id": 3,
+        "event_id": 3,
+        "pass_2_photo": "path/to/photo2",
+        "latitude": 22.2222,
+        "longitude": 212.12,
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-01T02:00:00"
+      }
+
+    ]
+  },
+  {
+    "model":"api.models.database_models.Photo2MobileUser",
+    "data":[
+      {
+        "photo_id":1,
+        "user_id":"a",
+        "score":100
+      },
+      {
+        "photo_id":1,
+        "user_id":"b",
+        "score":99
+      },
+      {
+        "photo_id":1,
+        "user_id":"c",
+        "score":98
+      },
+      {
+        "photo_id":1,
+        "user_id":"d",
+        "score":97
+      },
+      {
+        "photo_id":1,
+        "user_id":"a",
+        "score":96
+      },
+      {
+        "photo_id":2,
+        "user_id":"b",
+        "score":96
+      },
+      {
+        "photo_id":2,
+        "user_id":"c",
+        "score":30
+      },
+      {
+        "photo_id":2,
+        "user_id":"d",
+        "score":43
       }
     ]
   }
