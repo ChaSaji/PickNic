@@ -1,14 +1,14 @@
 # crud.py
 from sqlalchemy.orm import Session
 #from api.models.mobile import MobileUser
-from api.models.database_models import MobileUser
+from api.models.database_models import MobileUser, Photo2MobileUser
 from api.schemes.mobile import MobileCreate,MobileUpdate,MobileCommit,Mobile
 from api.lib.auth.auth_utils import get_password_hash
 from datetime import datetime, timedelta
 import api.models.database_models as event_model
 import api.schemes.event as event_schema
 import api.cruds.event as event_cruds
-from fastapi import HTTPException
+from fastapi import HTTPException, File
 
 def get_mobile_user_all(db: Session):
     return db.query(MobileUser).all()
