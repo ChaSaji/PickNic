@@ -175,10 +175,10 @@ def read_events(event_id:int, db:Session=Depends(get_db)):
     return get_event_detail_for_mobile(db, event_id)
 
 @router.post("/mobile/events/{event_id}/uploadfile")
-async def upload_files(db:Session = Depends(get_db), file: UploadFile = File(...), x_user_id: int = Header(...)):
+async def upload_files(db:Session = Depends(get_db), file: UploadFile = File(...), x_user_id: str = Header(...)):
     contents = await file.read()
 
-    path = update_user_photo(db, contents, file, x_user_id)
+    path = update_user_photo(db, contents, x_user_id)
     print(path)
     # Path to the static file2 in the directory
     file2_path = Path("./banana.jpg")
