@@ -11,7 +11,7 @@ from api.models.database_models import Base
 from api.schemes.mobile import MobileCreate, MobileUpdate, Mobile,MobileIdAsk
 from api.schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
 from api.cruds.mobile import get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name, get_event_list_for_mobile, get_event_detail_for_mobile
-from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id
+from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id,get_potho_ranking
 from api.database import engine, get_db
 from pydantic import BaseModel
 from typing import List
@@ -189,3 +189,18 @@ async def upload_files(file: UploadFile = File(...)):
 
     ret = akaze(contents,original)
     return {"return":str(ret)}
+
+class PhotoRankingModel(BaseModel):
+    user_id: int
+    score: int
+
+@router.post("/mobile/events/{event_id}/photo_ranking")
+def upload_files(event_id:int, db:Session=Depends(get_db)):
+    rankings=get_potho_ranking(db,event_id)
+    print(rankings)
+    #if not rankings:
+        #raise HTTPException(status_code=404, detail="No rankings found for this event")
+        # Pydanticモデルに変換
+    # 2列目を"user_id"、3列目を"score"としてリストを辞書に変換
+    json_data = [{"user_id": user_id, "score": score} for _, user_id, score in rankings]
+    return json_data

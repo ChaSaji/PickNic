@@ -69,6 +69,3 @@ def update_event(event_body: event_schema.EventUpdate, db: Session=Depends(get_d
 @router.delete("/events/{event_id}/delete", response_model=None)
 def delete_event(db: Session=Depends(get_db), owned_event: Event = Depends(get_owned_event)):
     return event_cruds.delete_event(db, owned_event.event_id, owned_event.organization_id)
-
-
-
