@@ -74,8 +74,11 @@ def delete_photo2mobile_by_photo_id(db: Session, photo_id: int):
 
 
 def get_potho_ranking(db: Session, event_id:int):
-    print(event_id)
-    print(db.query(Photo.id,Photo2MobileUser.user_id,Photo2MobileUser.score).filter(Photo.event_id == event_id).all())
-    rankings=db.query(Photo.id,Photo2MobileUser.user_id,Photo2MobileUser.score).filter(Photo.event_id == event_id).join(Photo2MobileUser,Photo.id == Photo2MobileUser.photo_id).order_by(Photo2MobileUser.score.desc()).limit(10).all()
-    #print("db####")
+    rankings=(db.query(Photo.id,Photo2MobileUser.user_id,Photo2MobileUser.score, MobileUser.name)
+              .filter(Photo.event_id == event_id)
+              .join(Photo2MobileUser,Photo.id == Photo2MobileUser.photo_id)
+              .join(MobileUser, Photo2MobileUser.user_id == MobileUser.id)
+              .order_by(Photo2MobileUser.score.desc())
+              .limit(10)
+              .all())
     return rankings

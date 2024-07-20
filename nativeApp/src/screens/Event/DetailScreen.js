@@ -37,6 +37,13 @@ const DetailScreen = ({ route, navigation }) => {
     });
   };
 
+  const handleNavigateRanking = () => {
+    navigation.navigate("Ranking", {
+      eventId: eventId,
+      eventName: event.event_name,
+    });
+  };
+
   if (!event) return;
 
   return (
@@ -54,7 +61,14 @@ const DetailScreen = ({ route, navigation }) => {
         <Text style={styles.overview}>{event.overview}</Text>
       </View>
 
-      <MyButton onPress={handleNavigation} label={"探す"} />
+      <View style={styles.buttonContainer}>
+        <MyButton onPress={handleNavigation} label={"探す"} />
+        <MyButton
+          onPress={handleNavigateRanking}
+          label={"ランキング"}
+          fontSize={30}
+        />
+      </View>
     </View>
   );
 };
@@ -68,7 +82,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6F6C7",
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 10,
     alignItems: "center",
   },
   title: {
@@ -94,6 +108,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlign: "center",
     paddingHorizontal: 20,
+  },
+  buttonContainer: {
+    display: "flex",
+    gap: 10,
   },
 });
 export default DetailScreen;
