@@ -1,52 +1,21 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import getImageSource from "../../lib/images";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { getEventRanking } from "../../lib/api/event";
 
 const RankingScreen = ({ navigation, route }) => {
-  const users = [
-    {
-      name: "test-user",
-      score: 10,
-    },
-    {
-      name: "test-user",
-      score: 10,
-    },
-    {
-      name: "あかさたなはまやらわ",
-      score: 100,
-    },
-    {
-      name: "test-user",
-      score: 10,
-    },
-    {
-      name: "test-user",
-      score: 10,
-    },
-    {
-      name: "test-user",
-      score: 10,
-    },
-    {
-      name: "test-user",
-      score: 10,
-    },
-    {
-      name: "test-user",
-      score: 10,
-    },
-    {
-      name: "test-user",
-      score: 10,
-    },
-    {
-      name: "test-user",
-      score: 10,
-    },
-  ];
-
+  const [ranking, setRanking] = useState([]);
+  const eventId = route.params.eventId;
   const pass2PhotoMap = ["gold", "silver", "bronze"];
+
+  useEffect(() => {
+    (async () => {
+      if (!eventId) return;
+      const data = await getEventRanking(eventId);
+      console.log(data);
+      setRanking(data);
+    })();
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -57,7 +26,7 @@ const RankingScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {users.map((user, index) => (
+        {ranking.map((value, index) => (
           <View key={index} style={styles.cardContainer}>
             {index < 3 ? (
               <Image
@@ -71,8 +40,8 @@ const RankingScreen = ({ navigation, route }) => {
               </View>
             )}
             <View style={styles.textContainer}>
-              <Text style={styles.name}>{user.name}</Text>
-              <Text style={styles.score}>{user.score + "点"}</Text>
+              <Text style={styles.name}>{value.name}</Text>
+              <Text style={styles.score}>{value.score + "点"}</Text>
             </View>
           </View>
         ))}
