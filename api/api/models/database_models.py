@@ -72,6 +72,7 @@ class Photo2MobileUser(Base):
     photo_id = Column(Integer, ForeignKey('photos.id'), index=True)
     user_id = Column(String, ForeignKey('mobile_users.id'), index=True)
     created_date = Column(DateTime, default=func.now())
+    score = Column(Integer,index=True)
     # リレーションシップの定義（オプション）
     
 

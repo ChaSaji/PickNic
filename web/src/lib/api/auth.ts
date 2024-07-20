@@ -1,7 +1,7 @@
 import { LoginSchemaType } from "@/schemas/loginSchema";
 import { fetchAPI, fetchAPIWithAuth } from "./helper";
 import { ApiResponse } from "@/types/utils";
-import { APIError } from "./ApiError";
+import { ApiError } from "./ApiError";
 import AuthUser from "@/types/user";
 
 export const postLoginForm = async ({
@@ -25,7 +25,7 @@ export const postLoginForm = async ({
       user: { id: response.id, name: response.username, email: response.email },
       organization: {
         id: response.organization_id,
-        name: response.organization_id,
+        name: response.organization_name,
       },
       accessToken: response.access_token,
     };
@@ -33,7 +33,7 @@ export const postLoginForm = async ({
     return { success: true, message: "ログインに成功しました。", data };
   } catch (error) {
     let userMessage = "エラーが発生しました。";
-    if (error instanceof APIError && error.status === 401) {
+    if (error instanceof ApiError && error.status === 401) {
       userMessage = "メールアドレスあるいはパスワードが正しくありません。";
     }
     return { success: false, message: userMessage };
@@ -56,7 +56,7 @@ export const postLogout = async (): Promise<
     };
   } catch (error) {
     let userMessage = "エラーが発生しました。";
-    if (error instanceof APIError && error.status === 401) {
+    if (error instanceof ApiError && error.status === 401) {
       userMessage = "ログアウトに失敗しました。";
     }
     return { success: false, message: userMessage };
@@ -74,14 +74,14 @@ export const getMe = async (): Promise<ApiResponse<AuthUser | null>> => {
       user: { id: response.id, name: response.username, email: response.email },
       organization: {
         id: response.organization_id,
-        name: response.organization_id,
+        name: response.organization_name,
       },
     };
 
     return { success: true, message: "セッションが有効です。", data };
   } catch (error) {
     let userMessage = "エラーが発生しました。";
-    if (error instanceof APIError && error.status === 401) {
+    if (error instanceof ApiError && error.status === 401) {
       userMessage = "セッションが無効です。";
     }
     return { success: false, message: userMessage };

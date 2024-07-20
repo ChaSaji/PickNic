@@ -10,6 +10,12 @@ def get_user_by_username(db: Session, username: str):
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
+def get_user_by_id(db: Session, id: str):
+    return db.query(User).filter(User.id == id).first()
+
+def get_user_list_by_organization_id(db: Session, organization_id: str):
+    return db.query(User).filter(User.organization_id == organization_id).all()
+
 def create_user(db: Session, user: UserCreate, organization_id: int):
     db_user = User(
         username=user.username,

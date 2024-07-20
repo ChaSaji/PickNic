@@ -5,19 +5,21 @@ from sqlalchemy.orm import Session
 from sqlalchemy import inspect
 from jose import JWTError, jwt
 from api.models.database_models import Base
-from api.schemes.mobile import MobileCreate, MobileUpdate, Mobile,MobileIdAsk
+from api.schemes.mobile import MobileCreate, MobileUpdate, Mobile,MobileIdAsk,Upload_file
 from api.schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
-from api.cruds.mobile import get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name, get_event_list_for_mobile, get_event_detail_for_mobile
-from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id, update_user_photo
+from api.cruds.mobile import get_event_photo_by_id,get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name, get_event_list_for_mobile, get_event_detail_for_mobile
+from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id,get_potho_ranking, update_user_photo
 from api.database import engine, get_db
 from pydantic import BaseModel
 from typing import List, Union
 import api.schemes.event as event_schema
-from fastapi import UploadFile, File
+from fastapi import File,UploadFile,Form
 from api.lib.akaze import akaze
 from pathlib import Path
 import aiofiles
+import math
 
+dist_limit=100
 
 router = APIRouter()
 
@@ -31,6 +33,28 @@ if not inspector.has_table(table_name):
     print(f"Table '{table_name}' has been created.")
 else:
     print(f"Table '{table_name}' already exists.")
+
+#距離の計算(m)で回答
+def calc_distance(lat1, lon1, lat2, lon2):
+        # 地球の半径 (キロメートル)
+    R = 6371.0
+
+    # 緯度と経度をラジアンに変換
+    lat1_rad = math.radians(lat1)
+    lon1_rad = math.radians(lon1)
+    lat2_rad = math.radians(lat2)
+    lon2_rad = math.radians(lon2)
+
+    # ハバーサイン公式
+    dlat = lat2_rad - lat1_rad
+    dlon = lon2_rad - lon1_rad
+    a = math.sin(dlat / 2)**2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon / 2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    # 距離の計算(mに変換)
+    distance = R * c * 1000
+
+    return distance
 
 @router.post("/mobile/create_user/", response_model=Mobile)
 def register_user(user: MobileCreate, db: Session = Depends(get_db)):
@@ -175,7 +199,7 @@ def read_events(event_id:int, db:Session=Depends(get_db)):
     return get_event_detail_for_mobile(db, event_id)
 
 @router.post("/mobile/events/{event_id}/uploadfile")
-async def upload_files(db:Session = Depends(get_db), file: UploadFile = File(...), x_user_id: str = Header(...)):
+async def upload_files(event_id: int,db:Session = Depends(get_db), file: UploadFile = File(...),latitude:float=Form(...),longitude:float=Form(...), x_user_id: str = Header(...)):
     contents = await file.read()
 
     path = update_user_photo(db, contents, x_user_id)
@@ -186,6 +210,29 @@ async def upload_files(db:Session = Depends(get_db), file: UploadFile = File(...
     # Read the content of file2 from the directory
     async with aiofiles.open(file2_path, 'rb') as file2:
         original = await file2.read()
-
-    ret = akaze(contents,original)
+    #position={1,2}
+    #print("(lat,log),",latitude,longitude)
+    pos=get_event_photo_by_id(db=db,event_id=event_id)
+    dist=calc_distance(lat1=pos.latitude,lat2=latitude,lon1=pos.longitude,lon2=longitude)
+    #print(dist)
+    ret=None
+    if (dist>=dist_limit):
+        ret=0
+    else:
+        ret = akaze(contents,original)
     return {"return":str(ret)}
+
+class PhotoRankingModel(BaseModel):
+    user_id: int
+    score: int
+
+@router.post("/mobile/events/{event_id}/photo_ranking")
+def upload_files(event_id:int, db:Session=Depends(get_db)):
+    rankings=get_potho_ranking(db,event_id)
+    print(rankings)
+    #if not rankings:
+        #raise HTTPException(status_code=404, detail="No rankings found for this event")
+        # Pydanticモデルに変換
+    # 2列目を"user_id"、3列目を"score"としてリストを辞書に変換
+    json_data = [{"user_id": user_id, "user_name": user_name,"score": score} for _, user_id, score, user_name in rankings]
+    return json_data

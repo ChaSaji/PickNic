@@ -2,7 +2,7 @@ import { formatDate } from "../util/dateFormatter";
 import { fetchAPI } from "./helper";
 
 export const getEvents = async () => {
-  const data = await fetchAPI({ endpoint: "events" });
+  const data = await fetchAPI({ endpoint: "mobile/events" });
   const eventData = data.map((event) => {
     return {
       id: event.event_id,
@@ -17,7 +17,7 @@ export const getEvents = async () => {
 };
 
 export const getEventDetail = async (eventId) => {
-  const data = await fetchAPI({ endpoint: `events/${eventId}` });
+  const data = await fetchAPI({ endpoint: `mobile/events/${eventId}` });
   const eventData = {
     id: data.id,
     name: data.event_name,
@@ -33,4 +33,17 @@ export const getEventDetail = async (eventId) => {
   };
 
   return eventData;
+};
+
+export const getEventRanking = async (eventId) => {
+  const data = await fetchAPI({
+    method: "POST",
+    endpoint: `mobile/events/${eventId}/photo_ranking`,
+  });
+  const rankingData = data.map((value) => ({
+    name: value.user_name,
+    score: value.score,
+  }));
+
+  return rankingData;
 };

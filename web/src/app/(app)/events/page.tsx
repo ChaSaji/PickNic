@@ -6,39 +6,30 @@ import Button from "@/components/Button/Button";
 import { useRouter } from "next/navigation";
 import { Column } from "react-table";
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { useAuth } from "@/context/AuthContext";
-
-// 型定義
-type EventData = {
-  event_name: string;
-  organizer: string;
-  start_date: string;
-  end_date: string;
-  id: string;
-};
+import { Event } from "@/types/event";
+import { getEventList } from "@/lib/api/event";
+import { toast } from "react-toastify";
 
 // columns 配列に型を適用
-const columns: Column<EventData>[] = [
+const columns: Column<Event>[] = [
   {
     Header: "イベント名",
-    accessor: "event_name",
+    accessor: "name",
     Cell: ({ row }) => (
       <a
-        href={`/events/${row.values.id}`}
+        href={`/events/${row.original.id}`}
         style={{ textDecoration: "none", color: "blue" }}
       >
-        {row.values.event_name}
+        {row.values.name}
       </a>
     ),
   },
-  { Header: "開始日", accessor: "start_date" },
-  { Header: "終了日", accessor: "end_date" },
+  { Header: "開始日", accessor: "startDate" },
+  { Header: "終了日", accessor: "endDate" },
 ];
 
 export default function EventListPage() {
-  const { logout } = useAuth();
-  const [events, setEvents] = useState<EventData[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
@@ -49,15 +40,12 @@ export default function EventListPage() {
     router.push(`/events/create`);
   };
 
-  const handleLogout = async () => await logout();
-
   useEffect(() => {
     (async () => {
-      try {
-        const response = await axios.get("http://localhost:8000/events");
-        setEvents(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      const result = await getEventList();
+      result.data && setEvents(result.data);
+      if (!result.success) {
+        toast.error(result.message);
       }
     })();
   }, []);
@@ -134,8 +122,6 @@ export default function EventListPage() {
           })}
         </tbody>
       </table>
-      <Button onClick={() => router.push("/login")} label="ログイン用" />
-      <Button onClick={handleLogout} label="ログアウト用" />
     </PageTemplate>
   );
 }

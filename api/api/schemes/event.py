@@ -4,7 +4,6 @@ from datetime import datetime
 
 class EventBase(BaseModel):
     event_name: str = Field(..., title="イベント名")
-    organization: str = Field(..., title="主催団体")
     start_date: datetime = Field(..., title="開始日")
     end_date: datetime = Field(..., title="終了日")
 
