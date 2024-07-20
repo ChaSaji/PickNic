@@ -1,7 +1,7 @@
 # crud.py
 from sqlalchemy.orm import Session
 #from api.models.mobile import MobileUser
-from api.models.database_models import MobileUser,Photo2MobileUser,Photo
+from api.models.database_models import MobileUser,Photo, Event
 from api.schemes.mobile import MobileCreate,MobileUpdate
 from api.lib.auth.auth_utils import get_password_hash
 from datetime import datetime, timedelta
@@ -16,6 +16,13 @@ def get_mobile_user_all(db: Session):
 def get_mobile_user_by_Id(db: Session, id: str):
     print("get_user_by_username In crud.py",id)
     return db.query(MobileUser).filter(MobileUser.id == id).first()
+
+def get_event_photo_by_id(db: Session, event_id:int):
+    event = db.query(Event).filter(Event.id==event_id).first()
+    if not event:
+        return 0
+    photo = db.query(Photo.latitude,Photo.longitude).filter(Photo.id==event.id).first()
+    return photo
 
 def create_mobile_user(db: Session, user: MobileCreate):
     
