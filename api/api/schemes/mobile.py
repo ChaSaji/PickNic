@@ -1,7 +1,7 @@
 # schemas.py
 from pydantic import BaseModel
 from typing import Optional
-
+from fastapi import UploadFile
 class MobileCreate(BaseModel):
     name: str
 
@@ -20,3 +20,7 @@ class Mobile(BaseModel):
     id: str
     name: str
     
+class Upload_file(BaseModel):
+    file : UploadFile
+    latitude:float
+    longitude:float
