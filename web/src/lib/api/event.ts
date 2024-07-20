@@ -227,14 +227,39 @@ export const deleteEvent = async ({
   }
 };
 
-export const getPhotosFromR2 = async ({
-  id,
+export const getPhotoFromR2 = async ({
+  key,
 }: {
-  id: string;
+  key: string;
+}): Promise<ApiResponse<{ src: string; alt: string }>> => {
+  try {
+    const response = await fetchNextAPI({
+      endpoint: `api/r2?key=${encodeURIComponent(key)}`,
+      method: "GET",
+    });
+    const data = {
+      src: response.imageData,
+      alt: response.key,
+    };
+
+    return { success: true, message: "写真の取得に成功しました。", data };
+  } catch (error) {
+    let userMessage = "エラーが発生しました。";
+    if (error instanceof ApiError) {
+      userMessage = error.detail;
+    }
+    return { success: false, message: userMessage };
+  }
+};
+
+export const getPhotosFromR2 = async ({
+  prefix,
+}: {
+  prefix: string;
 }): Promise<ApiResponse<Array<{ src: string; alt: string }>>> => {
   try {
     const response = await fetchNextAPI({
-      endpoint: `api/r2?prefix=${id}/user-photos/`,
+      endpoint: `api/r2?prefix=${prefix}/user-photos/`,
       method: "GET",
     });
     const data = response.map((value: { key: string; imageData: string }) => ({

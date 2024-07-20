@@ -16,7 +16,7 @@ const EventPicturePage = () => {
   useEffect(() => {
     (async () => {
       try {
-        const result = await getPhotosFromR2({ id: eventId });
+        const result = await getPhotosFromR2({ prefix: eventId });
         result.data && setPhotos(result.data);
         if (!result.success) {
           toast.error(result.message);

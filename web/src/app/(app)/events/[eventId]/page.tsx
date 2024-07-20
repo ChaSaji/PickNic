@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { EventDetail } from "@/types/event";
-import { deleteEvent, getEvent } from "@/lib/api/event";
+import { deleteEvent, getEvent, getPhotoFromR2 } from "@/lib/api/event";
 import { toast } from "react-toastify";
 import { useApiSubmit } from "@/hooks/useApiSubmit";
 import DetailText from "@/components/DetailText/DetailText";
+import DetailImg from "@/components/DetailImg/DetailImg";
 
 const EventDetailPage = () => {
   const [event, setEvent] = useState<EventDetail | null>(null);
@@ -38,7 +39,16 @@ const EventDetailPage = () => {
     (async () => {
       try {
         const result = await getEvent({ eventId: eventId });
-        result.data && setEvent(result.data);
+        const targetImg =
+          result.data &&
+          (await getPhotoFromR2({ key: result.data?.targetImg }));
+        result.data &&
+          targetImg?.data &&
+          setEvent({
+            ...result.data,
+            targetImg: targetImg.data?.src,
+            targetName: targetImg.data?.alt,
+          });
         if (!result.success) {
           toast.error(result.message);
         }
@@ -76,11 +86,14 @@ const EventDetailPage = () => {
               label="期間"
               value={`${event.startDate} ~ ${event.endDate}`}
             />
-            {/* <DetailText label="バッジ画像" value={event.badgeImg} /> */}
-            <DetailText label="撮影対象" value={event.targetImg} />
             <DetailText
               label="座標"
               value={`（緯度：${event.latitude}、経度：${event.longitude}）`}
+            />
+            <DetailImg
+              label="撮影対象"
+              imgSrc={event.targetImg}
+              imgAlt={event.targetName}
             />
           </>
         )}
