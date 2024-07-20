@@ -19,6 +19,13 @@ def get_photo2Mobile_Relation_by_mobile_id(db: Session, id: str):
     print("get_photo2Mobile_Relation_by_mobile_id In crud.py",id)
     return db.query(Photo2MobileUser).filter(Photo2MobileUser.user_id == id).all()
 
+def get_photo2Mobile_Relation_by_user_and_event(db: Session, user_id: str, event_id: int):
+    photo_ids_subquery = db.query(Photo2MobileUser.photo_id).filter(Photo2MobileUser.user_id == user_id).subquery()
+    return (db.query(Photo2MobileUser)
+        .join(Photo, Photo2MobileUser.photo_id == Photo.id)
+        .filter(Photo2MobileUser.photo_id.in_(photo_ids_subquery), Photo.event_id == event_id)
+        .first())
+
 def create_photo2Mobile(db: Session, newItem: Photo2UserCreate):
     #print("create:",new_id,user)
     db_user = Photo2MobileUser(
