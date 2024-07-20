@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from api.models.database_models import Photo,Photo2MobileUser, MobileUser
 from api.schemes.photo2user import Photo2UserCreate, Photo2UserUpdate
 from api.lib.upload_image_to_s3 import upload_image_to_s3
-from api.cruds.mobile import get_event_photo_by_id, get_mobile_user_by_Id
+from api.cruds.mobile import get_mobile_photo_by_id, get_mobile_user_by_Id
 import os
 
 def get_photo2Mobile_Relation_by_id(db: Session, id: int):
@@ -67,9 +67,9 @@ def update_user_photo(db:Session, contents:bytes, user_id:str, event_id:int):
     bucket_name = os.getenv('S3_BUCKET_NAME')
     file_key = upload_image_to_s3(aws_access_key_id, aws_secret_access_key, endpoint_url, bucket_name, contents, user_name, event_id)
 
-    photo = get_event_photo_by_id(db, event_id)
+    photo = get_mobile_photo_by_id(db, mobile_user.id)
     if photo is None:
-        raise ValueError(f"No photo found for event_id {event_id}")
+        raise ValueError(f"No photo found for mobile_user {mobile_user}")
     photo.pass_2_photo = file_key
 
     db.commit()
