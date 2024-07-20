@@ -47,7 +47,7 @@ export default function App() {
       >
         <FormProvider {...formMethods}>
           <form
-            style={{ width: 400 }}
+            style={{ width: 400, marginBottom: 100 }}
             onSubmit={formMethods.handleSubmit(onApiSubmit)}
           >
             <InputField

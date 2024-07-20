@@ -13,3 +13,4 @@ export const userSchema = z.object({
 });
 
 export type userSchemaType = z.infer<typeof userSchema>;
+export type userPutSchemaType = { id: string; body: userSchemaType };
