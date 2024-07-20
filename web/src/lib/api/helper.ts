@@ -2,6 +2,7 @@ import { getToken } from "../auth/token";
 import { ApiError } from "./ApiError";
 
 type optionType = {
+  baseUrl?: string;
   endpoint: string;
   method?: "GET" | "POST" | "PUT" | "DELETE";
   headers?: Record<string, string>;
@@ -20,7 +21,15 @@ export const fetchAPIWithAuth = async ({
   });
 };
 
+export const fetchNextAPI = async ({ ...rest }: optionType) => {
+  return await fetchAPI({
+    baseUrl: "",
+    ...rest,
+  });
+};
+
 export const fetchAPI = async ({
+  baseUrl = process.env.NEXT_PUBLIC_API_URL,
   endpoint,
   method = "GET",
   headers = {
@@ -40,10 +49,7 @@ export const fetchAPI = async ({
   }
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}`,
-      options
-    );
+    const response = await fetch(`${baseUrl}/${endpoint}`, options);
     if (!response.ok) {
       const errorRes = await response.json();
       const error = new ApiError(

@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/types/utils";
-import { fetchAPIWithAuth } from "./helper";
+import { fetchAPIWithAuth, fetchNextAPI } from "./helper";
 import { Event, EventDetail } from "@/types/event";
 import { ApiError } from "./ApiError";
 import { eventPutSchemaType, eventPostSchemaType } from "@/schemas/eventSchema";
@@ -219,6 +219,31 @@ export const deleteEvent = async ({
     };
 
     return { success: true, message: "イベント削除に成功しました。", data };
+  } catch (error) {
+    let userMessage = "エラーが発生しました。";
+    if (error instanceof ApiError) {
+      userMessage = error.detail;
+    }
+    return { success: false, message: userMessage };
+  }
+};
+
+export const getPhotosFromR2 = async ({
+  id,
+}: {
+  id: string;
+}): Promise<ApiResponse<Array<{ src: string; alt: string }>>> => {
+  try {
+    const response = await fetchNextAPI({
+      endpoint: `api/r2?prefix=${id}/user-photos/`,
+      method: "GET",
+    });
+    const data = response.map((value: { key: string; imageData: string }) => ({
+      src: value.imageData,
+      alt: value.key,
+    }));
+
+    return { success: true, message: "写真の取得に成功しました。", data };
   } catch (error) {
     let userMessage = "エラーが発生しました。";
     if (error instanceof ApiError) {
