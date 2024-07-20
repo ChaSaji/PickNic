@@ -33,7 +33,6 @@ const SubmitScreen = ({ navigation, route }) => {
         headers: {
           "x-user-id": userId,
           accept: "application/json",
-          "Content-Type": "multipart/form-data",
         },
         endpoint: `mobile/events/${eventId}/uploadfile`,
         body: {
