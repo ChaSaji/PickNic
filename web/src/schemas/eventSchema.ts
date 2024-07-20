@@ -23,10 +23,7 @@ export const eventSchema = z
     // badgeImg: z.custom<FileList>().refine((data) => data.length == 1, {
     //   message: "画像ファイルが選択されていません",
     // }),
-    targetName: z
-      .string()
-      .min(1, { message: "写真の名前を入力してください" })
-      .regex(/^[A-Za-z0-9]+$/, { message: "入力は半角英数字のみです" }),
+    targetName: z.string().optional(),
     targetImg: z.custom<FileList>().refine((data) => data.length == 1, {
       message: "画像ファイルが選択されていません",
     }),
@@ -60,8 +57,4 @@ export const eventPutFormSchema = z
   });
 
 export type eventSchemaType = z.infer<typeof eventSchema>;
-export type eventPostSchemaType = {
-  organizationId: string;
-  event: eventSchemaType;
-};
 export type eventPutSchemaType = { id: string; body: eventSchemaType };

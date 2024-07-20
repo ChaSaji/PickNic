@@ -4,11 +4,7 @@ import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import { useForm, FormProvider } from "react-hook-form";
 import InputField from "@/components/InputField/InputField";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  eventSchemaType,
-  eventSchema,
-  eventPostSchemaType,
-} from "@/schemas/eventSchema";
+import { eventSchemaType, eventSchema } from "@/schemas/eventSchema";
 import InputFileField from "@/components/InputFileField/InputFileField";
 import InputDateField from "@/components/InputDateField/InputDateField";
 import InputCoordinateField from "@/components/InputCoordinateField/InputCoordinateField";
@@ -22,7 +18,7 @@ import Button from "@/components/Button/Button";
 import { useAuth } from "@/context/AuthContext";
 
 export default function App() {
-  const { onApiSubmit, apiResponse } = useApiSubmit<eventPostSchemaType, Event>(
+  const { onApiSubmit, apiResponse } = useApiSubmit<eventSchemaType, Event>(
     postEventForm
   );
   const formMethods = useForm<eventSchemaType>({
@@ -34,9 +30,11 @@ export default function App() {
 
   const handleSubmit = formMethods.handleSubmit(async (data) => {
     if (!user) return;
-    const createData: eventPostSchemaType = {
-      organizationId: user?.organization.id,
-      event: { ...data },
+    const createData: eventSchemaType = {
+      ...data,
+      targetName: `o-${user.organization.id}/target-${
+        data.name
+      }-${Date.now()}.jpg`,
     };
     await onApiSubmit(createData);
   });
