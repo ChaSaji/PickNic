@@ -77,6 +77,7 @@ export const postEventForm = async ({
   }
 
   const dataURL = await encodeImage(fileList[0]);
+  const imgKey = `o-${organizationId}/target-${event.name}-${Date.now()}.jpg`;
 
   await fetch(`/api/r2?key=123/target.jpg`, {
     method: "POST",
@@ -84,7 +85,7 @@ export const postEventForm = async ({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      key: `o-${organizationId}/target-${event.name}-${Date.now()}.jpg`,
+      key: imgKey,
       body: dataURL,
     }),
   });
@@ -104,9 +105,9 @@ export const postEventForm = async ({
         overview: event.overview,
         // badge_img: event.badgeImg,
         badge_img: "",
-        badge_name: event.badgeName,
+        badge_name: "",
         // target_img: event.targetImg,
-        target_img: "",
+        target_img: imgKey,
         target_name: event.targetName,
         latitude: event.latitude,
         longitude: event.longitude,
@@ -156,9 +157,8 @@ export const putEventForm = async ({
         overview: body.overview,
         // badge_img: body.badgeImg,
         badge_img: "",
-        badge_name: body.badgeName,
-        // target_img: body.targetImg,
-        target_img: "",
+        badge_name: "",
+        target_img: body.targetImg,
         target_name: body.targetName,
         latitude: body.latitude,
         longitude: body.longitude,

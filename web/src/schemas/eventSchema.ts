@@ -16,13 +16,13 @@ export const eventSchema = z
       .number()
       .min(-180, { message: "範囲は-180~180です" })
       .max(180, { message: "範囲は-180~180です" }),
-    badgeName: z
-      .string()
-      .min(1, { message: "バッジの名前を入力してください" })
-      .regex(/^[A-Za-z0-9]+$/, { message: "入力は半角英数字のみです" }),
-    badgeImg: z.custom<FileList>().refine((data) => data.length == 1, {
-      message: "画像ファイルが選択されていません",
-    }),
+    // badgeName: z
+    //   .string()
+    //   .min(1, { message: "バッジの名前を入力してください" })
+    //   .regex(/^[A-Za-z0-9]+$/, { message: "入力は半角英数字のみです" }),
+    // badgeImg: z.custom<FileList>().refine((data) => data.length == 1, {
+    //   message: "画像ファイルが選択されていません",
+    // }),
     targetName: z
       .string()
       .min(1, { message: "写真の名前を入力してください" })

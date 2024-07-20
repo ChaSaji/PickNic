@@ -87,11 +87,11 @@ export default function App() {
               longitudeTag="longitude"
             />
 
-            <InputFileField
+            {/* <InputFileField
               title="バッジ画像"
               imageTag="badgeImg"
               nameTag="badgeName"
-            />
+            /> */}
 
             <InputFileField
               title="撮影対象画像"

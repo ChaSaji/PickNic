@@ -76,7 +76,7 @@ const EventDetailPage = () => {
               label="期間"
               value={`${event.startDate} ~ ${event.endDate}`}
             />
-            <DetailText label="バッジ画像" value={event.badgeImg} />
+            {/* <DetailText label="バッジ画像" value={event.badgeImg} /> */}
             <DetailText label="撮影対象" value={event.targetImg} />
             <DetailText
               label="座標"

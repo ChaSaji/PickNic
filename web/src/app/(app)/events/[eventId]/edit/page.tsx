@@ -114,7 +114,7 @@ export default function EventEditPage() {
                 }}
               />
 
-              <InputFileField
+              {/* <InputFileField
                 title="バッジ画像"
                 imageTag="badgeImg"
                 nameTag="badgeName"
@@ -122,7 +122,7 @@ export default function EventEditPage() {
                   image: event.badgeImg,
                   name: event.badgeName,
                 }}
-              />
+              /> */}
 
               <InputFileField
                 title="撮影対象画像"
