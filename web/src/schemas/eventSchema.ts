@@ -36,6 +36,29 @@ export const eventSchema = z
     message: "開始日は終了日より前である必要があります",
   });
 
+export const eventPutFormSchema = z
+  .object({
+    name: z.string().min(1, { message: "イベント名を入力してください" }),
+    overview: z
+      .string()
+      .min(1, { message: "イベントの説明を入力してください" }),
+    startDate: z.date({ message: "開始日を入力してください" }),
+    endDate: z.date({ message: "終了日を入力してください" }),
+    latitude: z.coerce
+      .number()
+      .min(-90, { message: "範囲は-90~90です" })
+      .max(90, { message: "範囲は-90~90です" }),
+    longitude: z.coerce
+      .number()
+      .min(-180, { message: "範囲は-180~180です" })
+      .max(180, { message: "範囲は-180~180です" }),
+    targetImg: z.custom<FileList>(),
+  })
+  .refine((data) => data.startDate <= data.endDate, {
+    path: ["startDate"],
+    message: "開始日は終了日より前である必要があります",
+  });
+
 export type eventSchemaType = z.infer<typeof eventSchema>;
 export type eventPostSchemaType = {
   organizationId: string;

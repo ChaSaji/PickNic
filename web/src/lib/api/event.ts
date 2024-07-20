@@ -107,7 +107,7 @@ export const postEventForm = async ({
         badge_img: "",
         badge_name: "",
         target_img: imgKey,
-        target_name: event.targetName,
+        target_name: imgKey,
         latitude: event.latitude,
         longitude: event.longitude,
       },
@@ -141,7 +141,22 @@ export const putEventForm = async ({
   id,
   body,
 }: eventPutSchemaType): Promise<ApiResponse<Event>> => {
+  const fileList = body.targetImg;
   try {
+    if (fileList && fileList.length === 1) {
+      const dataURL = await encodeImage(fileList[0]);
+      await fetchNextAPI({
+        endpoint: `api/r2?${body.targetName}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: {
+          key: body.targetName,
+          body: dataURL,
+        },
+      });
+    }
     const response = await fetchAPIWithAuth({
       endpoint: `events/${id}/edit`,
       method: "PUT",
@@ -157,7 +172,7 @@ export const putEventForm = async ({
         // badge_img: body.badgeImg,
         badge_img: "",
         badge_name: "",
-        target_img: body.targetImg,
+        target_img: body.targetName,
         target_name: body.targetName,
         latitude: body.latitude,
         longitude: body.longitude,
