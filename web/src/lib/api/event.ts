@@ -2,7 +2,8 @@ import { ApiResponse } from "@/types/utils";
 import { fetchAPIWithAuth } from "./helper";
 import { Event, EventDetail } from "@/types/event";
 import { ApiError } from "./ApiError";
-import { eventSchemaType, eventPutSchemaType } from "@/schemas/eventSchema";
+import { eventPutSchemaType, eventPostSchemaType } from "@/schemas/eventSchema";
+import { encodeImage } from "@/lib/utils/encodeImage";
 
 export const getEvent = async ({
   eventId,
@@ -64,9 +65,30 @@ export const getEventList = async (): Promise<ApiResponse<Event[]>> => {
   }
 };
 
-export const postEventForm = async (
-  event: eventSchemaType
-): Promise<ApiResponse<Event>> => {
+export const postEventForm = async ({
+  organizationId,
+  event,
+}: eventPostSchemaType): Promise<ApiResponse<Event>> => {
+  const fileList = event.targetImg;
+
+  // バリデーション: ファイルが1つ選択されているかどうかを確認
+  if (!fileList || fileList.length !== 1) {
+    console.error("画像ファイルが選択されていません");
+  }
+
+  const dataURL = await encodeImage(fileList[0]);
+
+  await fetch(`/api/r2?key=123/target.jpg`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      key: `o-${organizationId}/target-${event.name}-${Date.now()}.jpg`,
+      body: dataURL,
+    }),
+  });
+
   try {
     const response = await fetchAPIWithAuth({
       endpoint: "events/create",

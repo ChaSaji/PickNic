@@ -4,7 +4,11 @@ import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import { useForm, FormProvider } from "react-hook-form";
 import InputField from "@/components/InputField/InputField";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { eventSchemaType, eventSchema } from "@/schemas/eventSchema";
+import {
+  eventSchemaType,
+  eventSchema,
+  eventPostSchemaType,
+} from "@/schemas/eventSchema";
 import InputFileField from "@/components/InputFileField/InputFileField";
 import InputDateField from "@/components/InputDateField/InputDateField";
 import InputCoordinateField from "@/components/InputCoordinateField/InputCoordinateField";
@@ -15,16 +19,27 @@ import { postEventForm } from "@/lib/api/event";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button/Button";
+import { useAuth } from "@/context/AuthContext";
 
 export default function App() {
-  const { onApiSubmit, apiResponse } = useApiSubmit<eventSchemaType, Event>(
+  const { onApiSubmit, apiResponse } = useApiSubmit<eventPostSchemaType, Event>(
     postEventForm
   );
   const formMethods = useForm<eventSchemaType>({
     resolver: zodResolver(eventSchema),
   });
+  const { user } = useAuth();
 
   const router = useRouter();
+
+  const handleSubmit = formMethods.handleSubmit(async (data) => {
+    if (!user) return;
+    const updatedData: eventPostSchemaType = {
+      organizationId: user?.organization.id,
+      event: { ...data },
+    };
+    await onApiSubmit(updatedData);
+  });
 
   useEffect(() => {
     if (apiResponse?.success) {
@@ -48,7 +63,7 @@ export default function App() {
         <FormProvider {...formMethods}>
           <form
             style={{ width: 400, marginBottom: 100 }}
-            onSubmit={formMethods.handleSubmit(onApiSubmit)}
+            onSubmit={handleSubmit}
           >
             <InputField
               size="medium"

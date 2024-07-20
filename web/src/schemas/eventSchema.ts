@@ -37,4 +37,8 @@ export const eventSchema = z
   });
 
 export type eventSchemaType = z.infer<typeof eventSchema>;
+export type eventPostSchemaType = {
+  organizationId: string;
+  event: eventSchemaType;
+};
 export type eventPutSchemaType = { id: string; body: eventSchemaType };
