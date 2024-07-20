@@ -25,7 +25,7 @@ export const postLoginForm = async ({
       user: { id: response.id, name: response.username, email: response.email },
       organization: {
         id: response.organization_id,
-        name: response.organization_id,
+        name: response.organization_name,
       },
       accessToken: response.access_token,
     };
@@ -74,7 +74,7 @@ export const getMe = async (): Promise<ApiResponse<AuthUser | null>> => {
       user: { id: response.id, name: response.username, email: response.email },
       organization: {
         id: response.organization_id,
-        name: response.organization_id,
+        name: response.organization_name,
       },
     };
 

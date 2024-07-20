@@ -6,7 +6,6 @@ import Button from "@/components/Button/Button";
 import { useRouter } from "next/navigation";
 import { Column } from "react-table";
 import { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
 import { Event } from "@/types/event";
 import { getEventList } from "@/lib/api/event";
 import { toast } from "react-toastify";
@@ -30,7 +29,6 @@ const columns: Column<Event>[] = [
 ];
 
 export default function EventListPage() {
-  const { logout } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
@@ -41,8 +39,6 @@ export default function EventListPage() {
   const handleClickPictures = () => {
     router.push(`/events/create`);
   };
-
-  const handleLogout = async () => await logout();
 
   useEffect(() => {
     (async () => {
@@ -126,8 +122,6 @@ export default function EventListPage() {
           })}
         </tbody>
       </table>
-      <Button onClick={() => router.push("/login")} label="ログイン用" />
-      <Button onClick={handleLogout} label="ログアウト用" />
     </PageTemplate>
   );
 }

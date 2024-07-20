@@ -47,6 +47,9 @@ const images = {
   satsumaimo: require("../../assets/satsumaimo.png"),
   un: require("../../assets/un.png"),
   lock: require("../../assets/lock.png"),
+  silver: require("../../assets/medal_silver.png"),
+  bronze: require("../../assets/medal_bronze.png"),
+  gold: require("../../assets/medal_gold.png"),
 };
 
 const getImageSource = ({ pass2Photo, locked = 0, cooked = 1 }) => {
