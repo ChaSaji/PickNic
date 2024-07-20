@@ -179,6 +179,15 @@ def update_event(db: Session, event_id:int, event_update:event_schema.EventUpdat
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+def update_event_with_photo_id(db: Session, event_id: int, photo_id: int):
+    db_event = db.query(event_model.Event).filter(event_model.Event.id == event_id).first()
+    if db_event:
+        db_event.photo_id = photo_id
+        db_event.update_date = dt_now
+        db.commit()
+        db.refresh(db_event)
+    return db_event
 
 def update_organization(db: Session, organization_id:int, name:str):
     try:

@@ -24,6 +24,8 @@ def create_event(event_body: event_schema.EventCreate, current_user: User = Depe
 
     db_event_badge = event_cruds.create_event_badge(db, event_body, db_event_id)
 
+    event_cruds.update_event_with_photo_id(db, db_event_id, db_photo_id)
+
     create_event_data = event_body.model_dump()
     create_event_data["event_id"] = db_event_id
     create_event_data["organization_id"] = db_organization_id
