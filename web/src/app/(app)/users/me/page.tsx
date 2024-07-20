@@ -4,22 +4,20 @@ import Button from "@/components/Button/Button";
 import PageTemplate from "@/components/PageTemplate/PageTemplate";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
-import { deleteUser, getUser } from "@/lib/api/user";
-import { User } from "@/types/user";
+import { deleteUser } from "@/lib/api/user";
 import { useApiSubmit } from "@/hooks/useApiSubmit";
-import { toast } from "react-toastify";
+import { useAuth } from "@/context/AuthContext";
 import DetailText from "@/components/DetailText/DetailText";
 
-const UserDetailPage = () => {
-  const [user, setUser] = useState<User | null>(null);
+const MyPage = () => {
+  const { user } = useAuth();
   const router = useRouter();
   const params = useParams();
   const userId = params["userId"] as string;
   const { onApiSubmit } = useApiSubmit(deleteUser);
 
-  const handleClickBuck = () => {
-    router.push(`/users`);
+  const handleClickEdit = () => {
+    router.push(`/users/me/edit`);
   };
   const handleClickDelate = async () => {
     if (!userId) return;
@@ -29,25 +27,10 @@ const UserDetailPage = () => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        if (!userId) return;
-        const result = await getUser({ id: userId });
-        result.data && setUser(result.data);
-        if (!result.success) {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    })();
-  }, []);
-
   return (
-    <PageTemplate titleLabel="ユーザ詳細">
+    <PageTemplate titleLabel="アカウント詳細">
       <div style={{ display: "flex", justifyContent: "end", gap: 10 }}>
-        <Button onClick={handleClickBuck} label="戻る" />
+        <Button onClick={handleClickEdit} label="編集" />
         <Button onClick={handleClickDelate} label="削除" />
       </div>
       <div
@@ -60,9 +43,9 @@ const UserDetailPage = () => {
       >
         {user && (
           <>
-            <DetailText label="ユーザID" value={user.id} />
-            <DetailText label="ユーザ名" value={user.name} />
-            <DetailText label="メールアドレス" value={user.email} />
+            <DetailText label="ユーザID" value={user.user.id} />
+            <DetailText label="ユーザ名" value={user.user.name} />
+            <DetailText label="メールアドレス" value={user.user.email} />
           </>
         )}
       </div>
@@ -70,4 +53,4 @@ const UserDetailPage = () => {
   );
 };
 
-export default UserDetailPage;
+export default MyPage;

@@ -1,8 +1,8 @@
 # crud.py
 from sqlalchemy.orm import Session
 #from api.models.mobile import MobileUser
-from api.models.database_models import MobileUser,Event,Photo
-from api.schemes.mobile import MobileCreate,MobileUpdate,MobileCommit,Mobile
+from api.models.database_models import MobileUser,Photo, Event
+from api.schemes.mobile import MobileCreate,MobileUpdate
 from api.lib.auth.auth_utils import get_password_hash
 from datetime import datetime, timedelta
 import api.models.database_models as event_model
@@ -94,4 +94,3 @@ def get_event_detail_for_mobile(db: Session, event_id:int):
     if event_detail is None:
         raise HTTPException(status_code=404, detail="Event not found")
     return event_detail
-

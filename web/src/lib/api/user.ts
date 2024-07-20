@@ -1,4 +1,4 @@
-import { userSchemaType } from "@/schemas/userSchema";
+import { userPutSchemaType, userSchemaType } from "@/schemas/userSchema";
 import { ApiResponse } from "@/types/utils";
 import { fetchAPIWithAuth } from "./helper";
 import AuthUser, { User } from "@/types/user";
@@ -75,7 +75,7 @@ export const postUserForm = async ({
       user: { id: response.id, name: response.username, email: response.email },
       organization: {
         id: response.organization_id,
-        name: response.organization_id,
+        name: response.organization_name,
       },
       accessToken: response.access_token,
     };
@@ -84,6 +84,39 @@ export const postUserForm = async ({
   } catch (error) {
     let userMessage = "エラーが発生しました。";
     if (error instanceof ApiError && error.status === 400) {
+      userMessage = error.detail;
+    }
+    return { success: false, message: userMessage };
+  }
+};
+
+export const putUserForm = async ({
+  id,
+  body,
+}: userPutSchemaType): Promise<ApiResponse<AuthUser>> => {
+  try {
+    const response = await fetchAPIWithAuth({
+      endpoint: `auth/users/update/${id}`,
+      method: "PUT",
+      body: {
+        username: body.username,
+        email: body.email,
+        password: body.password,
+      },
+    });
+
+    const data = {
+      user: { id: response.id, name: response.username, email: response.email },
+      organization: {
+        id: response.organization_id,
+        name: response.organization_name,
+      },
+    };
+
+    return { success: true, message: "ユーザ更新に成功しました。", data };
+  } catch (error) {
+    let userMessage = "エラーが発生しました。";
+    if (error instanceof ApiError) {
       userMessage = error.detail;
     }
     return { success: false, message: userMessage };

@@ -34,3 +34,16 @@ export const getEventDetail = async (eventId) => {
 
   return eventData;
 };
+
+export const getEventRanking = async (eventId) => {
+  const data = await fetchAPI({
+    method: "POST",
+    endpoint: `mobile/events/${eventId}/photo_ranking`,
+  });
+  const rankingData = data.map((value) => ({
+    name: value.user_name,
+    score: value.score,
+  }));
+
+  return rankingData;
+};
