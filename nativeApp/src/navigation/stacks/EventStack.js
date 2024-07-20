@@ -11,6 +11,7 @@ import SubmitScreen from "../../screens/Event/SubmitScreen";
 import ResultScreen from "../../screens/Event/ResultScreen";
 import { WebInitContext } from "../../context/WebInitContext";
 import WebInitRemindScreen from "../../screens/Event/WebInitRemindScreen";
+import RankingScreen from "../../screens/Event/RankingScreen";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const EventScreenNavigator = () => {
         <Stack.Navigator>
           <Stack.Screen name="Event" component={TopScreen} />
           <Stack.Screen name="Detail" component={DetailScreen} />
+          <Stack.Screen name="Ranking" component={RankingScreen} />
           <Stack.Screen name="Map" component={MapScreen} />
           <Stack.Screen name="Camera" component={CameraScreen} />
           <Stack.Screen name="Submit" component={SubmitScreen} />
