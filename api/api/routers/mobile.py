@@ -202,5 +202,5 @@ def upload_files(event_id:int, db:Session=Depends(get_db)):
         #raise HTTPException(status_code=404, detail="No rankings found for this event")
         # Pydanticモデルに変換
     # 2列目を"user_id"、3列目を"score"としてリストを辞書に変換
-    json_data = [{"user_id": user_id, "score": score} for _, user_id, score in rankings]
+    json_data = [{"user_id": user_id, "user_name": user_name,"score": score} for _, user_id, score, user_name in rankings]
     return json_data
