@@ -34,11 +34,11 @@ export default function App() {
 
   const handleSubmit = formMethods.handleSubmit(async (data) => {
     if (!user) return;
-    const updatedData: eventPostSchemaType = {
+    const createData: eventPostSchemaType = {
       organizationId: user?.organization.id,
       event: { ...data },
     };
-    await onApiSubmit(updatedData);
+    await onApiSubmit(createData);
   });
 
   useEffect(() => {
