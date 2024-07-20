@@ -42,7 +42,7 @@ const EventPicturePage = () => {
   }, []);
 
   const getKey = "66448766.jpg" //getする画像に応じて変更する必要有
-  const postKey = "hello-s3.txt" //postする画像名
+  const postKey = "hello-s3222.jpg" //postする画像名
   const postBody = "Hello S3!" //postするファイルの中身
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
 
@@ -57,12 +57,16 @@ const EventPicturePage = () => {
     setImageSrc(data)
   }
   const handleClickPost = async() => {
+    if (!imageSrc) {
+      alert("No image to upload.");
+      return;
+    }
     const res = await fetch(`/api/r2?key=${postKey}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({key: postKey, body: postBody}),
+      body: JSON.stringify({key: postKey, body: imageSrc}),
     });
   }
 
