@@ -2,14 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate/PageTemplate";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { getPhotosFromR2 } from "@/lib/api/event";
 import { toast } from "react-toastify";
+import Button from "@/components/Button/Button";
 
 const EventPicturePage = () => {
   const params = useParams();
   const eventId = params["eventId"] as string;
   const [photos, setPhotos] = useState<Array<{ src: string; alt: string }>>([]);
+  const route = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -27,6 +29,9 @@ const EventPicturePage = () => {
 
   return (
     <PageTemplate titleLabel="投稿された写真">
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button onClick={() => route.push(`/events/${eventId}`)} label="戻る" />
+      </div>
       <div
         id="displayphoto"
         style={{
@@ -37,6 +42,8 @@ const EventPicturePage = () => {
           justifyContent: "center",
           gap: "100px",
           width: "100%",
+          marginTop: 20,
+          marginBottom: 20,
         }}
       >
         {photos.map((photo, index) => (
