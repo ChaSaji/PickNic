@@ -41,6 +41,7 @@ class Event(EventBase): # Event
 class EventDetail(EventDetailBase):
     event_id: int = Field(..., title="イベント番号")
     organization_id: int = Field(..., title="団体番号")
+    photo_id: int = Field(..., title="ターゲット写真番号")
     class Config:
         from_attributes = True
 

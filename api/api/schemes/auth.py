@@ -28,7 +28,7 @@ class UsersResponse(BaseModel):
     users: List[User]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class BelongedOrganization(User):
     organization_name: str

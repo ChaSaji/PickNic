@@ -1,20 +1,17 @@
 # main.py
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi import APIRouter
+from fastapi import Depends, FastAPI, HTTPException, status, APIRouter, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from sqlalchemy import inspect
 from jose import JWTError, jwt
-from datetime import timedelta
-
 from api.models.database_models import Base
 from api.schemes.mobile import MobileCreate, MobileUpdate, Mobile,MobileIdAsk,Upload_file
 from api.schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
-from api.cruds.mobile import get_event_photo_by_id,get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name, get_event_list_for_mobile, get_event_detail_for_mobile
-from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id,get_potho_ranking
+from api.cruds.mobile import get_event_photo_by_id,get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name, get_event_list_for_mobile, get_event_detail_for_mobile, get_photo2users
+from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id,get_potho_ranking, update_user_photo
 from api.database import engine, get_db
 from pydantic import BaseModel
-from typing import List
+from typing import List, Union
 import api.schemes.event as event_schema
 from fastapi import File,UploadFile,Form
 from api.lib.akaze import akaze
@@ -201,20 +198,25 @@ def list_events(db:Session=Depends(get_db)):
 def read_events(event_id:int, db:Session=Depends(get_db)):
     return get_event_detail_for_mobile(db, event_id)
 
+@router.get("/mobile/get_photo2users")
+def photo2users_list(db:Session = Depends(get_db)):
+    return get_photo2users(db)
+
 @router.post("/mobile/events/{event_id}/uploadfile")
-async def upload_files(event_id: int,file: UploadFile = File(...),latitude:float=Form(...),longitude:float=Form(...),db:Session=Depends(get_db)):
+async def upload_files(event_id: int,db:Session = Depends(get_db), file: UploadFile = File(...),latitude:float=Form(...),longitude:float=Form(...), x_user_id: str = Header(...)):
     contents = await file.read()
+    _ = update_user_photo(db, contents, x_user_id, event_id)
+
     # Path to the static file2 in the directory
     file2_path = Path("./banana.jpg")
 
     # Read the content of file2 from the directory
     async with aiofiles.open(file2_path, 'rb') as file2:
         original = await file2.read()
-    #position={1,2}
-    #print("(lat,log),",latitude,longitude)
+
+    # 距離計算処理
     pos=get_event_photo_by_id(db=db,event_id=event_id)
     dist=calc_distance(lat1=pos.latitude,lat2=latitude,lon1=pos.longitude,lon2=longitude)
-    #print(dist)
     ret=None
     if (dist>=dist_limit):
         ret=0

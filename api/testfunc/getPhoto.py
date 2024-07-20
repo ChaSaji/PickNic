@@ -12,7 +12,7 @@ def download_image_from_s3(bucket_name, s3_key, save_path, aws_access_key_id, aw
                       endpoint_url=endpoint_url,
                       aws_access_key_id=aws_access_key_id,
                       aws_secret_access_key=aws_secret_access_key)
-    
+
     # 画像をダウンロード
     s3.download_file(bucket_name, s3_key, save_path)
     print(f"Image successfully downloaded from S3: {save_path}")
@@ -24,7 +24,7 @@ def debug_print_envs(aws_access_key_id,aws_secret_access_key,endpoint_url,bucket
     print('aws_secret_access_key : ',aws_secret_access_key)
     print('endpoint_url : ',endpoint_url)
     print('bucket_name : ',bucket_name)
-    
+
 
 # AWSアクセスキーとシークレットキー
 aws_access_key_id = os.getenv('AWS_ACCESS_KEY')

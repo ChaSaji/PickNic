@@ -7,6 +7,7 @@ class Event(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     organization_id = Column(Integer, ForeignKey("organizations.id"), index=True)
+    photo_id = Column(Integer, ForeignKey("photos.id"), index=True)
     event_name = Column(String)
     target_name = Column(String)
     start_date = Column(DateTime)
@@ -18,7 +19,7 @@ class Event(Base):
 
     organization = relationship("Organization", back_populates="events")
     event_badge = relationship("EventBadge", back_populates="event")
-    photo = relationship("Photo", back_populates="event")
+    # photo = relationship("Photo", back_populates="event", foreign_keys=[photo_id])
 
 class Organization(Base):
     __tablename__ = "organizations"
@@ -56,7 +57,7 @@ class Photo(Base):
     create_date = Column(DateTime)
     update_date = Column(DateTime)
 
-    event = relationship("Event", back_populates="photo")
+    # event = relationship("Event", back_populates="photo", foreign_keys=[event_id])
 
 class MobileUser(Base):
     __tablename__ = "mobile_users"
@@ -74,7 +75,7 @@ class Photo2MobileUser(Base):
     created_date = Column(DateTime, default=func.now())
     score = Column(Integer,index=True)
     # リレーションシップの定義（オプション）
-    
+
 
 # authとの結合時に使うところ
 class User(Base):
