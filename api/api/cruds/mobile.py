@@ -1,14 +1,16 @@
 # crud.py
 from sqlalchemy.orm import Session
 #from api.models.mobile import MobileUser
+from sqlalchemy import select
 from api.models.database_models import MobileUser,Photo, Event, Photo2MobileUser
-from api.schemes.mobile import MobileCreate,MobileUpdate
+from api.schemes.mobile import MobileCreate, MobileUpdate,MobileCommit,Mobile
+from api.schemes.photo2user import Photo2User
 from api.lib.auth.auth_utils import get_password_hash
 from datetime import datetime, timedelta
 import api.models.database_models as event_model
 import api.schemes.event as event_schema
 import api.cruds.event as event_cruds
-from fastapi import HTTPException, File
+from fastapi import HTTPException
 
 def get_mobile_user_all(db: Session):
     return db.query(MobileUser).all()
@@ -20,8 +22,8 @@ def get_mobile_user_by_Id(db: Session, id: str):
 def get_event_photo_by_id(db: Session, event_id:int):
     event = db.query(Event).filter(Event.id==event_id).first()
     if not event:
-        return 0
-    photo = db.query(Photo.latitude,Photo.longitude).filter(Photo.id==event.id).first()
+        raise HTTPException(status_code=404, detail="Event not found")
+    photo = db.query(Photo).filter(Photo.id==event.photo_id).first()
     return photo
 
 def create_mobile_user(db: Session, user: MobileCreate):
@@ -29,8 +31,8 @@ def create_mobile_user(db: Session, user: MobileCreate):
     new_id=get_password_hash(user.name+str(datetime.now()))
     while(None != db.query(MobileUser).filter(MobileUser.id == new_id).first()):
         new_id=get_password_hash(new_id+str(1))
-        print(db.query(MobileUser).filter(MobileUser.id == new_id).first())
-        print(new_id)
+        # print(db.query(MobileUser).filter(MobileUser.id == new_id).first())
+        # print(new_id)
     
     #print("create:",new_id,user)
     db_user = MobileUser(
@@ -94,3 +96,19 @@ def get_event_detail_for_mobile(db: Session, event_id:int):
     if event_detail is None:
         raise HTTPException(status_code=404, detail="Event not found")
     return event_detail
+def get_photo2users(db:Session):
+    print("Get photo2event List...")
+    photo2users = db.query(Photo2MobileUser).all()
+
+    if not photo2users:
+        raise HTTPException(status_code=404, detail="No photo2user records found")
+
+    photo2user_list = [Photo2User(
+        id = photo2user.id,
+        photo_id= photo2user.photo_id,
+        user_id=photo2user.user_id,
+        score = photo2user.score
+    ) for photo2user in photo2users]
+
+    return photo2user_list
+

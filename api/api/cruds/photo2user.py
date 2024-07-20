@@ -1,9 +1,10 @@
 # crud.py
 from sqlalchemy.orm import Session
 #from api.models.mobile import MobileUser
-from api.models.database_models import Photo,Photo2MobileUser
+from api.models.database_models import Photo,Photo2MobileUser, MobileUser
 from api.schemes.photo2user import Photo2UserCreate, Photo2UserUpdate
 from api.lib.upload_image_to_s3 import upload_image_to_s3
+from api.cruds.mobile import get_event_photo_by_id
 import os
 
 def get_photo2Mobile_Relation_by_id(db: Session, id: int):
@@ -40,30 +41,26 @@ def update_photo2Mobile_Relation_by_id(db: Session, UpdateItem:Photo2UserUpdate)
         db_user.user_id = UpdateItem.user_id
         db_user.photo_id = UpdateItem.photo_id
         db_user.score = UpdateItem.score
-            
+
         db.commit()
         db.refresh(db_user)
     return db_user
 
 
-def update_user_photo(db:Session, contents:bytes, user_id:str):
+def update_user_photo(db:Session, contents:bytes, user_id:str, event_id:int):
     aws_access_key_id = os.getenv('AWS_ACCESS_KEY')
     aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
     endpoint_url=os.getenv('R2_ENDPOINT_URL')
     bucket_name = os.getenv('S3_BUCKET_NAME')
-    file_key = upload_image_to_s3(aws_access_key_id, aws_secret_access_key, endpoint_url, bucket_name, contents, user_id)
+    file_key = upload_image_to_s3(aws_access_key_id, aws_secret_access_key, endpoint_url, bucket_name, contents, user_id, event_id)
 
-    # ここの処理もっと綺麗にできたら嬉しい
-    db_photo2user = db.query(Photo2MobileUser).filter(Photo2MobileUser.user_id == user_id).first()
-    photo_id = None
-    if db_photo2user:
-        photo_id = db_photo2user.photo_id
-    db_photo = db.query(Photo).filter(Photo.id == photo_id).first()
-    if db_photo:
-        db_photo.pass2photo = file_key
-        db.commit()
-        db.refresh(db_photo)
+    photo = get_event_photo_by_id(db, event_id)
+    if photo is None:
+        raise ValueError(f"No photo found for event_id {event_id}")
+    photo.pass_2_photo = file_key
 
+    db.commit()
+    db.refresh(photo)
     return file_key
 
 
