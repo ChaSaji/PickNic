@@ -7,8 +7,9 @@ from jose import JWTError, jwt
 from api.models.database_models import Base
 from api.schemes.mobile import MobileCreate, MobileUpdate, Mobile,MobileIdAsk,Upload_file
 from api.schemes.photo2user import Photo2User,Photo2UserCreate,Photo2UserUpdate
+import api.cruds.event as event_cruds
 from api.cruds.mobile import get_event_photo_by_id,get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name, get_event_list_for_mobile, get_event_detail_for_mobile, get_photo2users
-from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id,get_potho_ranking, update_user_photo
+from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id,get_potho_ranking, update_user_photo, get_photo2Mobile_Relation_by_user_and_event
 from api.database import engine, get_db
 from pydantic import BaseModel
 from typing import List, Union
@@ -18,6 +19,7 @@ from api.lib.akaze import akaze
 from pathlib import Path
 import aiofiles
 import math
+from datetime import datetime
 
 dist_limit=100
 
@@ -205,7 +207,6 @@ def photo2users_list(db:Session = Depends(get_db)):
 @router.post("/mobile/events/{event_id}/uploadfile")
 async def upload_files(event_id: int,db:Session = Depends(get_db), file: UploadFile = File(...),latitude:float=Form(...),longitude:float=Form(...), x_user_id: str = Header(...)):
     contents = await file.read()
-    _ = update_user_photo(db, contents, x_user_id, event_id)
 
     # Path to the static file2 in the directory
     file2_path = Path("./banana.jpg")
@@ -222,6 +223,20 @@ async def upload_files(event_id: int,db:Session = Depends(get_db), file: UploadF
         ret=0
     else:
         ret = akaze(contents,original)
+
+    photo_2_mobile = get_photo2Mobile_Relation_by_user_and_event(db, x_user_id, event_id)
+    if photo_2_mobile == None:
+        # おこ
+        new_photo = event_schema.EventCreate(latitude=latitude, longitude=longitude, start_date=datetime.now(), end_date=datetime.now(), overview='', badge_img='', badge_name='', target_img='', target_name='', event_name='')
+        db_photo_id = event_cruds.create_photo(db, new_photo, event_id)
+        new_photo_2_mobile = Photo2UserCreate(user_id=x_user_id, photo_id=db_photo_id, score=ret)
+        create_photo2Mobile(db, new_photo_2_mobile)
+        _ = update_user_photo(db, contents, x_user_id, event_id)
+    elif ret > photo_2_mobile.score:
+        new_photo_2_mobile = Photo2UserUpdate(id=photo_2_mobile.id, user_id=x_user_id, photo_id=photo_2_mobile.photo_id, score=ret)
+        update_photo2Mobile_Relation_by_id(db, new_photo_2_mobile)
+        _ = update_user_photo(db, contents, x_user_id, event_id)
+
     return {"return":str(ret)}
 
 class PhotoRankingModel(BaseModel):

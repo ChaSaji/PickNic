@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from api.routers.auth import get_current_user
 from api.models.database_models import User, Event
 from api.dependencies.auth import get_owned_event
+from api.lib.upload_image_to_s3 import upload_image_to_s3
 
 router = APIRouter()
 
@@ -23,6 +24,8 @@ def create_event(event_body: event_schema.EventCreate, current_user: User = Depe
     db_photo_id = event_cruds.create_photo(db, event_body, db_event_id)
 
     db_event_badge = event_cruds.create_event_badge(db, event_body, db_event_id)
+
+    event_cruds.update_event_with_photo_id(db, db_event_id, db_photo_id)
 
     create_event_data = event_body.model_dump()
     create_event_data["event_id"] = db_event_id

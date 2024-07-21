@@ -4,6 +4,8 @@ import { useLayoutEffect, useState } from "react";
 import LoadingScreen from "./LoadingScreen";
 import MyButton from "../../components/MyButton";
 import sendImage from "../../lib/sendPicture";
+import { useLocation } from "../../context/LocationContext";
+import { get_user_Wedid } from "../../lib/dataBaseHelper";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -11,6 +13,7 @@ const windowHeight = Dimensions.get("window").height;
 const SubmitScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const { picture } = useCamera();
+  const { location } = useLocation();
 
   const eventId = route.params.eventId;
 
@@ -24,9 +27,18 @@ const SubmitScreen = ({ navigation, route }) => {
   const handleSubmitToAPI = async () => {
     setLoading(true);
     try {
+      const userId = await get_user_Wedid();
       const score = await sendImage({
         uri: picture.uri,
+        headers: {
+          "x-user-id": userId,
+          accept: "application/json",
+        },
         endpoint: `mobile/events/${eventId}/uploadfile`,
+        body: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
       });
 
       setLoading(false);
@@ -34,7 +46,9 @@ const SubmitScreen = ({ navigation, route }) => {
       navigation.navigate("Result", {
         score: Math.round(parseFloat(score.return)),
       });
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return loading ? (
