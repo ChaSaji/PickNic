@@ -227,7 +227,12 @@ async def upload_files(event_id: int,db:Session = Depends(get_db), file: UploadF
     if (dist>=dist_limit):
         ret=0
     else:
-        ret = int(akaze(contents,original))
+        try:
+            ret = int(akaze(contents,original))
+        except Exception as e:
+            # 任意でログを追加すると良い
+            print(f"Error occurred in akaze function: {e}")
+            ret = 0
 
     photo_2_mobile = get_photo2Mobile_Relation_by_user_and_event(db, x_user_id, event_id)
     if photo_2_mobile == None:
