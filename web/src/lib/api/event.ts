@@ -1,8 +1,8 @@
 import { ApiResponse } from "@/types/utils";
-import { fetchAPIWithAuth } from "./helper";
+import { fetchAPIWithAuth, fetchNextAPI } from "./helper";
 import { Event, EventDetail } from "@/types/event";
 import { ApiError } from "./ApiError";
-import { eventPutSchemaType, eventPostSchemaType } from "@/schemas/eventSchema";
+import { eventPutSchemaType, eventSchemaType } from "@/schemas/eventSchema";
 import { encodeImage } from "@/lib/utils/encodeImage";
 
 export const getEvent = async ({
@@ -65,31 +65,31 @@ export const getEventList = async (): Promise<ApiResponse<Event[]>> => {
   }
 };
 
-export const postEventForm = async ({
-  organizationId,
-  event,
-}: eventPostSchemaType): Promise<ApiResponse<Event>> => {
+export const postEventForm = async (
+  event: eventSchemaType
+): Promise<ApiResponse<Event>> => {
   const fileList = event.targetImg;
+  const imgKey = event.targetName;
 
   // バリデーション: ファイルが1つ選択されているかどうかを確認
   if (!fileList || fileList.length !== 1) {
     console.error("画像ファイルが選択されていません");
   }
 
-  const dataURL = await encodeImage(fileList[0]);
-
-  await fetch(`/api/r2?key=123/target.jpg`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      key: `o-${organizationId}/target-${event.name}-${Date.now()}.jpg`,
-      body: dataURL,
-    }),
-  });
-
   try {
+    const dataURL = await encodeImage(fileList[0]);
+    await fetchNextAPI({
+      endpoint: `api/r2?${imgKey}`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {
+        key: imgKey,
+        body: dataURL,
+      },
+    });
+
     const response = await fetchAPIWithAuth({
       endpoint: "events/create",
       method: "POST",
@@ -102,12 +102,10 @@ export const postEventForm = async ({
         start_date: event.startDate,
         end_date: event.endDate,
         overview: event.overview,
-        // badge_img: event.badgeImg,
         badge_img: "",
-        badge_name: event.badgeName,
-        // target_img: event.targetImg,
-        target_img: "",
-        target_name: event.targetName,
+        badge_name: "",
+        target_img: imgKey,
+        target_name: imgKey,
         latitude: event.latitude,
         longitude: event.longitude,
       },
@@ -141,7 +139,22 @@ export const putEventForm = async ({
   id,
   body,
 }: eventPutSchemaType): Promise<ApiResponse<Event>> => {
+  const fileList = body.targetImg;
   try {
+    if (fileList && fileList.length === 1) {
+      const dataURL = await encodeImage(fileList[0]);
+      await fetchNextAPI({
+        endpoint: `api/r2?${body.targetName}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: {
+          key: body.targetName,
+          body: dataURL,
+        },
+      });
+    }
     const response = await fetchAPIWithAuth({
       endpoint: `events/${id}/edit`,
       method: "PUT",
@@ -156,9 +169,8 @@ export const putEventForm = async ({
         overview: body.overview,
         // badge_img: body.badgeImg,
         badge_img: "",
-        badge_name: body.badgeName,
-        // target_img: body.targetImg,
-        target_img: "",
+        badge_name: "",
+        target_img: body.targetName,
         target_name: body.targetName,
         latitude: body.latitude,
         longitude: body.longitude,
@@ -219,6 +231,56 @@ export const deleteEvent = async ({
     };
 
     return { success: true, message: "イベント削除に成功しました。", data };
+  } catch (error) {
+    let userMessage = "エラーが発生しました。";
+    if (error instanceof ApiError) {
+      userMessage = error.detail;
+    }
+    return { success: false, message: userMessage };
+  }
+};
+
+export const getPhotoFromR2 = async ({
+  key,
+}: {
+  key: string;
+}): Promise<ApiResponse<{ src: string; alt: string }>> => {
+  try {
+    const response = await fetchNextAPI({
+      endpoint: `api/r2?key=${encodeURIComponent(key)}`,
+      method: "GET",
+    });
+    const data = {
+      src: response.imageData,
+      alt: response.key,
+    };
+
+    return { success: true, message: "写真の取得に成功しました。", data };
+  } catch (error) {
+    let userMessage = "エラーが発生しました。";
+    if (error instanceof ApiError) {
+      userMessage = error.detail;
+    }
+    return { success: false, message: userMessage };
+  }
+};
+
+export const getPhotosFromR2 = async ({
+  prefix,
+}: {
+  prefix: string;
+}): Promise<ApiResponse<Array<{ src: string; alt: string }>>> => {
+  try {
+    const response = await fetchNextAPI({
+      endpoint: `api/r2?prefix=${prefix}/user-photos/`,
+      method: "GET",
+    });
+    const data = response.map((value: { key: string; imageData: string }) => ({
+      src: value.imageData,
+      alt: value.key,
+    }));
+
+    return { success: true, message: "写真の取得に成功しました。", data };
   } catch (error) {
     let userMessage = "エラーが発生しました。";
     if (error instanceof ApiError) {

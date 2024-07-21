@@ -1,7 +1,6 @@
 import { eventSchemaType } from "@/schemas/eventSchema";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import InputField from "@/components/InputField/InputField";
 
 type PropsType = {
   title: string;
@@ -14,7 +13,9 @@ type PropsType = {
 };
 
 const InputFileField = (props: PropsType) => {
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [imageSrc, setImageSrc] = useState<string | null>(
+    props.defaultValue?.image || null
+  );
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -27,16 +28,16 @@ const InputFileField = (props: PropsType) => {
   } = useFormContext();
   return (
     <div>
-      <div>
+      {/* <div>
         <InputField
           size="medium"
           direction="column"
           name={props.nameTag}
-          label={props.title + "の名前"}
-          placeholder={""}
-          defaultValue={props.defaultValue && props.defaultValue.name}
+          label={`${props.title}の名前`}
+          placeholder=""
+          defaultValue={props.defaultValue?.name || ""}
         />
-      </div>
+      </div> */}
       {props.title}
       <br />
       <input
