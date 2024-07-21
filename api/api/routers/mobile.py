@@ -207,7 +207,7 @@ def read_events(event_id: int, db: Session = Depends(get_db), x_user_id: str = H
         score = -1
     else:
         score = photo_2_mobile.score
-    return event_schema.MobileEventDetail(event_id=event_detail.event_id, organization_id=event_detail.organization_id, photo_id=event_detail.photo_id, overview=event_detail.overview, badge_img=event_detail.badge_img, badge_name=event_detail.badge_name, target_img=event_detail.target_img, target_name=event_detail.target_name, latitude=event_detail.latitude, longitude=event_detail.longitude, event_name=event_detail.event_name, start_date=event_detail.start_date, end_date=event_detail.end_date, score=score)
+    return event_schema.MobileEventDetail(event_id=event_detail.event_id, organization_id=event_detail.organization_id, organization=event_detail.organization, photo_id=event_detail.photo_id, overview=event_detail.overview, badge_img=event_detail.badge_img, badge_name=event_detail.badge_name, target_img=event_detail.target_img, target_name=event_detail.target_name, latitude=event_detail.latitude, longitude=event_detail.longitude, event_name=event_detail.event_name, start_date=event_detail.start_date, end_date=event_detail.end_date, score=score)
 
 @router.get("/mobile/get_photo2users")
 def photo2users_list(db:Session = Depends(get_db)):
