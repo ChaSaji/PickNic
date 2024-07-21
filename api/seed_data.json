@@ -101,8 +101,8 @@
       },
       {
         "id": 2,
-        "event_id": 1,
-        "pass_2_photo": "path/to/photo2",
+        "event_id": 2,
+        "pass_2_photo": "hello-s3222.jpg",
         "latitude": 35.6895,
         "longitude": 139.6917,
         "create_date": "2023-01-01T01:00:00",
