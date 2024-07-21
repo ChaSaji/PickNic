@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 from api.routers.auth import get_current_user
 from api.models.database_models import User, Event
 from api.dependencies.auth import get_owned_event
-from api.lib.upload_image_to_s3 import upload_image_to_s3
 
 router = APIRouter()
 

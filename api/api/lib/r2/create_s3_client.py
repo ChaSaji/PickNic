@@ -13,14 +13,3 @@ def create_s3_client():
                     endpoint_url=endpoint_url,
                     aws_access_key_id=aws_access_key_id,
                     aws_secret_access_key=aws_secret_access_key)
-
-def upload_image_to_s3(key, body):
-    # S3クライアントの作成
-    s3 = create_s3_client()
-
-    # 画像をアップロード
-    bucket = os.getenv('S3_BUCKET_NAME')
-    result = s3.put_object(Bucket=bucket, Key=key, Body=body)
-    print(f"Image successfully updated to S3: {key}")
-
-    return result

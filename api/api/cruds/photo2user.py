@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 #from api.models.mobile import MobileUser
 from api.models.database_models import Photo,Photo2MobileUser, MobileUser
 from api.schemes.photo2user import Photo2UserCreate, Photo2UserUpdate
-from api.lib.upload_image_to_s3 import upload_image_to_s3
+from api.lib.r2.upload_image_to_s3 import upload_image_to_s3
 from api.cruds.mobile import get_mobile_photo_by_id, get_mobile_user_by_Id
 import os
 
