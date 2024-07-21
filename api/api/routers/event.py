@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File
 from typing import List
 import api.schemes.event as event_schema
 from api.database import get_db
@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from api.routers.auth import get_current_user
 from api.models.database_models import User, Event
 from api.dependencies.auth import get_owned_event
+from api.lib.akaze import akaze
+
 
 router = APIRouter()
 
@@ -71,3 +73,10 @@ def update_event(event_body: event_schema.EventUpdate, db: Session=Depends(get_d
 @router.delete("/events/{event_id}/delete", response_model=None)
 def delete_event(db: Session=Depends(get_db), owned_event: Event = Depends(get_owned_event)):
     return event_cruds.delete_event(db, owned_event.event_id, owned_event.organization_id)
+
+@router.post("/events/{event_id}/uploadfile/sub")
+async def upload_files_sub(file1: UploadFile = File(...),file2: UploadFile = File(...)):
+    contents = await file1.read()
+    original = await file2.read()
+    ret = akaze(contents,original)
+    return {"return":str(ret)}
