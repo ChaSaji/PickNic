@@ -30,6 +30,7 @@ const MapScreen = ({ route, navigation }) => {
   const handleNavigateCameraClick = () => {
     navigation.navigate("Camera", {
       eventId: route.params.eventId,
+      imageUrl: route.params.imageUrl,
     });
   };
 
