@@ -11,6 +11,7 @@ import api.cruds.event as event_cruds
 from api.cruds.mobile import get_event_photo_by_id,get_mobile_user_by_Id,create_mobile_user,get_mobile_user_all,delete_mobile_user_by_id,delete_mobile_user_by_name, get_event_list_for_mobile, get_event_detail_for_mobile, get_photo2users
 from api.cruds.photo2user import get_photo2Mobile_Relation_by_id,get_photo2Mobile_Relation_by_mobile_id,get_photo2Mobile_Relation_by_photo_id,create_photo2Mobile,update_photo2Mobile_Relation_by_id,delete_photo2mobile_by_id,delete_photo2mobile_by_mobile_id,delete_photo2mobile_by_photo_id,get_potho_ranking, update_user_photo, get_photo2Mobile_Relation_by_user_and_event
 from api.database import engine, get_db
+from api.lib.r2.download_image_from_s3 import download_file_from_s3
 from pydantic import BaseModel
 from typing import List, Union
 import api.schemes.event as event_schema
@@ -208,12 +209,8 @@ def photo2users_list(db:Session = Depends(get_db)):
 async def upload_files(event_id: int,db:Session = Depends(get_db), file: UploadFile = File(...),latitude:float=Form(...),longitude:float=Form(...), x_user_id: str = Header(...)):
     contents = await file.read()
 
-    # Path to the static file2 in the directory
-    file2_path = Path("./banana.jpg")
-
-    # Read the content of file2 from the directory
-    async with aiofiles.open(file2_path, 'rb') as file2:
-        original = await file2.read()
+    event = event_cruds.get_event_detail(event_id, db)
+    original = await download_file_from_s3(event.target_name)
 
     # 距離計算処理
     pos=get_event_photo_by_id(db=db,event_id=event_id)
@@ -222,7 +219,7 @@ async def upload_files(event_id: int,db:Session = Depends(get_db), file: UploadF
     if (dist>=dist_limit):
         ret=0
     else:
-        ret = akaze(contents,original)
+        ret = int(akaze(contents,original))
 
     photo_2_mobile = get_photo2Mobile_Relation_by_user_and_event(db, x_user_id, event_id)
     if photo_2_mobile == None:
