@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { Event } from "@/types/event";
 import { getEventList } from "@/lib/api/event";
 import { toast } from "react-toastify";
+import { formatDateString } from "@/lib/utils/formatDate";
 
 // columns 配列に型を適用
 const columns: Column<Event>[] = [
@@ -24,8 +25,16 @@ const columns: Column<Event>[] = [
       </a>
     ),
   },
-  { Header: "開始日", accessor: "startDate" },
-  { Header: "終了日", accessor: "endDate" },
+  {
+    Header: "開始日",
+    accessor: "startDate",
+    Cell: ({ value }) => formatDateString(value),
+  },
+  {
+    Header: "終了日",
+    accessor: "endDate",
+    Cell: ({ value }) => formatDateString(value),
+  },
 ];
 
 export default function EventListPage() {
