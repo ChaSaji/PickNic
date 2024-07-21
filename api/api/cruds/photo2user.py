@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from api.models.database_models import Photo,Photo2MobileUser, MobileUser
 from api.schemes.photo2user import Photo2UserCreate, Photo2UserUpdate
 from api.lib.upload_image_to_s3 import upload_image_to_s3
-from api.cruds.mobile import get_event_photo_by_id, get_mobile_user_by_Id
+from api.cruds.mobile import get_mobile_photo_by_id, get_mobile_user_by_Id
 import os
 
 def get_photo2Mobile_Relation_by_id(db: Session, id: int):
@@ -18,6 +18,13 @@ def get_photo2Mobile_Relation_by_photo_id(db: Session, id: int):
 def get_photo2Mobile_Relation_by_mobile_id(db: Session, id: str):
     print("get_photo2Mobile_Relation_by_mobile_id In crud.py",id)
     return db.query(Photo2MobileUser).filter(Photo2MobileUser.user_id == id).all()
+
+def get_photo2Mobile_Relation_by_user_and_event(db: Session, user_id: str, event_id: int):
+    photo_ids_subquery = db.query(Photo2MobileUser.photo_id).filter(Photo2MobileUser.user_id == user_id).subquery()
+    return (db.query(Photo2MobileUser)
+        .join(Photo, Photo2MobileUser.photo_id == Photo.id)
+        .filter(Photo2MobileUser.photo_id.in_(photo_ids_subquery), Photo.event_id == event_id)
+        .first())
 
 def create_photo2Mobile(db: Session, newItem: Photo2UserCreate):
     #print("create:",new_id,user)
@@ -54,15 +61,12 @@ def update_user_photo(db:Session, contents:bytes, user_id:str, event_id:int):
         raise ValueError(f"No user found for user_id {user_id} in update_user_photo()")
     user_name = mobile_user.name
 
-    aws_access_key_id = os.getenv('AWS_ACCESS_KEY')
-    aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
-    endpoint_url=os.getenv('R2_ENDPOINT_URL')
-    bucket_name = os.getenv('S3_BUCKET_NAME')
-    file_key = upload_image_to_s3(aws_access_key_id, aws_secret_access_key, endpoint_url, bucket_name, contents, user_name, event_id)
+    file_key = f"{event_id}/user-photos/{user_name}.jpg"
+    upload_image_to_s3(file_key, body=contents)
 
-    photo = get_event_photo_by_id(db, event_id)
+    photo = get_mobile_photo_by_id(db, mobile_user.id)
     if photo is None:
-        raise ValueError(f"No photo found for event_id {event_id}")
+        raise ValueError(f"No photo found for mobile_user {mobile_user}")
     photo.pass_2_photo = file_key
 
     db.commit()

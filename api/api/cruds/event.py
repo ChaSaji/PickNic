@@ -117,7 +117,7 @@ def create_photo(db: Session, photo_create: event_schema.EventCreate, event_id:i
         print("Start registering event photo...")
         db_photo = event_model.Photo(
             event_id=event_id,
-            pass_2_photo="画像保存先のURL，現在は固定値",
+            pass_2_photo=photo_create.target_img,
             latitude=photo_create.latitude,
             longitude=photo_create.longitude,
             create_date=dt_now,
@@ -140,7 +140,7 @@ def create_event_badge(db: Session, event_badge_create: event_schema.EventCreate
         db_event_badge = event_model.EventBadge(
             event_id=event_id,
             name=event_badge_create.badge_name,
-            pass_2_photo="バッジ画像保存先のURL，現在は固定値",
+            pass_2_photo=event_badge_create.badge_img,
             create_date=dt_now,
             update_date=dt_now
         )
@@ -179,6 +179,15 @@ def update_event(db: Session, event_id:int, event_update:event_schema.EventUpdat
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+def update_event_with_photo_id(db: Session, event_id: int, photo_id: int):
+    db_event = db.query(event_model.Event).filter(event_model.Event.id == event_id).first()
+    if db_event:
+        db_event.photo_id = photo_id
+        db_event.update_date = dt_now
+        db.commit()
+        db.refresh(db_event)
+    return db_event
 
 def update_organization(db: Session, organization_id:int, name:str):
     try:

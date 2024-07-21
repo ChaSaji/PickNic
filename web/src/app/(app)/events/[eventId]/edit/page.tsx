@@ -6,8 +6,8 @@ import InputField from "@/components/InputField/InputField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   eventSchemaType,
-  eventSchema,
   eventPutSchemaType,
+  eventPutFormSchema,
 } from "@/schemas/eventSchema";
 import InputFileField from "@/components/InputFileField/InputFileField";
 import InputDateField from "@/components/InputDateField/InputDateField";
@@ -15,7 +15,7 @@ import InputCoordinateField from "@/components/InputCoordinateField/InputCoordin
 import InputDescriptionField from "@/components/InputDescriptionField/InputDescriptionField";
 import { useApiSubmit } from "@/hooks/useApiSubmit";
 import { Event, EventDetail } from "@/types/event";
-import { getEvent, putEventForm } from "@/lib/api/event";
+import { getEvent, getPhotoFromR2, putEventForm } from "@/lib/api/event";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Button from "@/components/Button/Button";
@@ -31,11 +31,15 @@ export default function EventEditPage() {
     putEventForm
   );
   const formMethods = useForm<eventSchemaType>({
-    resolver: zodResolver(eventSchema),
+    resolver: zodResolver(eventPutFormSchema),
   });
 
   const handleSubmit = formMethods.handleSubmit(async (data) => {
-    const updatedData: eventPutSchemaType = { id: eventId, body: { ...data } };
+    if (!event) return;
+    const updatedData: eventPutSchemaType = {
+      id: eventId,
+      body: { ...data, targetName: event.targetName },
+    };
     await onApiSubmit(updatedData);
   });
 
@@ -43,7 +47,16 @@ export default function EventEditPage() {
     (async () => {
       try {
         const result = await getEvent({ eventId: eventId });
-        result.data && setEvent(result.data);
+        const targetImg =
+          result.data &&
+          (await getPhotoFromR2({ key: result.data?.targetImg }));
+        result.data &&
+          targetImg?.data &&
+          setEvent({
+            ...result.data,
+            targetImg: targetImg.data?.src,
+            targetName: targetImg.data?.alt,
+          });
         if (!result.success) {
           toast.error(result.message);
         }
@@ -114,7 +127,7 @@ export default function EventEditPage() {
                 }}
               />
 
-              <InputFileField
+              {/* <InputFileField
                 title="バッジ画像"
                 imageTag="badgeImg"
                 nameTag="badgeName"
@@ -122,7 +135,7 @@ export default function EventEditPage() {
                   image: event.badgeImg,
                   name: event.badgeName,
                 }}
-              />
+              /> */}
 
               <InputFileField
                 title="撮影対象画像"

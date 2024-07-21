@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 #from api.models.mobile import MobileUser
 from sqlalchemy import select
 from api.models.database_models import MobileUser,Photo, Event, Photo2MobileUser
-from api.schemes.mobile import MobileCreate, MobileUpdate,MobileCommit,Mobile
+from api.schemes.mobile import MobileCreate, MobileUpdate
 from api.schemes.photo2user import Photo2User
 from api.lib.auth.auth_utils import get_password_hash
 from datetime import datetime, timedelta
@@ -18,6 +18,13 @@ def get_mobile_user_all(db: Session):
 def get_mobile_user_by_Id(db: Session, id: str):
     print("get_user_by_username In crud.py",id)
     return db.query(MobileUser).filter(MobileUser.id == id).first()
+
+def get_mobile_photo_by_id(db: Session, mobile_user_id):
+    photo_2_mobile_user = db.query(Photo2MobileUser).filter(Photo2MobileUser.user_id==mobile_user_id).first()
+    if not photo_2_mobile_user:
+        raise HTTPException(status_code=404, detail="Photo2MobileUser not found")
+    mobile_photo = db.query(Photo).filter(Photo.id==photo_2_mobile_user.photo_id).first()
+    return mobile_photo
 
 def get_event_photo_by_id(db: Session, event_id:int):
     event = db.query(Event).filter(Event.id==event_id).first()

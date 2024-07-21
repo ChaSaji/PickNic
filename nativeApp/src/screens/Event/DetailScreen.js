@@ -3,9 +3,12 @@ import { Text, View, StyleSheet, Image } from "react-native";
 import { getRandomPointInRadius } from "../../lib/getRandomPointInRadius";
 import MyButton from "../../components/MyButton";
 import { getEventDetail } from "../../lib/api/event";
+import { S3_BUCKET_NAME } from "@env";
+import { s3 } from "../../lib/r2/s3";
 
 const DetailScreen = ({ route, navigation }) => {
   const [event, setEvent] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const eventId = route.params.eventId;
   const eventName = route.params.eventName;
 
@@ -13,7 +16,12 @@ const DetailScreen = ({ route, navigation }) => {
     (async () => {
       if (!eventId) return;
       const eventData = await getEventDetail(eventId);
+      const url = s3.getSignedUrl("getObject", {
+        Bucket: S3_BUCKET_NAME,
+        Key: eventData.targetName,
+      });
       setEvent(eventData);
+      setImageUrl(url);
     })();
   }, [route]);
 
@@ -34,6 +42,7 @@ const DetailScreen = ({ route, navigation }) => {
       eventName: event.event_name,
       latitude: randomCenter.latitude,
       longitude: randomCenter.longitude,
+      imageUrl: imageUrl,
     });
   };
 
@@ -50,10 +59,7 @@ const DetailScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.title}>ターゲット</Text>
-        <Image
-          style={styles.image}
-          source={require("../../../assets/sample.jpg")}
-        />
+        <Image style={styles.image} source={{ uri: imageUrl }} />
         <Text style={styles.organizer}>主催者: {event.organizer}</Text>
         <Text style={styles.date}>
           {event.startDate} ~ {event.endDate}

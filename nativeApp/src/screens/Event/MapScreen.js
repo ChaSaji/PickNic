@@ -15,6 +15,7 @@ const MapScreen = ({ route, navigation }) => {
   const eventName = route.params.eventName;
   const eventLatitude = route.params.latitude;
   const eventLongitude = route.params.longitude;
+  const imageUrl = route.params.imageUrl;
 
   const { location, granted } = useLocation();
   const { cameraKey, setCameraKey, isCameraEnabled, setIsCameraEnabled } =
@@ -88,10 +89,7 @@ const MapScreen = ({ route, navigation }) => {
               top: 20,
             }}
           >
-            <Image
-              style={styles.image}
-              source={require("../../../assets/sample.jpg")}
-            />
+            <Image style={styles.image} source={{ uri: imageUrl }} />
           </View>
           <View
             style={{
