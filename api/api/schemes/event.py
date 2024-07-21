@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
-from datetime import datetime
+from typing import Optional
 
 class EventBase(BaseModel):
     event_name: str = Field(..., title="イベント名")
@@ -23,6 +23,9 @@ class Event(EventBase): # Event
     start_date: datetime = Field(..., title="開始日")
     end_date: datetime = Field(..., title="終了日")
 
+    class Config:
+        from_attributes = True
+
 class EventDetailBase(EventBase): # EventBaseを継承する
     overview: str = Field(..., title="概要")
     badge_img: str = Field(..., title="バッジ画像(Base64)")
@@ -32,15 +35,10 @@ class EventDetailBase(EventBase): # EventBaseを継承する
     latitude: float = Field(..., title="緯度")
     longitude: float = Field(..., title="経度")
 
-class Event(EventBase): # Event
-    event_id: int = Field(..., title="イベント番号")
-
-    class Config:
-        from_attributes = True
-
 class EventDetail(EventDetailBase):
     event_id: int = Field(..., title="イベント番号")
     organization_id: int = Field(..., title="団体番号")
+    organization: Optional[str] = Field(..., title="団体名")
     photo_id: int = Field(..., title="ターゲット写真番号")
     class Config:
         from_attributes = True

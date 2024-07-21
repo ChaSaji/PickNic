@@ -51,6 +51,9 @@ export default function MyEditPage() {
 
   return (
     <PageTemplate titleLabel="アカウント編集" style={{ marginBottom: 200 }}>
+      <div style={{ marginBottom: 10 }}>
+        <Button label="戻る" onClick={() => router.push("/users/me")} />
+      </div>
       {user && (
         <div
           style={{
@@ -98,12 +101,6 @@ export default function MyEditPage() {
               />
 
               <Button size="fit" label="更新" />
-              <Button
-                type="button"
-                size="fit"
-                label="キャンセル"
-                onClick={() => router.push("/users/me")}
-              />
             </form>
           </FormProvider>
         </div>

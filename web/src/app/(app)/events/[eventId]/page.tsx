@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { useApiSubmit } from "@/hooks/useApiSubmit";
 import DetailText from "@/components/DetailText/DetailText";
 import DetailImg from "@/components/DetailImg/DetailImg";
+import { formatDateString } from "@/lib/utils/formatDate";
 
 const EventDetailPage = () => {
   const [event, setEvent] = useState<EventDetail | null>(null);
@@ -84,7 +85,10 @@ const EventDetailPage = () => {
             <DetailText label="概要" value={event.overview} />
             <DetailText
               label="期間"
-              value={`${event.startDate} ~ ${event.endDate}`}
+              value={`
+                ${formatDateString(event.startDate)} ~ 
+                ${formatDateString(event.endDate)}
+                `}
             />
             <DetailText
               label="座標"

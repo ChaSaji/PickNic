@@ -31,6 +31,9 @@ export default function UserCreatePage() {
 
   return (
     <PageTemplate titleLabel="ユーザ登録" style={{ marginBottom: 200 }}>
+      <div style={{ marginBottom: 10 }}>
+        <Button label="戻る" onClick={() => router.push("/users")} />
+      </div>
       <div
         style={{
           display: "flex",
@@ -74,12 +77,6 @@ export default function UserCreatePage() {
             />
 
             <Button size="fit" label="登録" />
-            <Button
-              type="button"
-              size="fit"
-              label="キャンセル"
-              onClick={() => router.push("/users")}
-            />
           </form>
         </FormProvider>
       </div>
