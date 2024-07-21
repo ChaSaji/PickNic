@@ -1,11 +1,20 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { Text, View, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  Dimensions,
+  Image,
+} from "react-native";
 import { useLocation } from "../../context/LocationContext";
 import { useCamera } from "../../context/CameraContext";
 import { Photo, PhotoElement } from "../../lib/databaseQueryText";
 import { insert_item } from "../../lib/dataBaseHelper";
 import { useDbUpdate } from "../../context/DbUpdateContext";
+
+const windowWidth = Dimensions.get("window").width;
 
 const CameraScreen = ({ navigation, route }) => {
   const [status, requestPermission] = useCameraPermissions(null);
@@ -60,7 +69,20 @@ const CameraScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      <CameraView style={{ flex: 1 }} ref={cameraRef} autoFocus={"on"} />
+      <View style={{ width: windowWidth, height: windowWidth }}>
+        <CameraView style={{ flex: 1 }} ref={cameraRef} autoFocus={"on"} />
+        <Image
+          source={require("../../../assets/sample.jpg")}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: windowWidth,
+            height: windowWidth,
+            opacity: 0.3,
+          }}
+        />
+      </View>
       <View
         style={{
           height: 60,
