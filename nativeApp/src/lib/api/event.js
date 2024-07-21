@@ -1,3 +1,4 @@
+import { get_user_Wedid } from "../dataBaseHelper";
 import { formatDate } from "../util/dateFormatter";
 import { fetchAPI } from "./helper";
 
@@ -17,7 +18,14 @@ export const getEvents = async () => {
 };
 
 export const getEventDetail = async (eventId) => {
-  const data = await fetchAPI({ endpoint: `mobile/events/${eventId}` });
+  const userId = await get_user_Wedid();
+  const data = await fetchAPI({
+    endpoint: `mobile/events/${eventId}`,
+    headers: {
+      "x-user-id": userId,
+      accept: "application/json",
+    },
+  });
   const eventData = {
     id: data.id,
     name: data.event_name,
@@ -30,6 +38,7 @@ export const getEventDetail = async (eventId) => {
     badgeUrl: data.badge_img,
     targetUrl: data.target_img,
     targetName: data.target_name,
+    score: data.score,
   };
 
   return eventData;

@@ -197,9 +197,17 @@ async def create_user(num: NumberData,db: Session = Depends(get_db)):
 def list_events(db:Session=Depends(get_db)):
     return get_event_list_for_mobile(db)
 
-@router.get("/mobile/events/{event_id}", response_model=event_schema.EventDetail)
-def read_events(event_id:int, db:Session=Depends(get_db)):
-    return get_event_detail_for_mobile(db, event_id)
+
+@router.get("/mobile/events/{event_id}", response_model=event_schema.MobileEventDetail)
+def read_events(event_id: int, db: Session = Depends(get_db), x_user_id: str = Header(...)):
+    event_detail = get_event_detail_for_mobile(db, event_id)
+    photo_2_mobile = get_photo2Mobile_Relation_by_user_and_event(db, x_user_id, event_id)
+    score = 0
+    if photo_2_mobile is None:
+        score = -1
+    else:
+        score = photo_2_mobile.score
+    return event_schema.MobileEventDetail(event_id=event_detail.event_id, organization_id=event_detail.organization_id, organization=event_detail.organization, photo_id=event_detail.photo_id, overview=event_detail.overview, badge_img=event_detail.badge_img, badge_name=event_detail.badge_name, target_img=event_detail.target_img, target_name=event_detail.target_name, latitude=event_detail.latitude, longitude=event_detail.longitude, event_name=event_detail.event_name, start_date=event_detail.start_date, end_date=event_detail.end_date, score=score)
 
 @router.get("/mobile/get_photo2users")
 def photo2users_list(db:Session = Depends(get_db)):

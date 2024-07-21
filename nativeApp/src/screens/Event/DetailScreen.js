@@ -65,6 +65,13 @@ const DetailScreen = ({ route, navigation }) => {
           {event.startDate} ~ {event.endDate}
         </Text>
         <Text style={styles.overview}>{event.overview}</Text>
+        {event.score != -1 && (
+          <View style={styles.scoreContainer}>
+            <Text style={styles.scoretext}>これまでの最高得点:</Text>
+            <Text style={styles.score}>{event.score}</Text>
+            <Text style={styles.scoretext}>点！！</Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.buttonContainer}>
@@ -114,6 +121,23 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlign: "center",
     paddingHorizontal: 20,
+  },
+  scoreContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  scoretext: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  score: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#FF914D",
+    textAlign: "center",
   },
   buttonContainer: {
     display: "flex",
