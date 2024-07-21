@@ -216,10 +216,7 @@ async def upload_files(event_id: int,db:Session = Depends(get_db), file: UploadF
     pos=get_event_photo_by_id(db=db,event_id=event_id)
     dist=calc_distance(lat1=pos.latitude,lat2=latitude,lon1=pos.longitude,lon2=longitude)
     ret=None
-    if (dist>=dist_limit):
-        ret=0
-    else:
-        ret = int(akaze(contents,original))
+    ret = int(akaze(contents,original))
 
     photo_2_mobile = get_photo2Mobile_Relation_by_user_and_event(db, x_user_id, event_id)
     if photo_2_mobile == None:
