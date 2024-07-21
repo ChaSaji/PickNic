@@ -27,6 +27,11 @@ const EventPicturePage = () => {
     })();
   }, []);
 
+  const getFileName = (path: string) => {
+    const fileName = path.split("/").pop();
+    return fileName?.split(".").shift();
+  };
+
   return (
     <PageTemplate titleLabel="投稿された写真">
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -37,10 +42,8 @@ const EventPicturePage = () => {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
-          //gridTemplateRows: "repeat(2, 1fr)",
-          //alignItems: "center",
           justifyContent: "center",
-          gap: "100px",
+          gap: "20px",
           width: "100%",
           marginTop: 20,
           marginBottom: 20,
@@ -49,7 +52,7 @@ const EventPicturePage = () => {
         {photos.map((photo, index) => (
           <div
             style={{
-              //display: "flex",
+              display: "flex",
               flexDirection: "column",
               alignItems: "center",
               width: "100%",
@@ -57,21 +60,29 @@ const EventPicturePage = () => {
             }}
             key={index}
           >
-            {/* <Button label="非表示" />
-            <Button label="詳細" /> */}
+            {photo.alt && (
+              <div
+                style={{
+                  marginBottom: 10,
+                  textAlign: "center",
+                  maxWidth: "100%",
+                  fontWeight: "bold",
+                }}
+              >
+                {getFileName(photo.alt)}
+              </div>
+            )}
             <div
               style={{
                 position: "relative",
                 width: "100%",
-                height: "100%",
-                //alignItems: "center",
-                //flexDirection: "column",
+                height: "auto",
               }}
             >
               {photo.src && (
                 <img
                   src={photo.src}
-                  alt={photo.alt}
+                  alt={getFileName(photo.alt)}
                   style={{ width: "100%", height: "auto" }}
                 />
               )}
