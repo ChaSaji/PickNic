@@ -46,7 +46,7 @@ const UserDetailPage = () => {
 
   return (
     <PageTemplate titleLabel="ユーザ詳細">
-      <div style={{ display: "flex", justifyContent: "end", gap: 10 }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Button onClick={handleClickBuck} label="戻る" />
         <Button onClick={handleClickDelate} label="削除" />
       </div>

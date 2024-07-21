@@ -30,8 +30,8 @@ const MyPage = () => {
   return (
     <PageTemplate titleLabel="アカウント詳細">
       <div style={{ display: "flex", justifyContent: "end", gap: 10 }}>
-        <Button onClick={handleClickEdit} label="編集" />
         <Button onClick={handleClickDelate} label="削除" />
+        <Button onClick={handleClickEdit} label="編集" />
       </div>
       <div
         style={{
