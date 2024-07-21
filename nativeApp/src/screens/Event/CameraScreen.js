@@ -72,7 +72,7 @@ const CameraScreen = ({ navigation, route }) => {
       <View style={{ width: windowWidth, height: windowWidth }}>
         <CameraView style={{ flex: 1 }} ref={cameraRef} autoFocus={"on"} />
         <Image
-          source={require("../../../assets/sample.jpg")}
+          source={{ uri: route.params.imageUrl }}
           style={{
             position: "absolute",
             top: 0,
