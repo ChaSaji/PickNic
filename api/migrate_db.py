@@ -16,8 +16,10 @@ session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def parse_datetime_fields(entity):
     if isinstance(entity, dict):
         for key, value in entity.items():
-            if 'create_date' in key or 'update_date' in key or 'start_date' in key or 'end_date' in key:
+            if 'create_date' in key or 'update_date' in key:
                 entity[key] = datetime.now()
+            elif 'start_date' in key or 'end_date' in key:
+                entity[key] = datetime.fromisoformat(value)
             elif isinstance(value, dict):
                 parse_datetime_fields(value)
             elif isinstance(value, list):
