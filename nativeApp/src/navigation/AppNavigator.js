@@ -80,14 +80,16 @@ const AppNavigator = () => {
           ),
         }}
       />
-      { <Tab.Screen
-        name="Db_tab"
-        component={DbScreen}
-        options={{
-          tabBarLabel: "DB",
-          tabBarIcon: () => <></>,
-        }}
-      /> }
+      {process.env.DEV_MODE === "true" && (
+        <Tab.Screen
+          name="Db_tab"
+          component={DbScreen}
+          options={{
+            tabBarLabel: "DB",
+            tabBarIcon: () => <></>,
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 };

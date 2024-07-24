@@ -84,9 +84,7 @@ def get_event_list_for_mobile(db: Session):
 
     print("Get event List...")
     current_time = datetime.now()
-    end_time = current_time + timedelta(days=10)
-    result = db.query(event_model.Event).filter(event_model.Event.end_date <= end_time)
-    events = result.all()
+    events = db.query(event_model.Event).filter(event_model.Event.start_date <= current_time, current_time <= event_model.Event.end_date).all()
 
     event_list = [event_schema.Event(
         event_id=event.id,
