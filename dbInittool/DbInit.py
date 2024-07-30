@@ -9,6 +9,7 @@ namelist = {
     "Material",
     "MaterialPhotoRelation",
     "Photo",
+    "User"
 }
 
 

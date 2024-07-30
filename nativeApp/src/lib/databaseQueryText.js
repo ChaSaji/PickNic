@@ -1,5 +1,5 @@
 //SQL Funcs
-export const debugDataBaseLevel = 0; //0:No Debug,1:Easy Debug,2:Full Debug;
+export const debugDataBaseLevel = 2; //0:No Debug,1:Easy Debug,2:Full Debug;
 
 export const PassToExcelTemplate = "../../DBtemplate/";
 export const FileExtension = ".xlsx";
@@ -39,6 +39,23 @@ export class RO {
   static LIKE = " LIKE ";
   static IsNull = " IS NULL";
   static Bet = " BETWEEN "; //上級者向け
+}
+
+class UserElementKey {
+  static id = PrimaryKey;
+  static name = "name";
+  static webId = "webId";
+  static isAccessed = "isAccessed";
+}
+export class UserElement {
+  id;
+  name;
+  webId;
+  isAccessed;
+}
+export class User {
+  static tablename = "User";
+  static elementsKey = UserElementKey;
 }
 
 class MealementKey {
@@ -146,6 +163,22 @@ export class MaterialPhotoRelation {
   static elementsKey = MaterialPhotoRelationElemantText;
 }
 
+class PlaceElementKey {
+  static id = PrimaryKey;
+  static name = "name";
+  static visited = "visited";
+}
+export class PlaceElement {
+  id;
+  name;
+  visited;
+}
+
+export class Place {
+  static tablename = "Place";
+  static elementsKey = PlaceElementKey;
+}
+
 class PhotoElementKey {
   static id = PrimaryKey;
   static name = "name";
@@ -154,6 +187,7 @@ class PhotoElementKey {
   static pass2Photo = "pass2Photo";
   static visited = "visited";
 }
+
 export class PhotoElement {
   id;
   name;
@@ -167,8 +201,23 @@ export class Photo {
   static tablename = "Photo";
   static elementsKey = PhotoElementKey;
 }
+
 // IF NOT EXISTS
 // テーブルを作成するクエリ
+export const createTableUser =
+  "CREATE TABLE IF NOT EXISTS " +
+  User.tablename +
+  " (" +
+  User.elementsKey.id +
+  " INTEGER PRIMARY KEY AUTOINCREMENT," +
+  User.elementsKey.webId +
+  " INTEGER," +
+  User.elementsKey.isAccessed +
+  " INTEGER," +
+  User.elementsKey.name +
+  " TEXT" +
+  ");";
+
 export const createTableBadge =
   "CREATE TABLE IF NOT EXISTS " +
   Badge.tablename +
@@ -246,6 +295,18 @@ export const createTableMaterialPhotoRelation =
   MaterialPhotoRelation.elementsKey.materialId +
   " INTEGER," +
   MaterialPhotoRelation.elementsKey.photoId +
+  " INTEGER" +
+  ");";
+
+export const createPlace =
+  `CREATE TABLE IF NOT EXISTS ` +
+  Place.tablename +
+  ` (` +
+  Place.elementsKey.id +
+  " INTEGER PRIMARY KEY AUTOINCREMENT," +
+  Place.elementsKey.name +
+  " TEXT UNIQUE," +
+  Place.elementsKey.visited +
   " INTEGER" +
   ");";
 

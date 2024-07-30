@@ -4,7 +4,8 @@ import HomeScreenNavigator from "./stacks/HomeStack";
 import CookingScreenNavigator from "./stacks/CookingStack";
 import BagScreenNavigator from "./stacks/BagStack";
 import BadgeScreenNabigator from "./stacks/BadgeStack";
-// import DbScreen from "../screens/DbScreen";
+import EventScreenNavigator from "./stacks/EventStack";
+import DbScreen from "../screens/DbScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -69,14 +70,26 @@ const AppNavigator = () => {
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="Db_tab"
-        component={DbScreen}
+      <Tab.Screen
+        name="Event_tab"
+        component={EventScreenNavigator}
         options={{
-          tabBarLabel: "DB",
-          tabBarIcon: () => <></>,
+          tabBarLabel: "Event",
+          tabBarIcon: () => (
+            <MaterialCommunityIcons name="flag" color={"#3e2465"} size={26} />
+          ),
         }}
-      /> */}
+      />
+      {process.env.DEV_MODE === "true" && (
+        <Tab.Screen
+          name="Db_tab"
+          component={DbScreen}
+          options={{
+            tabBarLabel: "DB",
+            tabBarIcon: () => <></>,
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 };

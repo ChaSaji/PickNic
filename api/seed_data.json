@@ -1,0 +1,380 @@
+[
+  {
+    "model": "api.models.database_models.Organization",
+    "data": [
+      {
+        "id": 1,
+        "name": "浜名湖花博",
+        "create_date": "2024-07-21T00:00:00",
+        "update_date": "2024-07-27T23:59:59"
+      },
+      {
+        "id": 2,
+        "name": "浜松大好きクラブ",
+        "create_date": "2024-07-23T00:00:00",
+        "update_date": "2024-08-05T18:00:00"
+      },
+      {
+        "id": 3,
+        "name": "静大情報学部",
+        "create_date": "2024-07-22T08:00:00",
+        "update_date": "2024-08-26T20:00:00"
+      },
+      {
+        "id": 4,
+        "name": "sj研究室",
+        "create_date": "2024-07-22T08:00:00",
+        "update_date": "2024-08-26T20:00:00"
+      },
+      {
+        "id": 5,
+        "name": "Hamamatsu_eel_club",
+        "create_date": "2024-07-22T08:00:00",
+        "update_date": "2024-08-26T20:00:00"
+      },
+      {
+        "id": 6,
+        "name": "ハマキャン",
+        "create_date": "2024-07-30T08:00:00",
+        "update_date": "2024-08-03T20:00:00"
+      }
+    ]
+  },
+  {
+    "model": "api.models.database_models.Event",
+    "data": [
+      {
+        "id": 1,
+        "organization_id": 1,
+        "photo_id": 1,
+        "event_name": "お花探し",
+        "target_name": "66448766.jpg",
+        "start_date": "2014-07-21T00:00:00",
+        "end_date": "2034-07-27T23:59:59",
+        "description": "画像のお花を探してください",
+        "create_date": "2024-07-10T00:00:00",
+        "update_date": "2024-07-15T10:00:00",
+        "status": true
+      },
+      {
+        "id": 2,
+        "organization_id": 2,
+        "photo_id": 2,
+        "event_name": "浜松の偉人を見つけろ！",
+        "target_name": "29164764_s.jpg",
+        "start_date": "2014-07-23T00:00:00",
+        "end_date": "2034-08-03T18:00:00",
+        "description": "浜松にはこんな偉人がいたのか！探せ！",
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-02T04:00:00",
+        "status": false
+      },
+      {
+        "id": 3,
+        "organization_id": 3,
+        "photo_id": 3,
+        "event_name": "浜松キャンパス探索会",
+        "target_name": "hello-s3.jpg",
+        "start_date": "2014-07-22T08:00:00",
+        "end_date": "2034-08-26T20:00:00",
+        "description": "浜松キャンパスを見て回ろう．",
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-02T04:00:00",
+        "status": true
+      },
+      {
+        "id": 4,
+        "organization_id": 4,
+        "photo_id": 4,
+        "event_name": "✝️佐治先生捕獲大作戦✝️",
+        "target_name": "hello-s3222.jpg",
+        "start_date": "2014-07-22T08:00:00",
+        "end_date": "2034-08-26T20:00:00",
+        "description": "ひとし，お前船降りろ．",
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-02T04:00:00",
+        "status": true
+      },
+      {
+        "id": 5,
+        "organization_id": 5,
+        "photo_id": 5,
+        "event_name": "うなぎが育つ場所",
+        "target_name": "IMG_9946.PNG",
+        "start_date": "2014-07-22T08:00:00",
+        "end_date": "2034-08-26T20:00:00",
+        "description": "うなぎ大好きうなぎパイも大好きうなぎうなぎうなぎうなぎ",
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-02T04:00:00",
+        "status": true
+      },
+      {
+        "id": 6,
+        "organization_id": 6,
+        "photo_id": 6,
+        "event_name": "ハマキャンアドベンチャー",
+        "target_name": "IMG_9947.PNG",
+        "start_date": "2014-07-30T00:00:00",
+        "end_date": "2034-08-03T23:59:59",
+        "description": "冒険の始まり",
+        "create_date": "2024-07-10T00:00:00",
+        "update_date": "2024-07-15T10:00:00",
+        "status": true
+      }
+    ]
+  },
+  {
+    "model": "api.models.database_models.User",
+    "data": [
+      {
+        "id": 1,
+        "organization_id": 1,
+        "username": "admin",
+        "email": "admin@example.com",
+        "hashed_password": "$2b$12$ozfQ6OLDAozLYvqwuTsPM.fq6Cxoz1dEZIaBYSfs7sPXD12OkUeHS"
+      },
+      {
+        "id": 2,
+        "organization_id": 2,
+        "username": "admin2",
+        "email": "admin2@example.com",
+        "hashed_password": "$2b$12$ozfQ6OLDAozLYvqwuTsPM.fq6Cxoz1dEZIaBYSfs7sPXD12OkUeHS"
+      },
+      {
+        "id": 3,
+        "organization_id": 3,
+        "username": "admin3",
+        "email": "admin3@example.com",
+        "hashed_password": "$2b$12$ozfQ6OLDAozLYvqwuTsPM.fq6Cxoz1dEZIaBYSfs7sPXD12OkUeHS"
+      },
+      {
+        "id": 4,
+        "organization_id": 4,
+        "username": "admin4",
+        "email": "admin4@example.com",
+        "hashed_password": "$2b$12$ozfQ6OLDAozLYvqwuTsPM.fq6Cxoz1dEZIaBYSfs7sPXD12OkUeHS"
+      },
+      {
+        "id": 5,
+        "organization_id": 5,
+        "username": "admin5",
+        "email": "admin5@example.com",
+        "hashed_password": "$2b$12$ozfQ6OLDAozLYvqwuTsPM.fq6Cxoz1dEZIaBYSfs7sPXD12OkUeHS"
+      },
+      {
+        "id": 6,
+        "organization_id": 6,
+        "username": "admin6",
+        "email": "admin6@example.com",
+        "hashed_password": "$2b$12$ozfQ6OLDAozLYvqwuTsPM.fq6Cxoz1dEZIaBYSfs7sPXD12OkUeHS"
+      }
+    ]
+  },
+  {
+    "model": "api.models.database_models.EventBadge",
+    "data": [
+      {
+        "id": 1,
+        "event_id": 1,
+        "name": "Badge 1",
+        "pass_2_photo": "path/to/photo1",
+        "create_date": "2023-01-01T00:00:00",
+        "update_date": "2023-01-01T00:00:00"
+      },
+      {
+        "id": 2,
+        "event_id": 2,
+        "name": "Badge 2",
+        "pass_2_photo": "path/to/photo2",
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-01T02:00:00"
+      },
+      {
+        "id": 3,
+        "event_id": 3,
+        "name": "Badge 3",
+        "pass_2_photo": "path/to/photo2",
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-01T02:00:00"
+      },
+      {
+        "id": 4,
+        "event_id": 4,
+        "name": "Badge 4",
+        "pass_2_photo": "path/to/photo2",
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-01T02:00:00"
+      },
+      {
+        "id": 5,
+        "event_id": 5,
+        "name": "Badge 5",
+        "pass_2_photo": "path/to/photo2",
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-01T02:00:00"
+      },
+      {
+        "id": 6,
+        "event_id": 6,
+        "name": "Badge 6",
+        "pass_2_photo": "path/to/photo2",
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-01T02:00:00"
+      }
+    ]
+  },
+  {
+    "model": "api.models.database_models.Photo",
+    "data": [
+      {
+        "id": 1,
+        "event_id": 1,
+        "pass_2_photo": "66448766.jpg",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T00:00:00",
+        "update_date": "2023-01-01T00:00:00"
+      },
+      {
+        "id": 2,
+        "event_id": 2,
+        "pass_2_photo": "29164764_s.jpg",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T01:00:00",
+        "update_date": "2023-01-01T01:00:00"
+      },
+      {
+        "id": 3,
+        "event_id": 3,
+        "pass_2_photo": "hello-s3.jpg",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-01T02:00:00"
+      },
+      {
+        "id": 4,
+        "event_id": 4,
+        "pass_2_photo": "hello-s3222.jpg",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T03:00:00",
+        "update_date": "2023-01-01T03:00:00"
+      },
+      {
+        "id": 5,
+        "event_id": 5,
+        "pass_2_photo": "IMG_9946.PNG",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T04:00:00",
+        "update_date": "2023-01-01T04:00:00"
+      },
+      {
+        "id": 6,
+        "event_id": 6,
+        "pass_2_photo": "IMG_9947.PNG",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T05:00:00",
+        "update_date": "2023-01-01T05:00:00"
+      },
+      {
+        "id": 7,
+        "event_id": 1,
+        "pass_2_photo": "path/to/photo7",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T02:00:00",
+        "update_date": "2023-01-01T02:00:00"
+      },
+      {
+        "id": 8,
+        "event_id": 1,
+        "pass_2_photo": "path/to/photo8",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T03:00:00",
+        "update_date": "2023-01-01T03:00:00"
+      },
+      {
+        "id": 9,
+        "event_id": 1,
+        "pass_2_photo": "path/to/photo9",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T04:00:00",
+        "update_date": "2023-01-01T04:00:00"
+      },
+      {
+        "id": 10,
+        "event_id": 1,
+        "pass_2_photo": "path/to/photo10",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T05:00:00",
+        "update_date": "2023-01-01T05:00:00"
+      },
+      {
+        "id": 11,
+        "event_id": 1,
+        "pass_2_photo": "path/to/photo11",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T06:00:00",
+        "update_date": "2023-01-01T06:00:00"
+      },
+      {
+        "id": 12,
+        "event_id": 1,
+        "pass_2_photo": "path/to/photo12",
+        "latitude": 34.726823616540635,
+        "longitude": 137.718191907226,
+        "create_date": "2023-01-01T07:00:00",
+        "update_date": "2023-01-01T07:00:00"
+      }
+    ]
+  },
+  {
+    "model": "api.models.database_models.MobileUser",
+    "data": [
+      {
+        "id": "a",
+        "name": "ひとし"
+      },
+      {
+        "id": "b",
+        "name": "よしみ"
+      },
+      {
+        "id": "c",
+        "name": "あらた"
+      },
+      {
+        "id": "d",
+        "name": "かりん"
+      },
+      {
+        "id": "e",
+        "name": "こじろう"
+      },
+      {
+        "id": "f",
+        "name": "ゆうき"
+      },
+      {
+        "id": "g",
+        "name": "User G"
+      },
+      {
+        "id": "h",
+        "name": "User H"
+      },
+      {
+        "id": "i",
+        "name": "User I"
+      }
+    ]
+  }
+]

@@ -7,6 +7,8 @@ import {
   insert_item,
   update_item,
   fetchData,
+  get_user,
+  get_user_id,
   selectDataById,
   selectDataByQueryText,
   selectData,
@@ -16,9 +18,14 @@ import {
   InitDatabaseTable,
   deleteDataById,
   deleteData,
+  clear_user,
+  get_isAccessed,
+  get_user_Wedid,
 } from "../lib/dataBaseHelper";
 import {
   RO,
+  User,
+  UserElement,
   Badge,
   BadgeElement,
   Material,
@@ -37,6 +44,8 @@ import {
   parb,
   OrderByQuery,
   Descending_order,
+  Place,
+  PlaceElement,
 } from "../lib/databaseQueryText";
 
 const DbScreen = () => {
@@ -187,6 +196,17 @@ const DbScreen = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+    place = new PlaceElement();
+    place.name = "佐治県";
+    place.visited = 0;
+    insert_item(Place.tablename, place)
+      .then((id) => {
+        /*ここにIDを用いた処理を記述*/
+        console.log("place id = " + id);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     photo = new PhotoElement();
     photo.name = "photoName";
     photo.ratitude = 135.1234567890123456789;
@@ -245,6 +265,13 @@ const DbScreen = () => {
       .catch((error) => {
         console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
       });
+    fetchData(Place.tablename)
+      .then((data) => {
+        console.log("Place", data); // getData関数の戻り値を受け取り、出力
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
     fetchData(Photo.tablename)
       .then((data) => {
         console.log("Photo", data); // getData関数の戻り値を受け取り、出力
@@ -291,7 +318,6 @@ const DbScreen = () => {
       .catch((error) => {
         console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
       });
-    
   };
   const functionUpdate = () => {
     console.log("アイテム更新テスト");
@@ -321,6 +347,7 @@ const DbScreen = () => {
     update_item(RecipeDetail.tablename, recipe);
     */
     material = new MaterialElement();
+    material.id = 1;
     material.mealId = 1;
     material.name = "updated material";
     material.pass2Photo = "pass/To/photo/Is/Updated.jpg";
@@ -332,6 +359,11 @@ const DbScreen = () => {
       relation.materialId = "194";relation.photoId="514";
       update_item(MaterialPhotoRelation.tablename,relation);
       */
+    place = new PlaceElement();
+    place.id = 1;
+    place.name = "茶匙県";
+    place.visited = 1;
+    update_item(Place.tablename, place);
     photo = new PhotoElement();
     photo.id = 1;
     photo.name = "Updated";
@@ -343,12 +375,13 @@ const DbScreen = () => {
   };
   const functionCheckSelect = () => {
     console.log("検索関数テスト");
-    selectDataById(RecipeDetail.tablename,1).then((data) => {
-      console.log("RecipeDetail Received by ID:", data); // getData関数の戻り値を受け取り、出力
-    })
-    .catch((error) => {
-      console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
-    });
+    selectDataById(RecipeDetail.tablename, 1)
+      .then((data) => {
+        console.log("RecipeDetail Received by ID:", data); // getData関数の戻り値を受け取り、出力
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
 
     selectDataById(Badge.tablename, 2)
       .then((data) => {
@@ -454,6 +487,115 @@ const DbScreen = () => {
         console.error("テーブル一覧を取得できませんでした:", error);
       });
   };
+  const functionUserAdd = () => {
+    console.log("ユーザの追加を行う");
+    user = new UserElement();
+    //user.id="XXXXfasdfhajhfalhf"
+    user.id = "";
+    user.webId = "New";
+    user.name = "1UserName";
+    user.isAccessed = 1;
+    insert_item(User.tablename, user)
+      .then((id) => {
+        /*ここにIDを用いた処理を記述*/
+        console.log("budge id = " + id);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    /*
+    user = new UserElement();
+    user.id="New"
+    user.name = "2UserName";
+    user.isAccessed = 1;
+    insert_item(User.tablename, user)
+      .then((id) => {
+        
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+    });
+    */
+  };
+
+  const functionGetUser = () => {
+    console.log("ユーザの取得を行う");
+    get_user()
+      .then((data) => {
+        console.log("Received user:", data); // getData関数の戻り値を受け取り、出力
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
+
+    get_user_id()
+      .then((data) => {
+        console.log("Received user_id:", data); // getData関数の戻り値を受け取り、出力
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
+
+    get_user_Wedid()
+      .then((data) => {
+        console.log("Received webId:", data); // getData関数の戻り値を受け取り、出力
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
+
+    get_isAccessed()
+      .then((data) => {
+        console.log("Received isAccessed:", data); // getData関数の戻り値を受け取り、出力
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
+  };
+
+  const functionUpdateUser = () => {
+    console.log("ユーザの更新を行う");
+
+    get_user_id()
+      .then((data) => {
+        console.log("Received user_id:", data); // getData関数の戻り値を受け取り、出力
+        user = new UserElement();
+        user.id = data;
+        user.webId = "updated_Web";
+        user.name = "updated_name";
+        user.isAccessed = 1;
+        update_item(User.tablename, user)
+          .then((id_) => {
+            /*ここにIDを用いた処理を記述*/
+            console.log("UserUpdated id = " + id_);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
+  };
+
+  const functionClearUser = () => {
+    console.log("ユーザの削除を行う");
+    clear_user()
+      .then((data) => {
+        console.log("Received data:", data); // getData関数の戻り値を受け取り、出力
+
+        get_user()
+          .then((data) => {
+            console.log("Received user:", data); // getData関数の戻り値を受け取り、出力
+          })
+          .catch((error) => {
+            console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+          });
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error); // エラーが発生した場合はエラーメッセージを出力
+      });
+  };
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -467,6 +609,7 @@ const DbScreen = () => {
       <Button title="DeleteItem" onPress={functionDelete} />
       <Button title="DropTable" onPress={functionD} />
       <Button title="CheckTable" onPress={functionE} />
+      <Button title="GetUser" onPress={functionGetUser} />
     </View>
   );
 };
